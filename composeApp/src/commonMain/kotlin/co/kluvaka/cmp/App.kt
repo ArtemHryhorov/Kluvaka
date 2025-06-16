@@ -7,20 +7,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.navigator.Navigator
 import co.kluvaka.cmp.home.HomeScreen
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-@Preview
 fun App() {
   MaterialTheme {
-    Column(
-      modifier = Modifier
-        .safeContentPadding()
-        .fillMaxSize(),
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      HomeScreen()
+    Navigator(HomeScreen) { navigator ->
+      Column(
+        modifier = Modifier
+          .safeContentPadding()
+          .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        navigator.lastItem.Content()
+      }
     }
   }
 }
