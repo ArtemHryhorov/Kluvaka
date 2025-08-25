@@ -7,12 +7,14 @@ androidx-activity = "1.10.1"
 androidx-lifecycle = "2.9.0"
 composeMultiplatform = "1.8.1"
 kotlin = "2.1.21"
+materialIconsExtended = "1.7.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version = "1.1.0-beta03" }
 
 [plugins]
