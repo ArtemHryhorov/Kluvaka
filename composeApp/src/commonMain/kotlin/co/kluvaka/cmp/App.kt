@@ -2,7 +2,6 @@ package co.kluvaka.cmp
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.History
@@ -19,7 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
-import co.kluvaka.cmp.equipments.EquipmentsScreen
+import co.kluvaka.cmp.equipments.ui.EquipmentsScreen
 import co.kluvaka.cmp.sessions.SessionsHistoryScreen
 import co.kluvaka.cmp.trophies.TrophiesScreen
 
@@ -36,11 +35,9 @@ fun App() {
         bottomBar = {
           BottomNavigationBar(navigator, bottomNavItems)
         }
-      ) { contentPadding ->
+      ) {
         Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(contentPadding)
+          modifier = Modifier.fillMaxWidth()
         ) {
           CurrentScreen()
         }

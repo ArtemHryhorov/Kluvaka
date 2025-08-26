@@ -2,7 +2,9 @@ package co.kluvaka.cmp.sessions
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,17 +17,23 @@ object SessionsHistoryScreen : Screen {
   override fun Content() {
     val navigator = LocalNavigator.current
 
-    Box(modifier = Modifier.Companion.fillMaxSize()) {
-      Text(
-        modifier = Modifier.Companion.align(Alignment.Companion.Center),
-        text = "История рыбалок",
-      )
-      FloatingActionButton(
-        onClick = {
-          navigator?.push(StartSessionScreen)
-        },
+    Scaffold { contentPadding ->
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(contentPadding)
       ) {
+        Text(
+          modifier = Modifier.align(Alignment.Center),
+          text = "История рыбалок",
+        )
+        FloatingActionButton(
+          onClick = {
+            navigator?.push(StartSessionScreen)
+          },
+        ) {
 
+        }
       }
     }
   }
