@@ -21,6 +21,12 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
     }
   }
 
+  internal fun deleteEquipment(id: Int) {
+    dbQuery.transaction {
+      dbQuery.deleteEquipment(id.toLong())
+    }
+  }
+
   private fun mapEquipment(
     id: Long,
     title: String,

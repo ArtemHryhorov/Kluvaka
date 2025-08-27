@@ -27,6 +27,14 @@ kotlin {
             isStatic = true
         }
     }
+
+    targets.filterIsInstance<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().forEach{
+        it.binaries.filterIsInstance<org.jetbrains.kotlin.gradle.plugin.mpp.Framework>()
+            .forEach { lib ->
+                lib.isStatic = false
+                lib.linkerOpts.add("-lsqlite3")
+            }
+    }
     
     sourceSets {
         androidMain.dependencies {

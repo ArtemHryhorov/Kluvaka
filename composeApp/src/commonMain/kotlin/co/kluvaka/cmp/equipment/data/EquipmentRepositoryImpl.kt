@@ -17,4 +17,8 @@ class EquipmentRepositoryImpl(
   override suspend fun getAll(): List<Equipment> {
     return database.getAllEquipment()
   }
+
+  override suspend fun delete(id: Int) {
+    return database.deleteEquipment(id)
+  }
 }
