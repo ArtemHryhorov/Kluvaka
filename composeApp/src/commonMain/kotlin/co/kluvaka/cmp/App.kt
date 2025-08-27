@@ -2,6 +2,7 @@ package co.kluvaka.cmp
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.History
@@ -35,9 +36,11 @@ fun App() {
         bottomBar = {
           BottomNavigationBar(navigator, bottomNavItems)
         }
-      ) {
+      ) { innerPadding ->
         Box(
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(innerPadding) // ← This line is critical
         ) {
           CurrentScreen()
         }

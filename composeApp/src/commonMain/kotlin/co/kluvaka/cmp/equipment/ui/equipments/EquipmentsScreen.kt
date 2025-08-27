@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,10 +13,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,41 +36,45 @@ object EquipmentsScreen : Screen {
     val viewModel = koinViewModel<EquipmentsViewModel>()
     val state by viewModel.state.collectAsState()
 
-    Scaffold(
-      modifier = Modifier.fillMaxSize(),
-      topBar = {
-        EquipmentsTopBar(state.totalPrice)
-      }
-    ) { contentPadding ->
-      Box(
+    LaunchedEffect(Unit) {
+      viewModel.fetchEquipments()
+    }
+
+    Box(Modifier.fillMaxSize()) {
+      Column(
         modifier = Modifier
           .fillMaxSize()
-          .padding(contentPadding)
+          // no top padding here, already handled by parent Scaffold
       ) {
-        LazyColumn(
-          contentPadding = contentPadding,
-          verticalArrangement = Arrangement.spacedBy(8.dp),
-          modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        EquipmentsTopBar(state.totalPrice)
+        Box(
+          modifier = Modifier.fillMaxSize(),
         ) {
-          items(state.equipments.size) { index ->
-            val item = state.equipments[index]
-            EquipmentCard(item)
+          LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+              .fillMaxSize()
+              .padding(16.dp)
+          ) {
+            items(state.equipments.size) { index ->
+              val item = state.equipments[index]
+              EquipmentCard(item)
+            }
           }
-        }
-        FloatingActionButton(
-          modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .padding(contentPadding)
-            .zIndex(3f),
-          onClick = {
-            navigator?.push(AddEquipmentScreen)
-          },
-        ) {
-          Text(
-            text = "Добавить",
-          )
+          FloatingActionButton(
+            modifier = Modifier
+              .padding(all = 16.dp)
+              .align(Alignment.BottomEnd)
+              .zIndex(3f),
+            onClick = {
+              navigator?.push(AddEquipmentScreen)
+            },
+          ) {
+            Text(
+              modifier = Modifier.padding(horizontal = 16.dp),
+              text = "Добавить",
+            )
+          }
         }
       }
     }
@@ -80,6 +85,7 @@ object EquipmentsScreen : Screen {
 @Composable
 private fun EquipmentsTopBar(totalPrice: Double) {
   TopAppBar(
+    windowInsets = WindowInsets(0, 0, 0, 0),
     title = {
       Row(
         modifier = Modifier.fillMaxWidth(),

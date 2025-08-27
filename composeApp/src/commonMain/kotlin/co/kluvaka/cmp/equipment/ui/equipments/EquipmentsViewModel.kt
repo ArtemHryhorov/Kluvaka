@@ -15,11 +15,7 @@ class EquipmentsViewModel(
   private val _mutableState = MutableStateFlow(EquipmentsState())
   val state: StateFlow<EquipmentsState> = _mutableState
 
-  init {
-    fetchEquipments()
-  }
-
-  private fun fetchEquipments() {
+  fun fetchEquipments() {
     viewModelScope.launch {
       _mutableState.update {
         it.copy(equipments = getAllEquipments())

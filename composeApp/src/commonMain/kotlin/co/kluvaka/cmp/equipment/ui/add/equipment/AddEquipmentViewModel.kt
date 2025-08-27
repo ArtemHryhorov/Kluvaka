@@ -11,16 +11,18 @@ class AddEquipmentViewModel(
   private val addEquipment: AddEquipment,
 ) : ViewModel() {
 
-  init {
+  fun addEquipment(
+    name: String,
+    price: Double
+  ) {
+    val equipment = Equipment(
+      id = Random.nextInt(),
+      title = name,
+      image = null,
+      price = price,
+    )
     viewModelScope.launch {
-      addEquipment(
-        Equipment(
-          id = Random.nextInt(),
-          title = "Удочка Daiwa Black Widow",
-          image = null,
-          price = 2800.0,
-        ),
-      )
+      addEquipment(equipment)
     }
   }
 }
