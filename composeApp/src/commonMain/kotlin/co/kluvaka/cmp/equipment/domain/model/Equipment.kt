@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.equipments.domain
+package co.kluvaka.cmp.equipment.domain.model
 
 data class Equipment(
   val id: Int,

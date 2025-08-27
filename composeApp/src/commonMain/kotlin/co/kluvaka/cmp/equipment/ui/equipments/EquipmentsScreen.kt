@@ -1,6 +1,7 @@
-package co.kluvaka.cmp.equipments.ui
+package co.kluvaka.cmp.equipment.ui.equipments
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,11 +18,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import co.kluvaka.cmp.equipments.domain.Equipment
+import co.kluvaka.cmp.equipment.domain.model.Equipment
+import co.kluvaka.cmp.equipment.ui.add.equipment.AddEquipmentScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 object EquipmentsScreen : Screen {
@@ -31,20 +36,40 @@ object EquipmentsScreen : Screen {
     val state by viewModel.state.collectAsState()
 
     Scaffold(
+      modifier = Modifier.fillMaxSize(),
       topBar = {
         EquipmentsTopBar(state.totalPrice)
       }
-    ) { padding ->
-      LazyColumn(
-        contentPadding = padding,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) { contentPadding ->
+      Box(
         modifier = Modifier
           .fillMaxSize()
-          .padding(16.dp)
+          .padding(contentPadding)
       ) {
-        items(state.equipments.size) { index ->
-          val item = state.equipments[index]
-          EquipmentCard(item)
+        LazyColumn(
+          contentPadding = contentPadding,
+          verticalArrangement = Arrangement.spacedBy(8.dp),
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+        ) {
+          items(state.equipments.size) { index ->
+            val item = state.equipments[index]
+            EquipmentCard(item)
+          }
+        }
+        FloatingActionButton(
+          modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(contentPadding)
+            .zIndex(3f),
+          onClick = {
+            navigator?.push(AddEquipmentScreen)
+          },
+        ) {
+          Text(
+            text = "Добавить",
+          )
         }
       }
     }

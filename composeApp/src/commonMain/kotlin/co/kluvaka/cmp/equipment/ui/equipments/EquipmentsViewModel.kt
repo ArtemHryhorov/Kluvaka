@@ -1,8 +1,8 @@
-package co.kluvaka.cmp.equipments.ui
+package co.kluvaka.cmp.equipment.ui.equipments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kluvaka.cmp.equipments.domain.GetAllEquipments
+import co.kluvaka.cmp.equipment.domain.usecase.GetAllEquipments
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

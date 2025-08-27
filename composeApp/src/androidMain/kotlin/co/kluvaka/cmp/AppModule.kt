@@ -1,11 +1,14 @@
 package co.kluvaka.cmp
 
 import co.kluvaka.cmp.database.AndroidDatabaseDriverFactory
-import co.kluvaka.cmp.equipments.data.EquipmentRepositoryImpl
-import co.kluvaka.cmp.equipments.domain.EquipmentRepository
-import co.kluvaka.cmp.equipments.domain.GetAllEquipments
-import co.kluvaka.cmp.equipments.domain.GetAllEquipmentsImpl
-import co.kluvaka.cmp.equipments.ui.EquipmentsViewModel
+import co.kluvaka.cmp.equipment.data.EquipmentRepositoryImpl
+import co.kluvaka.cmp.equipment.domain.EquipmentRepository
+import co.kluvaka.cmp.equipment.domain.usecase.AddEquipment
+import co.kluvaka.cmp.equipment.domain.usecase.AddEquipmentImpl
+import co.kluvaka.cmp.equipment.domain.usecase.GetAllEquipments
+import co.kluvaka.cmp.equipment.domain.usecase.GetAllEquipmentsImpl
+import co.kluvaka.cmp.equipment.ui.add.equipment.AddEquipmentViewModel
+import co.kluvaka.cmp.equipment.ui.equipments.EquipmentsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -19,14 +22,16 @@ val appModule = module {
   }
 
   single<GetAllEquipments> {
-    GetAllEquipmentsImpl(
-      repository = get(),
-    )
+    GetAllEquipmentsImpl(repository = get())
+  }
+  single<AddEquipment> {
+    AddEquipmentImpl(repository = get())
   }
 
   viewModel {
-    EquipmentsViewModel(
-      getAllEquipments = get(),
-    )
+    EquipmentsViewModel(getAllEquipments = get())
+  }
+  viewModel {
+    AddEquipmentViewModel(addEquipment = get())
   }
 }

@@ -1,6 +1,6 @@
-package co.kluvaka.cmp.equipments.ui
+package co.kluvaka.cmp.equipment.ui.equipments
 
-import co.kluvaka.cmp.equipments.domain.Equipment
+import co.kluvaka.cmp.equipment.domain.model.Equipment
 
 data class EquipmentsState(
   val equipments: List<Equipment> = emptyList(),

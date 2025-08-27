@@ -1,9 +1,9 @@
-package co.kluvaka.cmp.equipments.data
+package co.kluvaka.cmp.equipment.data
 
 import co.kluvaka.cmp.database.Database
 import co.kluvaka.cmp.database.DatabaseDriverFactory
-import co.kluvaka.cmp.equipments.domain.Equipment
-import co.kluvaka.cmp.equipments.domain.EquipmentRepository
+import co.kluvaka.cmp.equipment.domain.model.Equipment
+import co.kluvaka.cmp.equipment.domain.EquipmentRepository
 
 class EquipmentRepositoryImpl(
   databaseDriverFactory: DatabaseDriverFactory,

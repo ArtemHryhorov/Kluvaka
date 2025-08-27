@@ -1,4 +1,6 @@
-package co.kluvaka.cmp.equipments.domain
+package co.kluvaka.cmp.equipment.domain
+
+import co.kluvaka.cmp.equipment.domain.model.Equipment
 
 interface EquipmentRepository {
 
