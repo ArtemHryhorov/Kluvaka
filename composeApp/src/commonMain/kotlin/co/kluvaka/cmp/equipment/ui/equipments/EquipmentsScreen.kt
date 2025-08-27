@@ -1,5 +1,6 @@
 package co.kluvaka.cmp.equipment.ui.equipments
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,19 +9,28 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
@@ -52,9 +62,14 @@ object EquipmentsScreen : Screen {
               .fillMaxSize()
               .padding(16.dp)
           ) {
-            items(state.equipments.size) { index ->
-              val item = state.equipments[index]
-              EquipmentCard(item)
+            items(
+              items = state.equipments,
+              key = { it.id }
+            ) { equipment ->
+              EquipmentItem(
+                equipment = equipment,
+                onRemove = { viewModel.delete(equipment.id) },
+              )
             }
           }
           FloatingActionButton(
@@ -97,6 +112,47 @@ private fun EquipmentsTopBar(totalPrice: Double) {
       }
     }
   )
+}
+
+@Composable
+fun EquipmentItem(
+  equipment: Equipment,
+  onRemove: (Equipment) -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
+    confirmValueChange = {
+      if (it == SwipeToDismissBoxValue.EndToStart) onRemove(equipment)
+      // Reset item when toggling done status
+      it != SwipeToDismissBoxValue.StartToEnd
+    }
+  )
+
+  SwipeToDismissBox(
+    state = swipeToDismissBoxState,
+    modifier = modifier.fillMaxSize(),
+    enableDismissFromStartToEnd = false,
+    backgroundContent = {
+      when (swipeToDismissBoxState.dismissDirection) {
+        SwipeToDismissBoxValue.EndToStart -> {
+          Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = "Remove item",
+            modifier = Modifier
+              .fillMaxSize()
+              .background(Color.Red)
+              .wrapContentSize(Alignment.CenterEnd)
+              .padding(12.dp),
+            tint = Color.White
+          )
+        }
+        SwipeToDismissBoxValue.StartToEnd -> {}
+        SwipeToDismissBoxValue.Settled -> {}
+      }
+    }
+  ) {
+    EquipmentCard(equipment)
+  }
 }
 
 @Composable
