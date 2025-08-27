@@ -15,9 +15,11 @@ object SessionsHistoryScreen : Screen {
   override fun Content() {
     val navigator = LocalNavigator.current
 
-    Box(modifier = Modifier.Companion.fillMaxSize()) {
+    Box(
+      modifier = Modifier.fillMaxSize()
+    ) {
       Text(
-        modifier = Modifier.Companion.align(Alignment.Companion.Center),
+        modifier = Modifier.align(Alignment.Center),
         text = "История рыбалок",
       )
       FloatingActionButton(

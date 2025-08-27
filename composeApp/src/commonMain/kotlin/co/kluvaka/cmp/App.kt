@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
-import co.kluvaka.cmp.equipments.EquipmentsScreen
+import co.kluvaka.cmp.equipment.ui.equipments.EquipmentsScreen
 import co.kluvaka.cmp.sessions.SessionsHistoryScreen
 import co.kluvaka.cmp.trophies.TrophiesScreen
 
@@ -36,11 +36,11 @@ fun App() {
         bottomBar = {
           BottomNavigationBar(navigator, bottomNavItems)
         }
-      ) { contentPadding ->
+      ) { innerPadding ->
         Box(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(contentPadding)
+            .padding(innerPadding) // ← This line is critical
         ) {
           CurrentScreen()
         }
