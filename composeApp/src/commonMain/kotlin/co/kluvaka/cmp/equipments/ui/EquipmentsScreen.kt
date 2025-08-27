@@ -16,19 +16,18 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.equipments.domain.Equipment
-import co.kluvaka.cmp.equipments.domain.GetAllEquipmentsImpl
+import org.koin.compose.viewmodel.koinViewModel
 
 object EquipmentsScreen : Screen {
   @Composable
   override fun Content() {
     val navigator = LocalNavigator.current
-    val viewModel = rememberEquipmentsViewModel()
+    val viewModel = koinViewModel<EquipmentsViewModel>()
     val state by viewModel.state.collectAsState()
 
     Scaffold(
@@ -85,14 +84,5 @@ private fun EquipmentCard(
       Text(text = item.title, style = MaterialTheme.typography.titleMedium)
       Text(text = "₴${item.price}", style = MaterialTheme.typography.bodyMedium)
     }
-  }
-}
-
-@Composable
-fun rememberEquipmentsViewModel(): EquipmentsViewModel {
-  return remember {
-    EquipmentsViewModel(
-      getAllEquipments = GetAllEquipmentsImpl()
-    )
   }
 }

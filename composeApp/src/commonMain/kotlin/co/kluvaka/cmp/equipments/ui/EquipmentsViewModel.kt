@@ -12,7 +12,7 @@ class EquipmentsViewModel(
   private val getAllEquipments: GetAllEquipments,
 ) : ViewModel() {
 
-  private val _mutableState = MutableStateFlow<EquipmentsState>(EquipmentsState())
+  private val _mutableState = MutableStateFlow(EquipmentsState())
   val state: StateFlow<EquipmentsState> = _mutableState
 
   init {
