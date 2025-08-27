@@ -1,7 +1,9 @@
 package co.kluvaka.cmp.equipment.ui.add.equipment
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
@@ -22,9 +24,14 @@ object AddEquipmentScreen : Screen {
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
 
-    Box(
-      modifier = Modifier.fillMaxSize()
-    ) {
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .imePadding() // adds bottom padding when keyboard is shown
+        .padding(16.dp),
+      verticalArrangement = Arrangement.SpaceBetween
+    )  {
       Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -51,21 +58,25 @@ object AddEquipmentScreen : Screen {
         )
       }
 
-      Button(
-        onClick = {
-          viewModel.addEquipment(
-            name = name,
-            price = price.toDouble(),
-          )
-          navigator?.pop()
-        },
-        modifier = Modifier
-          .align(Alignment.BottomCenter)
-          .fillMaxWidth()
-          .padding(horizontal = 16.dp)
-          .padding(bottom = 16.dp)
-      ) {
-        Text("Save")
+      Box {
+        Button(
+          onClick = {
+            if (name.isNotBlank() && price.isNotBlank()) {
+              viewModel.addEquipment(
+                name = name,
+                price = price.toDouble(),
+              )
+              navigator?.pop()
+            }
+          },
+          modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp)
+        ) {
+          Text("Save")
+        }
       }
     }
   }
