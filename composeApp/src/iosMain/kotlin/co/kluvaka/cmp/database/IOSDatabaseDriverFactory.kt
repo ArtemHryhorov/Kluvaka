@@ -1,0 +1,11 @@
+package co.kluvaka.cmp.database
+
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import co.kluvaka.cmp.AppDatabase
+
+class IOSDatabaseDriverFactory : DatabaseDriverFactory {
+  override fun createDriver(): SqlDriver {
+    return NativeSqliteDriver(AppDatabase.Schema, "equipment.db")
+  }
+}
