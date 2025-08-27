@@ -11,5 +11,5 @@ SELECT * FROM Equipment;
 insertEquipment:
 INSERT INTO Equipment(id, title, image, price) VALUES (?, ?, ?, ?);
 
-deleteAllEquipment:
-DELETE FROM Equipment;
+deleteEquipment:
+DELETE FROM Equipment WHERE id = ?;

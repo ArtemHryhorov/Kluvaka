@@ -7,4 +7,6 @@ interface EquipmentRepository {
   suspend fun insert(equipment: Equipment)
 
   suspend fun getAll(): List<Equipment>
+
+  suspend fun delete(id: Int)
 }

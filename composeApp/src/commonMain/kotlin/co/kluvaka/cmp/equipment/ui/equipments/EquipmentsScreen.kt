@@ -41,11 +41,7 @@ object EquipmentsScreen : Screen {
     }
 
     Box(Modifier.fillMaxSize()) {
-      Column(
-        modifier = Modifier
-          .fillMaxSize()
-          // no top padding here, already handled by parent Scaffold
-      ) {
+      Column(modifier = Modifier.fillMaxSize()) {
         EquipmentsTopBar(state.totalPrice)
         Box(
           modifier = Modifier.fillMaxSize(),
