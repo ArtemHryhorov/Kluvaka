@@ -5,6 +5,20 @@ CREATE TABLE Equipment(
     price REAL NOT NULL
 );
 
+CREATE TABLE fishing_session (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    location TEXT NOT NULL,
+    date TEXT NOT NULL
+);
+
+CREATE TABLE rod (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id INTEGER NOT NULL REFERENCES fishing_session(id) ON DELETE CASCADE,
+    [order] INTEGER NOT NULL,
+    distance INTEGER NOT NULL,
+    bait TEXT NOT NULL
+);
+
 selectAllEquipment:
 SELECT * FROM Equipment;
 
@@ -13,3 +27,20 @@ INSERT INTO Equipment(id, title, image, price) VALUES (?, ?, ?, ?);
 
 deleteEquipment:
 DELETE FROM Equipment WHERE id = ?;
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+getAllSessions:
+SELECT * FROM fishing_session;
+
+insertSession:
+INSERT INTO fishing_session(location, date)
+VALUES (:location, :date);
+
+getRodsBySession:
+SELECT * FROM rod WHERE session_id = :sessionId;
+
+insertRod:
+INSERT INTO rod(session_id, [order], distance, bait)
+VALUES (:sessionId, :order, :distance, :bait);
