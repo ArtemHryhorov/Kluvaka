@@ -20,7 +20,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import co.kluvaka.cmp.equipment.ui.equipments.EquipmentsScreen
-import co.kluvaka.cmp.sessions.SessionsHistoryScreen
+import co.kluvaka.cmp.sessions.ui.history.SessionsHistoryScreen
 import co.kluvaka.cmp.trophies.TrophiesScreen
 
 @Composable
