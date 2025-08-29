@@ -10,26 +10,16 @@ import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipments
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentViewModel
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsViewModel
-import co.kluvaka.cmp.features.sessions.data.repository.FishingSessionRepositoryImpl
-import co.kluvaka.cmp.features.sessions.data.usecase.CreateFishingSessionUseCase
-import co.kluvaka.cmp.features.sessions.data.usecase.GetAllFishingSessionsUseCase
-import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
-import co.kluvaka.cmp.features.sessions.domain.usecase.CreateFishingSession
-import co.kluvaka.cmp.features.sessions.domain.usecase.GetAllFishingSessions
-import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryViewModel
-import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val sharedModule = module {
-
+val equipmentModule = module {
+  // Repository
   single<EquipmentRepository> {
     EquipmentRepositoryImpl(databaseDriverFactory = get())
   }
-  single<FishingSessionRepository> {
-    FishingSessionRepositoryImpl(databaseDriverFactory = get())
-  }
 
+  // UseCase
   single<GetAllEquipments> {
     GetAllEquipmentsUseCase(repository = get())
   }
@@ -39,13 +29,8 @@ val sharedModule = module {
   single<DeleteEquipment> {
     DeleteEquipmentUseCase(repository = get())
   }
-  single<GetAllFishingSessions> {
-    GetAllFishingSessionsUseCase(repository = get())
-  }
-  single<CreateFishingSession> {
-    CreateFishingSessionUseCase(repository = get())
-  }
 
+  // ViewModel
   viewModel {
     EquipmentsViewModel(
       getAllEquipments = get(),
@@ -54,11 +39,5 @@ val sharedModule = module {
   }
   viewModel {
     AddEquipmentViewModel(addEquipment = get())
-  }
-  viewModel {
-    StartSessionViewModel(createFishingSession = get())
-  }
-  viewModel {
-    SessionsHistoryViewModel(getAllFishingSessions = get())
   }
 }
