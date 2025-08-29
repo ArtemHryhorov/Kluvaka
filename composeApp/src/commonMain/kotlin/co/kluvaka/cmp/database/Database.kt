@@ -1,8 +1,8 @@
 package co.kluvaka.cmp.database
 
-import co.kluvaka.cmp.equipment.domain.model.Equipment
-import co.kluvaka.cmp.sessions.domain.model.FishingSession
-import co.kluvaka.cmp.sessions.domain.model.Rod
+import co.kluvaka.cmp.features.equipment.domain.model.Equipment
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.Rod
 
 internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
   private val database = AppDatabase(databaseDriverFactory.createDriver())
