@@ -1,5 +1,6 @@
 package co.kluvaka.cmp.di
 
+import co.kluvaka.cmp.database.EquipmentDatabase
 import co.kluvaka.cmp.features.equipment.data.repository.EquipmentRepositoryImpl
 import co.kluvaka.cmp.features.equipment.data.usecase.AddEquipmentUseCase
 import co.kluvaka.cmp.features.equipment.data.usecase.DeleteEquipmentUseCase
@@ -14,9 +15,14 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val equipmentModule = module {
+  // Database
+  single<EquipmentDatabase> {
+    EquipmentDatabase(databaseDriverFactory = get())
+  }
+
   // Repository
   single<EquipmentRepository> {
-    EquipmentRepositoryImpl(databaseDriverFactory = get())
+    EquipmentRepositoryImpl(database = get())
   }
 
   // UseCase

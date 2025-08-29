@@ -1,5 +1,6 @@
 package co.kluvaka.cmp.di
 
+import co.kluvaka.cmp.database.SessionDatabase
 import co.kluvaka.cmp.features.sessions.data.repository.FishingSessionRepositoryImpl
 import co.kluvaka.cmp.features.sessions.data.usecase.CreateFishingSessionUseCase
 import co.kluvaka.cmp.features.sessions.data.usecase.GetAllFishingSessionsUseCase
@@ -12,9 +13,14 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val sessionModule = module {
+  // Database
+  single<SessionDatabase> {
+    SessionDatabase(databaseDriverFactory = get())
+  }
+
   // Repository
   single<FishingSessionRepository> {
-    FishingSessionRepositoryImpl(databaseDriverFactory = get())
+    FishingSessionRepositoryImpl(database = get())
   }
 
   // UseCase

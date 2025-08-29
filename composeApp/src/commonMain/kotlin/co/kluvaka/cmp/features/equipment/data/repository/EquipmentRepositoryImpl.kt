@@ -1,14 +1,12 @@
 package co.kluvaka.cmp.features.equipment.data.repository
 
-import co.kluvaka.cmp.database.Database
-import co.kluvaka.cmp.database.DatabaseDriverFactory
-import co.kluvaka.cmp.features.equipment.domain.repository.EquipmentRepository
+import co.kluvaka.cmp.database.EquipmentDatabase
 import co.kluvaka.cmp.features.equipment.domain.model.Equipment
+import co.kluvaka.cmp.features.equipment.domain.repository.EquipmentRepository
 
 class EquipmentRepositoryImpl(
-  databaseDriverFactory: DatabaseDriverFactory,
+  private val database: EquipmentDatabase,
 ) : EquipmentRepository {
-  private val database = Database(databaseDriverFactory)
 
   override suspend fun insert(equipment: Equipment) {
     database.insertEquipment(equipment)

@@ -1,14 +1,12 @@
 package co.kluvaka.cmp.features.sessions.data.repository
 
-import co.kluvaka.cmp.database.Database
-import co.kluvaka.cmp.database.DatabaseDriverFactory
-import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
+import co.kluvaka.cmp.database.SessionDatabase
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
 
 class FishingSessionRepositoryImpl(
-  databaseDriverFactory: DatabaseDriverFactory,
+  private val database: SessionDatabase,
 ) : FishingSessionRepository {
-  private val database = Database(databaseDriverFactory)
 
   override suspend fun createSession(session: FishingSession) {
     database.insertSessionWithRods(session)
