@@ -1,21 +1,21 @@
 package co.kluvaka.cmp.di
 
-import co.kluvaka.cmp.features.equipment.data.EquipmentRepositoryImpl
-import co.kluvaka.cmp.features.equipment.domain.EquipmentRepository
+import co.kluvaka.cmp.features.equipment.data.repository.EquipmentRepositoryImpl
+import co.kluvaka.cmp.features.equipment.data.usecase.AddEquipmentUseCase
+import co.kluvaka.cmp.features.equipment.data.usecase.DeleteEquipmentUseCase
+import co.kluvaka.cmp.features.equipment.data.usecase.GetAllEquipmentsUseCase
+import co.kluvaka.cmp.features.equipment.domain.repository.EquipmentRepository
 import co.kluvaka.cmp.features.equipment.domain.usecase.AddEquipment
-import co.kluvaka.cmp.features.equipment.domain.usecase.AddEquipmentImpl
 import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipment
-import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipmentImpl
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipments
-import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipmentsImpl
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentViewModel
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsViewModel
-import co.kluvaka.cmp.features.sessions.data.FishingSessionRepositoryImpl
-import co.kluvaka.cmp.features.sessions.domain.FishingSessionRepository
+import co.kluvaka.cmp.features.sessions.data.repository.FishingSessionRepositoryImpl
+import co.kluvaka.cmp.features.sessions.data.usecase.CreateFishingSessionUseCase
+import co.kluvaka.cmp.features.sessions.data.usecase.GetAllFishingSessionsUseCase
+import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
 import co.kluvaka.cmp.features.sessions.domain.usecase.CreateFishingSession
-import co.kluvaka.cmp.features.sessions.domain.usecase.CreateFishingSessionImpl
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetAllFishingSessions
-import co.kluvaka.cmp.features.sessions.domain.usecase.GetAllFishingSessionsImpl
 import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryViewModel
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionViewModel
 import org.koin.core.module.dsl.viewModel
@@ -31,19 +31,19 @@ val sharedModule = module {
   }
 
   single<GetAllEquipments> {
-    GetAllEquipmentsImpl(repository = get())
+    GetAllEquipmentsUseCase(repository = get())
   }
   single<AddEquipment> {
-    AddEquipmentImpl(repository = get())
+    AddEquipmentUseCase(repository = get())
   }
   single<DeleteEquipment> {
-    DeleteEquipmentImpl(repository = get())
+    DeleteEquipmentUseCase(repository = get())
   }
   single<GetAllFishingSessions> {
-    GetAllFishingSessionsImpl(repository = get())
+    GetAllFishingSessionsUseCase(repository = get())
   }
   single<CreateFishingSession> {
-    CreateFishingSessionImpl(repository = get())
+    CreateFishingSessionUseCase(repository = get())
   }
 
   viewModel {

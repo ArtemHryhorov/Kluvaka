@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.domain
+package co.kluvaka.cmp.features.sessions.domain.repository
 
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 

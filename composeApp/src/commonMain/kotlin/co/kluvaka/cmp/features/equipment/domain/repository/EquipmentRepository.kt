@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.equipment.domain
+package co.kluvaka.cmp.features.equipment.domain.repository
 
 import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 

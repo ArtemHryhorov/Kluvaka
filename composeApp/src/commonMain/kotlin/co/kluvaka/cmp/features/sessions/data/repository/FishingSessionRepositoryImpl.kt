@@ -1,8 +1,8 @@
-package co.kluvaka.cmp.features.sessions.data
+package co.kluvaka.cmp.features.sessions.data.repository
 
 import co.kluvaka.cmp.database.Database
 import co.kluvaka.cmp.database.DatabaseDriverFactory
-import co.kluvaka.cmp.features.sessions.domain.FishingSessionRepository
+import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 
 class FishingSessionRepositoryImpl(
