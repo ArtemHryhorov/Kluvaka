@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.equipment.ui.add.equipment.composable.AddEquipmentTopBar
 import org.koin.compose.viewmodel.koinViewModel
 
 object AddEquipmentScreen : Screen {
@@ -80,30 +79,4 @@ object AddEquipmentScreen : Screen {
       }
     }
   }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AddEquipmentTopBar(
-  onClick: () -> Unit,
-) {
-  TopAppBar(
-    windowInsets = WindowInsets(0, 0, 0, 0),
-    title = {
-      Text(
-        text = "Новая Приблуда",
-      )
-    },
-    navigationIcon = {
-      IconButton(
-        onClick = onClick,
-        content = {
-          Icon(
-            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-            contentDescription = "Navigate back",
-          )
-        }
-      )
-    }
-  )
 }
