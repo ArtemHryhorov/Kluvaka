@@ -6,17 +6,33 @@ class EquipmentDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   private val database = AppDatabase(databaseDriverFactory.createDriver())
   private val dbQuery = database.equipmentQueries
 
-  fun getAllEquipment(): List<Equipment> {
-    return dbQuery.selectAllEquipment(::mapEquipment).executeAsList()
-  }
+  fun getAllEquipment(): List<Equipment> = dbQuery
+    .selectAllEquipment(::mapEquipment)
+    .executeAsList()
 
-  fun insertEquipment(equipment: Equipment) {
+  private fun mapEquipment(
+    id: Long,
+    title: String,
+    image: String?,
+    price: Double,
+  ) = Equipment(
+    id = id.toInt(),
+    title = title,
+    image = image,
+    price = price,
+  )
+
+  fun insertEquipment(
+    title: String,
+    image: String?,
+    price: Double,
+  ) {
     dbQuery.transaction {
       dbQuery.insertEquipment(
-        id = equipment.id.toLong(),
-        title = equipment.title,
-        image = equipment.image,
-        price = equipment.price,
+        id = null,
+        title = title,
+        image = image,
+        price = price,
       )
     }
   }
@@ -25,19 +41,5 @@ class EquipmentDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     dbQuery.transaction {
       dbQuery.deleteEquipment(id.toLong())
     }
-  }
-
-  private fun mapEquipment(
-    id: Long,
-    title: String,
-    image: String?,
-    price: Double,
-  ): Equipment {
-    return Equipment(
-      id = id.toInt(),
-      title = title,
-      image = image,
-      price = price,
-    )
   }
 }

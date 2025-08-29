@@ -21,7 +21,7 @@ object AddEquipmentScreen : Screen {
   override fun Content() {
     val navigator = LocalNavigator.current
     val viewModel = koinViewModel<AddEquipmentViewModel>()
-    var name by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
 
     Column(
@@ -38,8 +38,8 @@ object AddEquipmentScreen : Screen {
       ) {
         AddEquipmentTopBar { navigator?.pop() }
         OutlinedTextField(
-          value = name,
-          onValueChange = { name = it },
+          value = title,
+          onValueChange = { title = it },
           label = { Text("Name") },
           modifier = Modifier
             .fillMaxWidth()
@@ -61,9 +61,9 @@ object AddEquipmentScreen : Screen {
       Box {
         Button(
           onClick = {
-            if (name.isNotBlank() && price.isNotBlank()) {
+            if (title.isNotBlank() && price.isNotBlank()) {
               viewModel.addEquipment(
-                name = name,
+                title = title,
                 price = price.toDouble(),
               )
               navigator?.pop()

@@ -8,8 +8,12 @@ class EquipmentRepositoryImpl(
   private val database: EquipmentDatabase,
 ) : EquipmentRepository {
 
-  override suspend fun insert(equipment: Equipment) {
-    database.insertEquipment(equipment)
+  override suspend fun insert(
+    title: String,
+    image: String?,
+    price: Double,
+  ) {
+    database.insertEquipment(title, image, price)
   }
 
   override suspend fun getAll(): List<Equipment> {
