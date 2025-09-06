@@ -15,4 +15,8 @@ class FishingSessionRepositoryImpl(
   override suspend fun getAllSessions(): List<FishingSession> {
     return database.getAllSessionsWithRods()
   }
+
+  override suspend fun updateSession(session: FishingSession) {
+    database.updateSession(session)
+  }
 }
