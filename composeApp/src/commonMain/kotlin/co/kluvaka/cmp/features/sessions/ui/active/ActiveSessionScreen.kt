@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.history
+package co.kluvaka.cmp.features.sessions.ui.active
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,47 +14,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import co.kluvaka.cmp.features.sessions.ui.active.ActiveSessionScreen
-import co.kluvaka.cmp.features.sessions.ui.history.composable.FishingSessionList
-import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionScreen
 import org.koin.compose.viewmodel.koinViewModel
 
-object SessionsHistoryScreen : Screen {
+object ActiveSessionScreen : Screen {
   @Composable
   override fun Content() {
     val navigator = LocalNavigator.current
-    val viewModel = koinViewModel<SessionsHistoryViewModel>()
+    val viewModel = koinViewModel<ActiveSessionViewModel>()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-      viewModel.getAllSessions()
+      viewModel.getActiveSession()
     }
 
     Box(
       modifier = Modifier.fillMaxSize()
     ) {
-      FishingSessionList(state.sessions)
+      Text("Active Session")
       FloatingActionButton(
         modifier = Modifier
           .align(Alignment.BottomEnd)
           .padding(all = 16.dp),
         onClick = {
-          if (state.anyActiveSession) {
-            navigator?.push(ActiveSessionScreen)
-          } else {
-            navigator?.push(StartSessionScreen)
-          }
+          viewModel.finishSession()
+          navigator?.popUntilRoot()
         },
       ) {
         Text(
           modifier = Modifier
             .align(Alignment.Center)
             .padding(horizontal = 16.dp),
-          text = if (state.anyActiveSession) {
-            "Открыть активную рыбалку"
-          } else {
-            "Новая рыбалка"
-          },
+          text = "Закончить рыбалку",
         )
       }
     }

@@ -5,4 +5,5 @@ data class FishingSession(
   val location: String,
   val date: String,
   val rods: List<Rod>,
+  val isActive: Boolean,
 )

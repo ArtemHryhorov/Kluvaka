@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.sessions.domain.model.Rod
+import co.kluvaka.cmp.features.sessions.ui.active.ActiveSessionScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -51,7 +52,7 @@ object StartSessionScreen : Screen {
         onNavigateBackClick = { navigator?.pop() },
         onStartSessionClick = {
           viewModel.saveSession()
-          navigator?.pop()
+          navigator?.push(ActiveSessionScreen)
         },
       )
       Column(
