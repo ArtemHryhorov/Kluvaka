@@ -6,11 +6,13 @@ import co.kluvaka.cmp.features.sessions.data.usecase.CreateFishingSessionUseCase
 import co.kluvaka.cmp.features.sessions.data.usecase.FinishActiveSessionUseCase
 import co.kluvaka.cmp.features.sessions.data.usecase.GetActiveFishingSessionUseCase
 import co.kluvaka.cmp.features.sessions.data.usecase.GetAllFishingSessionsUseCase
+import co.kluvaka.cmp.features.sessions.data.usecase.GetSessionByIdUseCase
 import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
 import co.kluvaka.cmp.features.sessions.domain.usecase.CreateFishingSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.FinishActiveSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetActiveFishingSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetAllFishingSessions
+import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
 import co.kluvaka.cmp.features.sessions.ui.active.ActiveSessionViewModel
 import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryViewModel
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionViewModel
@@ -41,11 +43,15 @@ val sessionModule = module {
   single<GetAllFishingSessions> {
     GetAllFishingSessionsUseCase(repository = get())
   }
+  single<GetSessionById> {
+    GetSessionByIdUseCase(repository = get())
+  }
 
   // ViewModel
   viewModel {
     ActiveSessionViewModel(
       getActiveFishingSession = get(),
+      getSessionById = get(),
       finishActiveSession = get(),
     )
   }

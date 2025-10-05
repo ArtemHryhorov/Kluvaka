@@ -11,7 +11,10 @@ import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 
 @Composable
-fun FishingSessionList(sessions: List<FishingSession>) {
+fun FishingSessionList(
+  sessions: List<FishingSession>,
+  onSessionClick: ((FishingSession) -> Unit)? = null
+) {
   LazyColumn(
     modifier = Modifier
       .fillMaxSize()
@@ -22,7 +25,12 @@ fun FishingSessionList(sessions: List<FishingSession>) {
       items = sessions,
       key = { it.id ?: it.hashCode() }
     ) { session ->
-      FishingSessionCard(session)
+      FishingSessionCard(
+        session = session,
+        onClick = if (session.isActive && onSessionClick != null) {
+          { onSessionClick(session) }
+        } else null
+      )
     }
   }
 }

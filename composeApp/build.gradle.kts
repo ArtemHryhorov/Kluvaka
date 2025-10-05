@@ -57,6 +57,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.kotlin.datetime)
             implementation(libs.material.icons.extended)
             implementation(libs.voyager.navigator)
         }

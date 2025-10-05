@@ -33,14 +33,21 @@ object SessionsHistoryScreen : Screen {
     Box(
       modifier = Modifier.fillMaxSize()
     ) {
-      FishingSessionList(state.sessions)
+      FishingSessionList(
+        sessions = state.sessions,
+        onSessionClick = { session ->
+          if (session.isActive) {
+            navigator?.push(ActiveSessionScreen(session.id))
+          }
+        }
+      )
       FloatingActionButton(
         modifier = Modifier
           .align(Alignment.BottomEnd)
           .padding(all = 16.dp),
         onClick = {
           if (state.anyActiveSession) {
-            navigator?.push(ActiveSessionScreen)
+            navigator?.push(ActiveSessionScreen())
           } else {
             navigator?.push(StartSessionScreen)
           }
