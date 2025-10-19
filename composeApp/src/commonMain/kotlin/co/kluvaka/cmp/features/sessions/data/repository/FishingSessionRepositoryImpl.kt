@@ -16,6 +16,10 @@ class FishingSessionRepositoryImpl(
     return database.getAllSessionsWithRods()
   }
 
+  override suspend fun getSessionById(sessionId: Int): FishingSession {
+    return database.getSessionWithRods(sessionId)
+  }
+
   override suspend fun updateSession(session: FishingSession) {
     database.updateSession(session)
   }

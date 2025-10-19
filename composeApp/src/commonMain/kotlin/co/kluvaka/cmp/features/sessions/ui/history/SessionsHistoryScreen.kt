@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.sessions.ui.active.ActiveSessionScreen
+import co.kluvaka.cmp.features.sessions.ui.completed.CompletedSessionScreen
 import co.kluvaka.cmp.features.sessions.ui.history.composable.FishingSessionList
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionScreen
 import org.koin.compose.viewmodel.koinViewModel
@@ -33,14 +34,25 @@ object SessionsHistoryScreen : Screen {
     Box(
       modifier = Modifier.fillMaxSize()
     ) {
-      FishingSessionList(state.sessions)
+      FishingSessionList(
+        sessions = state.sessions,
+        onSessionClick = { session ->
+          if (session.isActive) {
+            navigator?.push(ActiveSessionScreen(session.id))
+          } else {
+            session.id?.let { sessionId ->
+              navigator?.push(CompletedSessionScreen(sessionId))
+            }
+          }
+        }
+      )
       FloatingActionButton(
         modifier = Modifier
           .align(Alignment.BottomEnd)
           .padding(all = 16.dp),
         onClick = {
           if (state.anyActiveSession) {
-            navigator?.push(ActiveSessionScreen)
+            navigator?.push(ActiveSessionScreen())
           } else {
             navigator?.push(StartSessionScreen)
           }

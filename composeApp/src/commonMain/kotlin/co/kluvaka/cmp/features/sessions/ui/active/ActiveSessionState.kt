@@ -1,7 +1,24 @@
 package co.kluvaka.cmp.features.sessions.ui.active
 
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 
 data class ActiveSessionState(
   val session: FishingSession?,
+  val events: List<FishingSessionEvent> = emptyList(),
+  val showAddEventDialog: Boolean = false,
+  val showEventTypeDialog: Boolean = false,
+  val showRodSelectionDialog: Boolean = false,
+  val showFishEventDialog: Boolean = false,
+  val showSpombEventDialog: Boolean = false,
+  val showFishLooseDialog: Boolean = false,
+  val showFinishSessionDialog: Boolean = false,
+  val selectedEventType: FishingSessionEventType? = null,
+  val selectedRodId: Int? = null,
+  val newEventWeight: String = "",
+  val newEventPhotos: List<String> = emptyList(),
+  val newSpombCount: String = "",
+  val sessionNotes: String = "",
+  val sessionPhotos: List<String> = emptyList(),
 )

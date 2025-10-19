@@ -6,4 +6,5 @@ data class FishingSession(
   val date: String,
   val rods: List<Rod>,
   val isActive: Boolean,
+  val events: List<FishingSessionEvent> = emptyList(),
 )

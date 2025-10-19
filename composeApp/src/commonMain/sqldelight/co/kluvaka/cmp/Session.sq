@@ -13,6 +13,17 @@ CREATE TABLE rod (
     bait TEXT NOT NULL
 );
 
+CREATE TABLE fishing_session_event (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id INTEGER NOT NULL REFERENCES fishing_session(id) ON DELETE CASCADE,
+    event_type TEXT NOT NULL, -- 'FISH', 'LOOSE', 'SPOMB'
+    rod_id INTEGER, -- For FISH and LOOSE events
+    count INTEGER, -- For SPOMB events
+    timestamp TEXT NOT NULL,
+    weight TEXT, -- For FISH events
+    photos TEXT -- JSON array of photo paths
+);
+
 lastInsertRowId:
 SELECT last_insert_rowid();
 
@@ -36,3 +47,10 @@ SELECT * FROM rod WHERE session_id = :sessionId;
 insertRod:
 INSERT INTO rod(session_id, [order], distance, bait)
 VALUES (:sessionId, :order, :distance, :bait);
+
+getEventsBySession:
+SELECT * FROM fishing_session_event WHERE session_id = :sessionId ORDER BY timestamp;
+
+insertEvent:
+INSERT INTO fishing_session_event(session_id, event_type, rod_id, count, timestamp, weight, photos)
+VALUES (:sessionId, :eventType, :rodId, :count, :timestamp, :weight, :photos);

@@ -8,5 +8,7 @@ interface FishingSessionRepository {
 
   suspend fun getAllSessions(): List<FishingSession>
 
+  suspend fun getSessionById(sessionId: Int): FishingSession
+
   suspend fun updateSession(session: FishingSession)
 }

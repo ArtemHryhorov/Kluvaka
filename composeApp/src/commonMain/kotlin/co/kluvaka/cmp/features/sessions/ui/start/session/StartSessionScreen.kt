@@ -52,7 +52,7 @@ object StartSessionScreen : Screen {
         onNavigateBackClick = { navigator?.pop() },
         onStartSessionClick = {
           viewModel.saveSession()
-          navigator?.push(ActiveSessionScreen)
+          navigator?.push(ActiveSessionScreen())
         },
       )
       Column(

@@ -1,5 +1,6 @@
 package co.kluvaka.cmp.features.sessions.ui.history.composable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,9 +17,16 @@ import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 
 @Composable
-fun FishingSessionCard(session: FishingSession) {
+fun FishingSessionCard(
+  session: FishingSession,
+  onClick: (() -> Unit)? = null
+) {
   Card(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+      .fillMaxWidth()
+      .clickable(enabled = onClick != null) { 
+        onClick?.invoke() 
+      },
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     colors = CardDefaults.cardColors(
       containerColor = if (session.isActive) Color.Green else Color.Unspecified,
