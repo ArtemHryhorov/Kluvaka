@@ -2,6 +2,10 @@ package co.kluvaka.cmp.database
 
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 import co.kluvaka.cmp.features.sessions.domain.model.Rod
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 
 class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   private val database = AppDatabase(databaseDriverFactory.createDriver())
@@ -46,12 +50,15 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
         )
       }
 
+    val events = getEventsBySession(sessionId)
+
     return FishingSession(
       id = session.id.toInt(),
       location = session.location,
       date = session.date,
       rods = rods,
       isActive = session.isActive == 1L,
+      events = events,
     )
   }
 
@@ -69,12 +76,15 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
             )
           }
 
+        val events = getEventsBySession(session.id.toInt())
+
         FishingSession(
           id = session.id.toInt(),
           location = session.location,
           date = session.date,
           rods = rods,
           isActive = session.isActive == 1L,
+          events = events,
         )
       }
   }
@@ -85,6 +95,67 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
       location = session.location,
       date = session.date,
       isActive = if (session.isActive) 1L else 0L,
+    )
+    
+    // Persist events for the session
+    session.id?.let { sessionId ->
+      session.events.forEach { event ->
+        insertEvent(sessionId, event)
+      }
+    }
+  }
+
+  fun getEventsBySession(sessionId: Int): List<FishingSessionEvent> {
+    return dbQuery.getEventsBySession(sessionId.toLong()).executeAsList()
+      .map { eventRow ->
+        val eventType = when (eventRow.event_type) {
+          "FISH" -> FishingSessionEventType.Fish(eventRow.rod_id?.toInt() ?: 0)
+          "LOOSE" -> FishingSessionEventType.Loose(eventRow.rod_id?.toInt() ?: 0)
+          "SPOMB" -> FishingSessionEventType.Spomb(eventRow.count?.toInt() ?: 0)
+          else -> throw IllegalArgumentException("Unknown event type: ${eventRow.event_type}")
+        }
+
+        val photos = if (eventRow.photos.isNullOrBlank()) {
+          emptyList()
+        } else {
+          try {
+            Json.decodeFromString<List<String>>(eventRow.photos)
+          } catch (e: Exception) {
+            emptyList()
+          }
+        }
+
+        FishingSessionEvent(
+          id = eventRow.id.toInt(),
+          type = eventType,
+          timestamp = eventRow.timestamp,
+          weight = eventRow.weight,
+          photos = photos
+        )
+      }
+  }
+
+  fun insertEvent(sessionId: Int, event: FishingSessionEvent) {
+    val (eventType, rodId, count) = when (event.type) {
+      is FishingSessionEventType.Fish -> Triple("FISH", event.type.rodId.toLong(), null)
+      is FishingSessionEventType.Loose -> Triple("LOOSE", event.type.rodId.toLong(), null)
+      is FishingSessionEventType.Spomb -> Triple("SPOMB", null, event.type.count.toLong())
+    }
+
+    val photosJson = if (event.photos.isNotEmpty()) {
+      Json.encodeToString(event.photos)
+    } else {
+      null
+    }
+
+    dbQuery.insertEvent(
+      sessionId = sessionId.toLong(),
+      eventType = eventType,
+      rodId = rodId,
+      count = count,
+      timestamp = event.timestamp,
+      weight = event.weight,
+      photos = photosJson
     )
   }
 }

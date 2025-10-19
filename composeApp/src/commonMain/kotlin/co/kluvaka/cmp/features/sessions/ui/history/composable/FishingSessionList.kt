@@ -27,9 +27,7 @@ fun FishingSessionList(
     ) { session ->
       FishingSessionCard(
         session = session,
-        onClick = if (session.isActive && onSessionClick != null) {
-          { onSessionClick(session) }
-        } else null
+        onClick = { onSessionClick?.invoke(session) },
       )
     }
   }

@@ -24,7 +24,7 @@ fun FishingSessionCard(
   Card(
     modifier = Modifier
       .fillMaxWidth()
-      .clickable(enabled = session.isActive && onClick != null) { 
+      .clickable(enabled = onClick != null) { 
         onClick?.invoke() 
       },
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),

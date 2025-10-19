@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.sqldelight)
+    kotlin("plugin.serialization") version "2.1.21"
 }
 
 kotlin {
@@ -58,6 +59,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlin.datetime)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.material.icons.extended)
             implementation(libs.voyager.navigator)
         }

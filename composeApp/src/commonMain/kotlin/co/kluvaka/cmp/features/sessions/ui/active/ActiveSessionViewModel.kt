@@ -194,7 +194,11 @@ class ActiveSessionViewModel(
   fun finishSessionWithNotes() {
     viewModelScope.launch {
       state.value.session?.let { activeSession ->
-        finishActiveSession(activeSession.copy(isActive = false))
+        val sessionWithEvents = activeSession.copy(
+          isActive = false,
+          events = state.value.events
+        )
+        finishActiveSession(sessionWithEvents)
       }
       _mutableState.update { it.copy(showFinishSessionDialog = false) }
     }
