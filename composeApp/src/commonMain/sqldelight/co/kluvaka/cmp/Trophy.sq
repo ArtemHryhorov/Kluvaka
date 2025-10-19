@@ -1,0 +1,23 @@
+CREATE TABLE trophy (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fish_type TEXT NOT NULL,
+    weight REAL NOT NULL,
+    length REAL,
+    location TEXT NOT NULL,
+    date TEXT NOT NULL,
+    image TEXT,
+    notes TEXT
+);
+
+selectAllTrophies:
+SELECT * FROM trophy ORDER BY date DESC;
+
+insertTrophy:
+INSERT INTO trophy(fish_type, weight, length, location, date, image, notes)
+VALUES (:fishType, :weight, :length, :date, :location, :image, :notes);
+
+deleteTrophy:
+DELETE FROM trophy WHERE id = :id;
+
+getTrophyById:
+SELECT * FROM trophy WHERE id = :id;

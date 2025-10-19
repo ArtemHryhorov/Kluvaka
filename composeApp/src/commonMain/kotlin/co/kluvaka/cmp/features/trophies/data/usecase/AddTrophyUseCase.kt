@@ -1,0 +1,20 @@
+package co.kluvaka.cmp.features.trophies.data.usecase
+
+import co.kluvaka.cmp.features.trophies.domain.repository.TrophyRepository
+import co.kluvaka.cmp.features.trophies.domain.usecase.AddTrophy
+
+class AddTrophyUseCase(
+  private val repository: TrophyRepository,
+) : AddTrophy {
+  override suspend fun invoke(
+    fishType: String,
+    weight: Double,
+    length: Double?,
+    location: String,
+    date: String,
+    image: String?,
+    notes: String?,
+  ) {
+    repository.insert(fishType, weight, length, location, date, image, notes)
+  }
+}
