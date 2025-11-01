@@ -39,6 +39,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     image: String?,
     notes: String?,
   ) {
+    println("DEBUG: TrophyDatabase.insertTrophy called with image: $image")
     dbQuery.transaction {
       dbQuery.insertTrophy(
         fishType = fishType,
@@ -50,6 +51,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
         notes = notes,
       )
     }
+    println("DEBUG: TrophyDatabase.insertTrophy completed")
   }
 
   fun deleteTrophy(id: Int) {

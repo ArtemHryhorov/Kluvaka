@@ -36,7 +36,9 @@ class AddTrophyViewModel(
   }
 
   fun updateImage(image: String?) {
+    println("DEBUG: AddTrophyViewModel.updateImage called with: $image")
     _mutableState.update { it.copy(image = image) }
+    println("DEBUG: AddTrophyViewModel state updated, current image: ${_mutableState.value.image}")
   }
 
   fun updateNotes(notes: String) {
@@ -46,6 +48,7 @@ class AddTrophyViewModel(
   fun addTrophy() {
     viewModelScope.launch {
       val state = _mutableState.value
+      println("DEBUG: Adding trophy with image: ${state.image}")
       addTrophy(
         fishType = state.fishType,
         weight = state.weight.toDoubleOrNull() ?: 0.0,
