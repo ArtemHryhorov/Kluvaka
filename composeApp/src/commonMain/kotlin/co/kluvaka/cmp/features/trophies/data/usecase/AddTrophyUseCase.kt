@@ -14,7 +14,13 @@ class AddTrophyUseCase(
     date: String,
     image: String?,
     notes: String?,
-  ) {
-    repository.insert(fishType, weight, length, location, date, image, notes)
-  }
+  ) = repository.insert(
+    fishType = fishType,
+    weight = weight,
+    length = length,
+    location = location,
+    date = date,
+    image = image,
+    notes = notes
+  )
 }

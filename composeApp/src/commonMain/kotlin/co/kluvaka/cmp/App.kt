@@ -21,7 +21,7 @@ import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsScreen
 import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryScreen
-import co.kluvaka.cmp.features.trophies.TrophiesScreen
+import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesScreen
 
 @Composable
 fun App() {

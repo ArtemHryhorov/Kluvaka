@@ -16,9 +16,15 @@ class TrophyRepositoryImpl(
     date: String,
     image: String?,
     notes: String?,
-  ) {
-    database.insertTrophy(fishType, weight, length, location, date, image, notes)
-  }
+  ) = database.insertTrophy(
+    fishType = fishType,
+    weight = weight,
+    length = length,
+    location = location,
+    date = date,
+    image = image,
+    notes = notes
+  )
 
   override suspend fun getAll(): List<Trophy> {
     return database.getAllTrophies()

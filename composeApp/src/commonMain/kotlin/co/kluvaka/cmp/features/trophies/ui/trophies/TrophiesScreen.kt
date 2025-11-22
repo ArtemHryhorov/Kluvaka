@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.trophies
+package co.kluvaka.cmp.features.trophies.ui.trophies
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
 import co.kluvaka.cmp.features.trophies.ui.detail.TrophyDetailScreen
-import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 object TrophiesScreen : Screen {
@@ -108,8 +108,8 @@ private fun TrophiesTopBar() {
 
 @Composable
 fun TrophyItem(
-  trophy: co.kluvaka.cmp.features.trophies.domain.model.Trophy,
-  onRemove: (co.kluvaka.cmp.features.trophies.domain.model.Trophy) -> Unit,
+  trophy: Trophy,
+  onRemove: (Trophy) -> Unit,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -149,7 +149,7 @@ fun TrophyItem(
 
 @Composable
 private fun TrophyCard(
-  trophy: co.kluvaka.cmp.features.trophies.domain.model.Trophy,
+  trophy: Trophy,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
