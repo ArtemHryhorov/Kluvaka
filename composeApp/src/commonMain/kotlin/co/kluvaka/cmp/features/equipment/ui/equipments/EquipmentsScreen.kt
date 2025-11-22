@@ -77,7 +77,7 @@ object EquipmentsScreen : Screen {
             ) { equipment ->
               EquipmentItem(
                 equipment = equipment,
-                onClick = { navigator?.push(EquipmentDetailsScreen) },
+                onClick = { navigator?.push(EquipmentDetailsScreen(equipment.id)) },
                 onRemove = { viewModel.delete(equipment.id) },
               )
             }

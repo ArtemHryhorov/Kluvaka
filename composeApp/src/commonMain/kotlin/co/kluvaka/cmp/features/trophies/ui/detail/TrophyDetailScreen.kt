@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,7 +40,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
-class TrophyDetailScreen(private val trophyId: Int) : Screen {
+class TrophyDetailScreen(
+  private val trophyId: Int,
+) : Screen {
+
   @OptIn(ExperimentalMaterial3Api::class)
   @Composable
   override fun Content() {
@@ -57,7 +59,7 @@ class TrophyDetailScreen(private val trophyId: Int) : Screen {
       topBar = {
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text("Детали трофея") },
+          title = { Text(state.trophy?.fishType ?: "Детали трофея") },
           navigationIcon = {
             IconButton(onClick = { navigator?.pop() }) {
               Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

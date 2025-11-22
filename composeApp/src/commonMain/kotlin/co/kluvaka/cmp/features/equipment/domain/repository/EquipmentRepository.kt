@@ -12,5 +12,7 @@ interface EquipmentRepository {
 
   suspend fun getAll(): List<Equipment>
 
+  suspend fun getById(id: Int): Equipment?
+
   suspend fun delete(id: Int)
 }

@@ -5,6 +5,9 @@ CREATE TABLE Equipment(
     price REAL NOT NULL
 );
 
+getEquipmentById:
+SELECT * FROM Equipment WHERE id = :id;
+
 selectAllEquipment:
 SELECT * FROM Equipment;
 
