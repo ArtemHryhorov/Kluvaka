@@ -38,8 +38,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import org.koin.compose.viewmodel.koinViewModel
 import coil3.compose.rememberAsyncImagePainter
+import org.koin.compose.viewmodel.koinViewModel
 
 class TrophyDetailScreen(private val trophyId: Int) : Screen {
   @OptIn(ExperimentalMaterial3Api::class)
@@ -70,93 +70,80 @@ class TrophyDetailScreen(private val trophyId: Int) : Screen {
       Column(
         modifier = Modifier
           .fillMaxSize()
-          .padding(paddingValues)
-          .padding(16.dp)
+          .padding(horizontal = 16.dp)
           .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
       ) {
         state.trophy?.let { trophy ->
-          Card(
-            modifier = Modifier.fillMaxWidth()
+          Spacer(modifier = Modifier.height(16.dp))
+          Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
-            Column(
-              modifier = Modifier.padding(16.dp),
-              verticalArrangement = Arrangement.spacedBy(8.dp)
+            Text(
+              text = trophy.fishType,
+              style = MaterialTheme.typography.headlineMedium
+            )
+
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalArrangement = Arrangement.SpaceBetween
             ) {
               Text(
-                text = trophy.fishType,
-                style = MaterialTheme.typography.headlineMedium
+                text = "Вес: ${trophy.weight} кг",
+                style = MaterialTheme.typography.bodyLarge
               )
-              
-              Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-              ) {
+              trophy.length?.let { length ->
                 Text(
-                  text = "Вес: ${trophy.weight} кг",
+                  text = "Длина: $length см",
                   style = MaterialTheme.typography.bodyLarge
-                )
-                trophy.length?.let { length ->
-                  Text(
-                    text = "Длина: $length см",
-                    style = MaterialTheme.typography.bodyLarge
-                  )
-                }
-              }
-
-              Text(
-                text = "Место: ${trophy.location}",
-                style = MaterialTheme.typography.bodyMedium
-              )
-
-              Text(
-                text = "Дата: ${trophy.date}",
-                style = MaterialTheme.typography.bodyMedium
-              )
-
-              trophy.image?.let { image ->
-                Spacer(modifier = Modifier.padding(8.dp))
-                Text(
-                  text = "Фото трофея:",
-                  style = MaterialTheme.typography.titleMedium
-                )
-                Card(
-                  modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                ) {
-                  Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                  ) {
-                    Image(
-                      painter = rememberAsyncImagePainter(image),
-                      contentDescription = "Trophy photo",
-                      modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                      contentScale = ContentScale.FillWidth,
-                    )
-                  }
-                }
-              }
-
-              trophy.notes?.let { notes ->
-                Spacer(modifier = Modifier.padding(8.dp))
-                Text(
-                  text = "Заметки:",
-                  style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                  text = notes,
-                  style = MaterialTheme.typography.bodyMedium
                 )
               }
             }
+
+            Text(
+              text = "Место: ${trophy.location}",
+              style = MaterialTheme.typography.bodyMedium
+            )
+
+            Text(
+              text = "Дата: ${trophy.date}",
+              style = MaterialTheme.typography.bodyMedium
+            )
+
+            trophy.image?.let { image ->
+              Spacer(modifier = Modifier.padding(8.dp))
+              Text(
+                text = "Фото трофея:",
+                style = MaterialTheme.typography.titleMedium
+              )
+              Box(
+                modifier = Modifier
+                  .fillMaxSize()
+                  .background(color = Color.Transparent),
+                contentAlignment = Alignment.Center
+              ) {
+                Image(
+                  painter = rememberAsyncImagePainter(image),
+                  contentDescription = "Trophy photo",
+                  modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                  contentScale = ContentScale.FillWidth,
+                )
+              }
+            }
+
+            trophy.notes?.let { notes ->
+              Spacer(modifier = Modifier.padding(8.dp))
+              Text(
+                text = "Заметки:",
+                style = MaterialTheme.typography.titleMedium
+              )
+              Text(
+                text = notes,
+                style = MaterialTheme.typography.bodyMedium
+              )
+            }
           }
-        } ?: run {
-          Text(
-            text = "Трофей не найден",
-            style = MaterialTheme.typography.bodyLarge
-          )
+          Spacer(modifier = Modifier.height(16.dp))
         }
       }
     }

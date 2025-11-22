@@ -44,6 +44,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentScreen
+import co.kluvaka.cmp.features.equipment.ui.details.EquipmentDetailsScreen
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -76,6 +77,7 @@ object EquipmentsScreen : Screen {
             ) { equipment ->
               EquipmentItem(
                 equipment = equipment,
+                onClick = { navigator?.push(EquipmentDetailsScreen) },
                 onRemove = { viewModel.delete(equipment.id) },
               )
             }
@@ -125,6 +127,7 @@ private fun EquipmentsTopBar(totalPrice: Double) {
 @Composable
 fun EquipmentItem(
   equipment: Equipment,
+  onClick: (Equipment) -> Unit,
   onRemove: (Equipment) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -159,16 +162,21 @@ fun EquipmentItem(
       }
     }
   ) {
-    EquipmentCard(equipment)
+    EquipmentCard(
+      item = equipment,
+      onClick = { onClick(equipment) },
+    )
   }
 }
 
 @Composable
 private fun EquipmentCard(
   item: Equipment,
+  onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
+    onClick = onClick,
     modifier = modifier.fillMaxWidth(),
   ) {
     Row(
