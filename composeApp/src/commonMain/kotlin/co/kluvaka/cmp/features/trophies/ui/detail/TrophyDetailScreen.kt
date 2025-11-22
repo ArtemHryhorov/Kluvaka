@@ -72,6 +72,7 @@ class TrophyDetailScreen(
       Column(
         modifier = Modifier
           .fillMaxSize()
+          .padding(top = paddingValues.calculateTopPadding())
           .padding(horizontal = 16.dp)
           .verticalScroll(rememberScrollState()),
       ) {
@@ -81,11 +82,6 @@ class TrophyDetailScreen(
             modifier = Modifier.padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
-            Text(
-              text = trophy.fishType,
-              style = MaterialTheme.typography.headlineMedium
-            )
-
             Row(
               modifier = Modifier.fillMaxWidth(),
               horizontalArrangement = Arrangement.SpaceBetween

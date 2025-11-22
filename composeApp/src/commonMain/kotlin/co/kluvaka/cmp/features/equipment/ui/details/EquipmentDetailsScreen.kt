@@ -57,7 +57,7 @@ class EquipmentDetailsScreen(
       topBar = {
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text("Детали трофея") },
+          title = { Text(state?.title ?: "Детали приблуды") },
           navigationIcon = {
             IconButton(onClick = { navigator?.pop() }) {
               Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -70,6 +70,7 @@ class EquipmentDetailsScreen(
       Column(
         modifier = Modifier
           .fillMaxSize()
+          .padding(top = paddingValues.calculateTopPadding())
           .padding(horizontal = 16.dp)
           .verticalScroll(rememberScrollState()),
       ) {
@@ -80,13 +81,8 @@ class EquipmentDetailsScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
             Text(
-              text = equipment.title,
+              text = "Стоимость: ${equipment.price} ГРН",
               style = MaterialTheme.typography.headlineMedium
-            )
-
-            Text(
-              text = equipment.price.toString(),
-              style = MaterialTheme.typography.bodyMedium
             )
 
             equipment.image?.let { image ->
