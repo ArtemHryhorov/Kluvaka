@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
 import co.kluvaka.cmp.features.trophies.ui.detail.TrophyDetailScreen
@@ -58,6 +60,19 @@ object TrophiesScreen : Screen {
       viewModel.fetchTrophies()
     }
 
+    (state.deleteConfirmationDialog as? DialogState.Shown<Trophy>)?.value?.let { trophy ->
+      Dialog(
+        title = "Удалить ${trophy.fishType} из Ваших трофеев?",
+        cancelButtonText = "Отмена",
+        confirmButtonText = "Да, удалить",
+        onConfirmClick = { viewModel.delete(trophy.id) },
+        onDismissClick = { viewModel.hideDeleteConfirmationDialog() },
+      )
+    }
+    if (state.deleteConfirmationDialog is DialogState.Shown) {
+
+    }
+
     Box(Modifier.fillMaxSize()) {
       Column(modifier = Modifier.fillMaxSize()) {
         TrophiesTopBar()
@@ -68,17 +83,23 @@ object TrophiesScreen : Screen {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
               .fillMaxSize()
-              .padding(16.dp)
+              .padding(horizontal = 16.dp)
           ) {
+            item {
+              Spacer(modifier = Modifier.height(8.dp))
+            }
             items(
               items = state.trophies,
               key = { it.id }
             ) { trophy ->
               TrophyItem(
                 trophy = trophy,
-                onRemove = { viewModel.delete(trophy.id) },
+                onRemove = { viewModel.showDeleteConfirmationDialog(trophy) },
                 onClick = { navigator?.push(TrophyDetailScreen(trophy.id)) }
               )
+            }
+            item {
+              Spacer(modifier = Modifier.height(8.dp))
             }
           }
           FloatingActionButton(
