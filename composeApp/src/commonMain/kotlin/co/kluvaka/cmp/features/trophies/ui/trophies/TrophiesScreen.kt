@@ -65,7 +65,10 @@ object TrophiesScreen : Screen {
         title = "Удалить ${trophy.fishType} из Ваших трофеев?",
         cancelButtonText = "Отмена",
         confirmButtonText = "Да, удалить",
-        onConfirmClick = { viewModel.delete(trophy.id) },
+        onConfirmClick = {
+          viewModel.delete(trophy.id)
+          viewModel.hideDeleteConfirmationDialog()
+        },
         onDismissClick = { viewModel.hideDeleteConfirmationDialog() },
       )
     }
@@ -113,7 +116,7 @@ object TrophiesScreen : Screen {
           ) {
             Text(
               modifier = Modifier.padding(horizontal = 16.dp),
-              text = "Добавить рыбу",
+              text = "Добавить",
             )
           }
         }
@@ -144,8 +147,12 @@ fun TrophyItem(
 ) {
   val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
     confirmValueChange = {
-      if (it == SwipeToDismissBoxValue.EndToStart) onRemove(trophy)
-      it != SwipeToDismissBoxValue.StartToEnd
+      if (it == SwipeToDismissBoxValue.EndToStart) {
+        onRemove(trophy)
+        false
+      } else {
+        it != SwipeToDismissBoxValue.StartToEnd
+      }
     }
   )
 
@@ -161,7 +168,10 @@ fun TrophyItem(
             contentDescription = "Remove item",
             modifier = Modifier
               .fillMaxSize()
-              .background(Color.Red)
+              .background(
+                color = Color.Red,
+                shape = RoundedCornerShape(8.dp),
+              )
               .wrapContentSize(Alignment.CenterEnd)
               .padding(12.dp),
             tint = Color.White
