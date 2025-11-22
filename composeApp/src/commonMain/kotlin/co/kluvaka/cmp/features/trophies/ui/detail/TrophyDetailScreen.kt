@@ -123,21 +123,17 @@ class TrophyDetailScreen(private val trophyId: Int) : Screen {
                 Card(
                   modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
                     .clip(RoundedCornerShape(8.dp))
                 ) {
                   Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                   ) {
-                    // Display the actual image
                     Image(
                       painter = rememberAsyncImagePainter(image),
                       contentDescription = "Trophy photo",
-                      modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
-                      contentScale = ContentScale.Crop
+                      modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                      contentScale = ContentScale.FillWidth,
                     )
                   }
                 }

@@ -1,16 +1,21 @@
 package co.kluvaka.cmp.features.trophies.ui.trophies
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
@@ -29,7 +34,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
@@ -37,6 +44,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
 import co.kluvaka.cmp.features.trophies.ui.detail.TrophyDetailScreen
+import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
 object TrophiesScreen : Screen {
@@ -157,14 +165,31 @@ private fun TrophyCard(
     modifier = modifier.fillMaxWidth(),
     onClick = onClick
   ) {
-    Column(modifier = Modifier.padding(12.dp)) {
-      Text(text = trophy.fishType, style = MaterialTheme.typography.titleMedium)
-      Text(text = "Вес: ${trophy.weight} кг", style = MaterialTheme.typography.bodyMedium)
-      trophy.length?.let { length ->
-        Text(text = "Длина: $length см", style = MaterialTheme.typography.bodyMedium)
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(12.dp),
+      verticalAlignment = Alignment.Top,
+      horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+      Column {
+        Text(text = trophy.fishType, style = MaterialTheme.typography.titleMedium)
+        Text(text = "Вес: ${trophy.weight} кг", style = MaterialTheme.typography.bodyMedium)
+        trophy.length?.let { length ->
+          Text(text = "Длина: $length см", style = MaterialTheme.typography.bodyMedium)
+        }
+        Text(text = "Место: ${trophy.location}", style = MaterialTheme.typography.bodyMedium)
+        Text(text = "Дата: ${trophy.date}", style = MaterialTheme.typography.bodyMedium)
       }
-      Text(text = "Место: ${trophy.location}", style = MaterialTheme.typography.bodyMedium)
-      Text(text = "Дата: ${trophy.date}", style = MaterialTheme.typography.bodyMedium)
+      Spacer(modifier = Modifier.size(4.dp))
+      Image(
+        painter = rememberAsyncImagePainter(trophy.image),
+        contentDescription = "Trophy photo",
+        modifier = Modifier
+          .size(96.dp)
+          .clip(RoundedCornerShape(8.dp)),
+        contentScale = ContentScale.Crop
+      )
     }
   }
 }
