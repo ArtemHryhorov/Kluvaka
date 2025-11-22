@@ -79,7 +79,6 @@ class TrophyDetailScreen(
         state.trophy?.let { trophy ->
           Spacer(modifier = Modifier.height(16.dp))
           Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
             Row(
