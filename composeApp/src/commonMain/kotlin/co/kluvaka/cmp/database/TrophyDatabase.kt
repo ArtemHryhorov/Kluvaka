@@ -12,9 +12,9 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
 
   fun insertTrophy(
     fishType: String,
-    weight: Double,
+    weight: Double?,
     length: Double?,
-    location: String,
+    location: String?,
     date: String,
     images: List<String>,
     notes: String?,
@@ -82,9 +82,9 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   private fun mapTrophy(
     id: Long,
     fishType: String,
-    weight: Double,
+    weight: Double?,
     length: Double?,
-    location: String,
+    location: String?,
     date: String,
     images: String?,
     notes: String?,

@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -96,26 +95,24 @@ class TrophyDetailScreen(
           Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
-            Row(
-              modifier = Modifier.fillMaxWidth(),
-              horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            trophy.weight?.let { weight ->
               Text(
-                text = "Вес: ${trophy.weight} кг",
-                style = MaterialTheme.typography.bodyLarge
+                text = "Вес: $weight кг",
+                style = MaterialTheme.typography.bodyMedium
               )
-              trophy.length?.let { length ->
-                Text(
-                  text = "Длина: $length см",
-                  style = MaterialTheme.typography.bodyLarge
-                )
-              }
             }
-
-            Text(
-              text = "Место: ${trophy.location}",
-              style = MaterialTheme.typography.bodyMedium
-            )
+            trophy.length?.let { length ->
+              Text(
+                text = "Длина: $length см",
+                style = MaterialTheme.typography.bodyMedium
+              )
+            }
+            trophy.location?.let { location ->
+              Text(
+                text = "Место: $location",
+                style = MaterialTheme.typography.bodyMedium
+              )
+            }
 
             Text(
               text = "Дата: ${trophy.date}",

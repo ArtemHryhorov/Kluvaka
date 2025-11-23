@@ -1,9 +1,9 @@
 CREATE TABLE trophy (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     fish_type TEXT NOT NULL,
-    weight REAL NOT NULL,
+    weight REAL,
     length REAL,
-    location TEXT NOT NULL,
+    location TEXT,
     date TEXT NOT NULL,
     images TEXT,
     notes TEXT
