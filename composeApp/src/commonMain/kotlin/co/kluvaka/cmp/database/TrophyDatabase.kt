@@ -19,7 +19,6 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     image: String?,
     notes: String?,
   ) {
-    println("DEBUG: TrophyDatabase.insertTrophy called with image: $image")
     dbQuery.transaction {
       dbQuery.insertTrophy(
         fishType = fishType,
@@ -31,7 +30,30 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
         notes = notes,
       )
     }
-    println("DEBUG: TrophyDatabase.insertTrophy completed")
+  }
+
+  fun updateTrophy(
+    id: Long,
+    fishType: String,
+    weight: Double,
+    length: Double?,
+    location: String,
+    date: String,
+    image: String?,
+    notes: String?,
+  ) {
+    dbQuery.transaction {
+      dbQuery.updateTrophy(
+        id = id,
+        fishType = fishType,
+        weight = weight,
+        length = length,
+        location = location,
+        date = date,
+        image = image,
+        notes = notes,
+      )
+    }
   }
 
   fun deleteTrophy(id: Int) {

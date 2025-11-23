@@ -3,6 +3,7 @@ package co.kluvaka.cmp.features.trophies.ui.add.trophy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kluvaka.cmp.features.trophies.domain.usecase.AddTrophy
+import co.kluvaka.cmp.features.trophies.domain.usecase.UpdateTrophy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -10,50 +11,138 @@ import kotlinx.coroutines.launch
 
 class AddTrophyViewModel(
   private val addTrophy: AddTrophy,
+  private val updateTrophy: UpdateTrophy,
 ) : ViewModel() {
 
   private val _mutableState = MutableStateFlow(AddTrophyState())
   val state: StateFlow<AddTrophyState> = _mutableState
 
+  fun setAddTrophyMode(mode: AddTrophyMode) {
+    _mutableState.update { state ->
+      state.copy(mode = mode)
+    }
+
+    if (mode is AddTrophyMode.Edit) {
+      _mutableState.update { state ->
+        state.copy(
+          trophyInput = state.trophyInput.copy(
+            fishType = mode.trophy.fishType,
+            weight = mode.trophy.weight.toString(),
+            length = mode.trophy.length?.toString() ?: "",
+            location = mode.trophy.location,
+            date = mode.trophy.date,
+            image = mode.trophy.image,
+            notes = mode.trophy.notes ?: "",
+          ),
+        )
+      }
+    }
+  }
+
   fun updateFishType(fishType: String) {
-    _mutableState.update { it.copy(fishType = fishType) }
+    _mutableState.update { state ->
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          fishType = fishType,
+        ),
+      )
+    }
   }
 
   fun updateWeight(weight: String) {
-    _mutableState.update { it.copy(weight = weight) }
+    _mutableState.update { state ->
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          weight = weight,
+        ),
+      )
+    }
   }
 
   fun updateLength(length: String) {
-    _mutableState.update { it.copy(length = length) }
+    _mutableState.update { state ->
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          length = length,
+        ),
+      )
+    }
   }
 
   fun updateLocation(location: String) {
-    _mutableState.update { it.copy(location = location) }
+    _mutableState.update { state ->
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          location = location,
+        ),
+      )
+    }
   }
 
   fun updateDate(date: String) {
-    _mutableState.update { it.copy(date = date) }
+    _mutableState.update { state ->
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          date = date,
+        ),
+      )
+    }
   }
 
   fun updateImage(image: String?) {
-    _mutableState.update { it.copy(image = image) }
+    _mutableState.update { state ->
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          image = image,
+        ),
+      )
+    }
   }
 
   fun updateNotes(notes: String) {
-    _mutableState.update { it.copy(notes = notes) }
+    _mutableState.update { state ->
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          notes = notes,
+        ),
+      )
+    }
   }
 
-  fun addTrophy() {
+  fun save() {
+    when (val mode = state.value.mode) {
+      is AddTrophyMode.Edit -> editTrophy(mode.trophy.id)
+      AddTrophyMode.New -> addTrophy()
+    }
+  }
+
+  private fun addTrophy() {
     viewModelScope.launch {
-      val state = _mutableState.value
+      val trophyInput = _mutableState.value.trophyInput
       addTrophy(
-        fishType = state.fishType,
-        weight = state.weight.toDoubleOrNull() ?: 0.0,
-        length = state.length.toDoubleOrNull(),
-        location = state.location,
-        date = state.date,
-        image = state.image,
-        notes = state.notes.takeIf { it.isNotEmpty() },
+        fishType = trophyInput.fishType,
+        weight = trophyInput.weight.toDoubleOrNull() ?: 0.0,
+        length = trophyInput.length.toDoubleOrNull(),
+        location = trophyInput.location,
+        date = trophyInput.date,
+        image = trophyInput.image,
+        notes = trophyInput.notes.takeIf { it.isNotEmpty() },
+      )
+    }
+  }
+
+  private fun editTrophy(id: Int) {
+    viewModelScope.launch {
+      val trophyInput = _mutableState.value.trophyInput
+      updateTrophy(
+        id = id.toLong(),
+        fishType = trophyInput.fishType,
+        weight = trophyInput.weight.toDoubleOrNull() ?: 0.0,
+        length = trophyInput.length.toDoubleOrNull(),
+        location = trophyInput.location,
+        date = trophyInput.date,
+        image = trophyInput.image,
+        notes = trophyInput.notes.takeIf { it.isNotEmpty() },
       )
     }
   }

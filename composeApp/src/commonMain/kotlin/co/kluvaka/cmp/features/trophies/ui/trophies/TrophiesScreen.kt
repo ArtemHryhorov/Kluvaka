@@ -72,9 +72,6 @@ object TrophiesScreen : Screen {
         onDismissClick = { viewModel.hideDeleteConfirmationDialog() },
       )
     }
-    if (state.deleteConfirmationDialog is DialogState.Shown) {
-
-    }
 
     Box(Modifier.fillMaxSize()) {
       Column(modifier = Modifier.fillMaxSize()) {
@@ -111,7 +108,7 @@ object TrophiesScreen : Screen {
               .align(Alignment.BottomEnd)
               .zIndex(3f),
             onClick = {
-              navigator?.push(AddTrophyScreen)
+              navigator?.push(AddTrophyScreen())
             },
           ) {
             Text(

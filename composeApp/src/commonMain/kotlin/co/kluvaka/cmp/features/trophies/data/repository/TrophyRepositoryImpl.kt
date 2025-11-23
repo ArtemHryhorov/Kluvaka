@@ -26,6 +26,26 @@ class TrophyRepositoryImpl(
     notes = notes
   )
 
+  override suspend fun update(
+    id: Long,
+    fishType: String,
+    weight: Double,
+    length: Double?,
+    location: String,
+    date: String,
+    image: String?,
+    notes: String?
+  ) = database.updateTrophy(
+    id = id,
+    fishType = fishType,
+    weight = weight,
+    length = length,
+    location = location,
+    date = date,
+    image = image,
+    notes = notes
+  )
+
   override suspend fun getAll(): List<Trophy> {
     return database.getAllTrophies()
   }

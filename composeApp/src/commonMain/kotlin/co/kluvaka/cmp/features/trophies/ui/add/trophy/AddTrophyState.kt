@@ -1,6 +1,13 @@
 package co.kluvaka.cmp.features.trophies.ui.add.trophy
 
+import co.kluvaka.cmp.features.trophies.domain.model.Trophy
+
 data class AddTrophyState(
+  val trophyInput: TrophyInput = TrophyInput(),
+  val mode: AddTrophyMode = AddTrophyMode.New,
+)
+
+data class TrophyInput(
   val fishType: String = "",
   val weight: String = "",
   val length: String = "",
@@ -9,3 +16,8 @@ data class AddTrophyState(
   val image: String? = null,
   val notes: String = "",
 )
+
+sealed interface AddTrophyMode {
+  object New : AddTrophyMode
+  data class  Edit(val trophy: Trophy) : AddTrophyMode
+}

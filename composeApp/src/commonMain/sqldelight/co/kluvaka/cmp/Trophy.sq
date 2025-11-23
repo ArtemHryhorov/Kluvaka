@@ -21,3 +21,14 @@ DELETE FROM trophy WHERE id = :id;
 
 getTrophyById:
 SELECT * FROM trophy WHERE id = :id;
+
+updateTrophy:
+UPDATE trophy
+SET fish_type = :fishType,
+    weight = :weight,
+    length = :length,
+    location = :location,
+    date = :date,
+    image = :image,
+    notes = :notes
+WHERE id = :id;
