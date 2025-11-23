@@ -93,7 +93,7 @@ class EquipmentDetailsScreen(
           ) {
             Text(
               text = "Стоимость: ${equipment.price} ГРН",
-              style = MaterialTheme.typography.headlineMedium
+              style = MaterialTheme.typography.bodyMedium
             )
           }
 
