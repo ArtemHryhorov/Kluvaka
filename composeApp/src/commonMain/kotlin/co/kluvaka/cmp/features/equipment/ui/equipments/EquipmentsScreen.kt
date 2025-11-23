@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
@@ -187,12 +188,22 @@ private fun EquipmentCard(
       horizontalArrangement = Arrangement.SpaceBetween,
     ) {
       Column(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+          .fillMaxHeight()
+          .weight(1f),
         verticalArrangement = Arrangement.SpaceBetween,
       ) {
-        Text(text = item.title, style = MaterialTheme.typography.titleMedium)
+        Text(
+          text = item.title,
+          style = MaterialTheme.typography.titleMedium,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis,
+        )
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = "₴${item.price}", style = MaterialTheme.typography.bodyMedium)
+        Text(
+          text = "₴${item.price}",
+          style = MaterialTheme.typography.bodyMedium,
+        )
       }
       Spacer(modifier = Modifier.size(4.dp))
       Image(
