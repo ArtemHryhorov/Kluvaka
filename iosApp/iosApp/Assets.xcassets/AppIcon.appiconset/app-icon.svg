@@ -1,0 +1,46 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Water gradient background -->
+  <defs>
+    <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E88E5;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#42A5F5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#waterGradient)"/>
+  
+  <!-- Wave patterns -->
+  <path d="M0,600 Q256,500 512,600 T1024,600 L1024,1024 L0,1024 Z" fill="#42A5F5" opacity="0.7"/>
+  <path d="M0,700 Q256,650 512,700 T1024,700 L1024,1024 L0,1024 Z" fill="#64B5F6" opacity="0.6"/>
+  <path d="M0,800 Q256,780 512,800 T1024,800 L1024,1024 L0,1024 Z" fill="#90CAF9" opacity="0.5"/>
+  
+  <!-- Light reflection -->
+  <path d="M0,0 Q512,100 1024,0 L1024,300 Q512,200 0,300 Z" fill="#BBDEFB" opacity="0.4"/>
+  
+  <!-- Fishing Rod (scaled up) -->
+  <rect x="200" y="200" width="20" height="550" fill="#FFFFFF" rx="10"/>
+  <path d="M200,200 Q250,250 300,300 L300,320 Q250,270 200,220 Z" fill="#FFFFFF"/>
+  
+  <!-- Fishing Line -->
+  <line x1="300" y1="300" x2="450" y2="550" stroke="#FFFFFF" stroke-width="3"/>
+  
+  <!-- Fish Body -->
+  <ellipse cx="450" cy="550" rx="50" ry="30" fill="#FFD700"/>
+  
+  <!-- Fish Tail -->
+  <path d="M400,550 Q350,520 330,550 Q350,580 400,550 Z" fill="#FFA500"/>
+  
+  <!-- Fish Eye -->
+  <circle cx="460" cy="545" r="8" fill="#000000"/>
+  <circle cx="462" cy="543" r="3" fill="#FFFFFF"/>
+  
+  <!-- Fish Fins -->
+  <path d="M430,530 Q410,510 430,490 Q450,510 430,530 Z" fill="#FFA500"/>
+  <path d="M430,570 Q410,590 430,610 Q450,590 430,570 Z" fill="#FFA500"/>
+  
+  <!-- Hook -->
+  <path d="M400,550 L370,580 L390,600" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
+
