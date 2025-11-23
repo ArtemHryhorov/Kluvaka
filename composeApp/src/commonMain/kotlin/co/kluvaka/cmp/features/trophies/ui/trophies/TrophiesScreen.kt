@@ -201,13 +201,32 @@ private fun TrophyCard(
       horizontalArrangement = Arrangement.SpaceBetween,
     ) {
       Column {
-        Text(text = trophy.fishType, style = MaterialTheme.typography.titleMedium)
-        Text(text = "Вес: ${trophy.weight} кг", style = MaterialTheme.typography.bodyMedium)
-        trophy.length?.let { length ->
-          Text(text = "Длина: $length см", style = MaterialTheme.typography.bodyMedium)
+        Text(
+          text = trophy.fishType,
+          style = MaterialTheme.typography.titleMedium,
+        )
+        trophy.weight?.let { weight ->
+          Text(
+            text = "Вес: $weight кг",
+            style = MaterialTheme.typography.bodyMedium,
+          )
         }
-        Text(text = "Место: ${trophy.location}", style = MaterialTheme.typography.bodyMedium)
-        Text(text = "Дата: ${trophy.date}", style = MaterialTheme.typography.bodyMedium)
+        trophy.length?.let { length ->
+          Text(
+            text = "Длина: $length см",
+            style = MaterialTheme.typography.bodyMedium,
+          )
+        }
+        trophy.location?.let { location ->
+          Text(
+            text = "Место: $location",
+            style = MaterialTheme.typography.bodyMedium,
+          )
+        }
+        Text(
+          text = "Дата: ${trophy.date}",
+          style = MaterialTheme.typography.bodyMedium,
+        )
       }
       Spacer(modifier = Modifier.size(4.dp))
       trophy.images.firstOrNull()?.let { image ->

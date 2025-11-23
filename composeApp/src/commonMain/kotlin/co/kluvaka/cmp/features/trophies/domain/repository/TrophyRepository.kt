@@ -6,9 +6,9 @@ interface TrophyRepository {
 
   suspend fun insert(
     fishType: String,
-    weight: Double,
+    weight: Double?,
     length: Double?,
-    location: String,
+    location: String?,
     date: String,
     images: List<String>,
     notes: String?,

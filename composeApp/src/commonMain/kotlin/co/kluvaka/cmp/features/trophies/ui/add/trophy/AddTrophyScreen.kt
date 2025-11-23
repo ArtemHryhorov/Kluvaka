@@ -242,6 +242,7 @@ data class AddTrophyScreen(
             viewModel.save()
             navigator?.pop()
           },
+          enabled = state.trophyInput.fishType.isNotBlank(),
         ) {
           when (state.mode) {
             is AddTrophyMode.Edit -> Text("Сохранить изменения")

@@ -27,9 +27,9 @@ class AddTrophyViewModel(
         state.copy(
           trophyInput = state.trophyInput.copy(
             fishType = mode.trophy.fishType,
-            weight = mode.trophy.weight.toString(),
+            weight = mode.trophy.weight?.toString() ?: "",
             length = mode.trophy.length?.toString() ?: "",
-            location = mode.trophy.location,
+            location = mode.trophy.location ?: "",
             date = mode.trophy.date,
             images = mode.trophy.images,
             notes = mode.trophy.notes ?: "",
@@ -135,9 +135,9 @@ class AddTrophyViewModel(
       val trophyInput = _mutableState.value.trophyInput
       addTrophy(
         fishType = trophyInput.fishType,
-        weight = trophyInput.weight.toDoubleOrNull() ?: 0.0,
+        weight = trophyInput.weight.toDoubleOrNull(),
         length = trophyInput.length.toDoubleOrNull(),
-        location = trophyInput.location,
+        location = trophyInput.location.takeIf { it.isNotEmpty() },
         date = trophyInput.date,
         images = trophyInput.images,
         notes = trophyInput.notes.takeIf { it.isNotEmpty() },
