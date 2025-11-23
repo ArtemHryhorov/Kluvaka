@@ -7,7 +7,7 @@ fun interface AddTrophy {
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   )
 }

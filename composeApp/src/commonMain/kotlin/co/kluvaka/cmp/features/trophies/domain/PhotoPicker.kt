@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 
 interface PhotoPicker {
     fun pickFromGallery(onResult: (String?) -> Unit)
+    fun pickMultipleFromGallery(onResult: (List<String>) -> Unit)
     fun pickFromCamera(onResult: (String?) -> Unit)
 }
 

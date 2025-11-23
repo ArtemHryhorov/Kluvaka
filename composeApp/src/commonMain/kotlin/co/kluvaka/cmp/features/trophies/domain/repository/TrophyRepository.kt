@@ -10,7 +10,7 @@ interface TrophyRepository {
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   )
 
@@ -21,7 +21,7 @@ interface TrophyRepository {
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   )
 

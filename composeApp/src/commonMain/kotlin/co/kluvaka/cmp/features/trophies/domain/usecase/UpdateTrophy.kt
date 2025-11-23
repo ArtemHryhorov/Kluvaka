@@ -8,7 +8,7 @@ fun interface UpdateTrophy {
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   )
 }

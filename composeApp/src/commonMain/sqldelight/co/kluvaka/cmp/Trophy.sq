@@ -5,7 +5,7 @@ CREATE TABLE trophy (
     length REAL,
     location TEXT NOT NULL,
     date TEXT NOT NULL,
-    image TEXT,
+    images TEXT,
     notes TEXT
 );
 
@@ -13,8 +13,8 @@ selectAllTrophies:
 SELECT * FROM trophy ORDER BY date DESC;
 
 insertTrophy:
-INSERT INTO trophy(fish_type, weight, length, location, date, image, notes)
-VALUES (:fishType, :weight, :length, :location, :date, :image, :notes);
+INSERT INTO trophy(fish_type, weight, length, location, date, images, notes)
+VALUES (:fishType, :weight, :length, :location, :date, :images, :notes);
 
 deleteTrophy:
 DELETE FROM trophy WHERE id = :id;
@@ -29,6 +29,6 @@ SET fish_type = :fishType,
     length = :length,
     location = :location,
     date = :date,
-    image = :image,
+    images = :images,
     notes = :notes
 WHERE id = :id;

@@ -16,7 +16,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   ) {
     dbQuery.transaction {
@@ -26,7 +26,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
         length = length,
         location = location,
         date = date,
-        image = image,
+        images = images.joinToString("|"),
         notes = notes,
       )
     }
@@ -39,7 +39,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   ) {
     dbQuery.transaction {
@@ -50,7 +50,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
         length = length,
         location = location,
         date = date,
-        image = image,
+        images = images.joinToString("|"),
         notes = notes,
       )
     }
@@ -73,7 +73,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
           length = trophyRow.length,
           location = trophyRow.location,
           date = trophyRow.date,
-          image = trophyRow.image,
+          images = trophyRow.images,
           notes = trophyRow.notes,
         )
       }
@@ -86,7 +86,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: String?,
     notes: String?,
   ) = Trophy(
     id = id.toInt(),
@@ -95,7 +95,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     length = length,
     location = location,
     date = date,
-    image = image,
+    images = images?.split("|")?.filter { it.isNotEmpty() } ?: emptyList(),
     notes = notes,
   )
 }

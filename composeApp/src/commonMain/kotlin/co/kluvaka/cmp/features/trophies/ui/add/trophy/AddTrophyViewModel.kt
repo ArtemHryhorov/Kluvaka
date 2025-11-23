@@ -31,7 +31,7 @@ class AddTrophyViewModel(
             length = mode.trophy.length?.toString() ?: "",
             location = mode.trophy.location,
             date = mode.trophy.date,
-            image = mode.trophy.image,
+            images = mode.trophy.images,
             notes = mode.trophy.notes ?: "",
           ),
         )
@@ -89,11 +89,25 @@ class AddTrophyViewModel(
     }
   }
 
-  fun updateImage(image: String?) {
+  fun addImage(image: String?) {
+    if (image == null) return
     _mutableState.update { state ->
       state.copy(
         trophyInput = state.trophyInput.copy(
-          image = image,
+          images = state.trophyInput.images + image,
+        ),
+      )
+    }
+  }
+
+  fun removeImage(index: Int) {
+    _mutableState.update { state ->
+      val newImages = state.trophyInput.images.toMutableList().apply {
+        removeAt(index)
+      }
+      state.copy(
+        trophyInput = state.trophyInput.copy(
+          images = newImages,
         ),
       )
     }
@@ -125,7 +139,7 @@ class AddTrophyViewModel(
         length = trophyInput.length.toDoubleOrNull(),
         location = trophyInput.location,
         date = trophyInput.date,
-        image = trophyInput.image,
+        images = trophyInput.images,
         notes = trophyInput.notes.takeIf { it.isNotEmpty() },
       )
     }
@@ -141,9 +155,10 @@ class AddTrophyViewModel(
         length = trophyInput.length.toDoubleOrNull(),
         location = trophyInput.location,
         date = trophyInput.date,
-        image = trophyInput.image,
+        images = trophyInput.images,
         notes = trophyInput.notes.takeIf { it.isNotEmpty() },
       )
     }
   }
 }
+

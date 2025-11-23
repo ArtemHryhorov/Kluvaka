@@ -11,18 +11,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -34,9 +40,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
@@ -146,7 +153,7 @@ data class AddTrophyScreen(
           Button(
             onClick = {
               photoPicker.pickFromCamera { imageUri ->
-                imageUri?.let { viewModel.updateImage(it) }
+                imageUri?.let { viewModel.addImage(it) }
               }
             },
             modifier = Modifier.weight(1f)
@@ -159,8 +166,8 @@ data class AddTrophyScreen(
           // Gallery button
           Button(
             onClick = {
-              photoPicker.pickFromGallery { imageUri ->
-                imageUri?.let { viewModel.updateImage(it) }
+              photoPicker.pickMultipleFromGallery { imageUris ->
+                imageUris.forEach { viewModel.addImage(it) }
               }
             },
             modifier = Modifier.weight(1f)
@@ -171,27 +178,50 @@ data class AddTrophyScreen(
           }
         }
 
-        // Display selected image
-        state.trophyInput.image?.let { imageUri ->
-          Card(
-            modifier = Modifier
-              .fillMaxWidth()
-              .height(200.dp)
-              .clip(RoundedCornerShape(8.dp))
+        // Display selected images
+        if (state.trophyInput.images.isNotEmpty()) {
+          LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
           ) {
-            Box(
-              modifier = Modifier.fillMaxSize(),
-              contentAlignment = Alignment.Center
-            ) {
-              // Display the actual image
-              Image(
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = "Selected trophy photo",
+            itemsIndexed(state.trophyInput.images) { index, imageUri ->
+              Box(
                 modifier = Modifier
-                  .fillMaxSize()
-                  .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-              )
+                  .height(120.dp)
+                  .width(120.dp)
+              ) {
+                // Delete button
+                IconButton(
+                  onClick = { viewModel.removeImage(index) },
+                  modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .zIndex(1f)
+                    .padding(4.dp)
+                    .size(24.dp),
+                  colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Black.copy(alpha = 0.5f),
+                    contentColor = Color.White
+                  )
+                ) {
+                  Icon(
+                    Icons.Default.Close,
+                    contentDescription = "Remove image",
+                    modifier = Modifier.padding(4.dp)
+                  )
+                }
+
+                Card(
+                  modifier = Modifier.fillMaxSize(),
+                  shape = RoundedCornerShape(8.dp)
+                ) {
+                  Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = "Selected trophy photo",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                  )
+                }
+              }
             }
           }
         }

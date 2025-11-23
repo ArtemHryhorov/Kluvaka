@@ -9,30 +9,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import java.io.File
-import java.io.InputStream
-import java.io.OutputStream
 
 class AndroidPhotoPicker(
     private val context: Context
 ) : PhotoPicker {
     
     private var galleryCallback: ((String?) -> Unit)? = null
+    private var galleryMultipleCallback: ((List<String>) -> Unit)? = null
     private var cameraCallback: ((String?) -> Unit)? = null
     private var galleryLauncher: androidx.activity.result.ActivityResultLauncher<String>? = null
+    private var galleryMultipleLauncher: androidx.activity.result.ActivityResultLauncher<String>? = null
     private var cameraLauncher: androidx.activity.result.ActivityResultLauncher<Uri>? = null
     private var currentPhotoUri: Uri? = null
     
     fun setLaunchers(
         galleryLauncher: androidx.activity.result.ActivityResultLauncher<String>,
+        galleryMultipleLauncher: androidx.activity.result.ActivityResultLauncher<String>,
         cameraLauncher: androidx.activity.result.ActivityResultLauncher<Uri>
     ) {
         this.galleryLauncher = galleryLauncher
+        this.galleryMultipleLauncher = galleryMultipleLauncher
         this.cameraLauncher = cameraLauncher
     }
     
     override fun pickFromGallery(onResult: (String?) -> Unit) {
         galleryCallback = onResult
         galleryLauncher?.launch("image/*")
+    }
+
+    override fun pickMultipleFromGallery(onResult: (List<String>) -> Unit) {
+        galleryMultipleCallback = onResult
+        galleryMultipleLauncher?.launch("image/*")
     }
     
     override fun pickFromCamera(onResult: (String?) -> Unit) {
@@ -61,6 +68,17 @@ class AndroidPhotoPicker(
             galleryCallback?.invoke(null)
         }
         galleryCallback = null
+    }
+
+    fun handleGalleryMultipleResult(uris: List<Uri>) {
+        val resultPaths = mutableListOf<String>()
+        for (uri in uris) {
+            val permanentFile = copyImageToPermanentStorage(uri)
+            val permanentUri = permanentFile?.let { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", it) }
+            permanentUri?.toString()?.let { resultPaths.add(it) }
+        }
+        galleryMultipleCallback?.invoke(resultPaths)
+        galleryMultipleCallback = null
     }
     
     private fun copyImageToPermanentStorage(uri: Uri): File? {
@@ -99,6 +117,12 @@ actual fun rememberPhotoPicker(): PhotoPicker {
     ) { uri ->
         photoPicker.handleGalleryResult(uri)
     }
+
+    val galleryMultipleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris ->
+        photoPicker.handleGalleryMultipleResult(uris)
+    }
     
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
@@ -106,7 +130,7 @@ actual fun rememberPhotoPicker(): PhotoPicker {
         photoPicker.handleCameraResult(success)
     }
     
-    photoPicker.setLaunchers(galleryLauncher, cameraLauncher)
+    photoPicker.setLaunchers(galleryLauncher, galleryMultipleLauncher, cameraLauncher)
     
     return photoPicker
 }
