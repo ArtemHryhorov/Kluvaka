@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
@@ -223,10 +224,12 @@ private fun TrophyCard(
             style = MaterialTheme.typography.bodyMedium,
           )
         }
-        Text(
-          text = "Дата: ${trophy.date}",
-          style = MaterialTheme.typography.bodyMedium,
-        )
+        trophy.date?.let { date ->
+          Text(
+            text = "Дата: ${DateFormatter.format(date)}",
+            style = MaterialTheme.typography.bodyMedium,
+          )
+        }
       }
       Spacer(modifier = Modifier.size(4.dp))
       trophy.images.firstOrNull()?.let { image ->

@@ -15,7 +15,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     weight: Double?,
     length: Double?,
     location: String?,
-    date: String,
+    date: Long,
     images: List<String>,
     notes: String?,
   ) {
@@ -35,10 +35,10 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   fun updateTrophy(
     id: Long,
     fishType: String,
-    weight: Double,
+    weight: Double?,
     length: Double?,
-    location: String,
-    date: String,
+    location: String?,
+    date: Long,
     images: List<String>,
     notes: String?,
   ) {
@@ -85,7 +85,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     weight: Double?,
     length: Double?,
     location: String?,
-    date: String,
+    date: Long,
     images: String?,
     notes: String?,
   ) = Trophy(

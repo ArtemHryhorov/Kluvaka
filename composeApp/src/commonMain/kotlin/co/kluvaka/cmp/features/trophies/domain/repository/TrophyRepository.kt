@@ -9,7 +9,7 @@ interface TrophyRepository {
     weight: Double?,
     length: Double?,
     location: String?,
-    date: String,
+    date: Long,
     images: List<String>,
     notes: String?,
   )
@@ -17,10 +17,10 @@ interface TrophyRepository {
   suspend fun update(
     id: Long,
     fishType: String,
-    weight: Double,
+    weight: Double?,
     length: Double?,
-    location: String,
-    date: String,
+    location: String?,
+    date: Long,
     images: List<String>,
     notes: String?,
   )

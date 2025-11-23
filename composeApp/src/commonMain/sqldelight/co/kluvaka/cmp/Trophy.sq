@@ -4,7 +4,7 @@ CREATE TABLE trophy (
     weight REAL,
     length REAL,
     location TEXT,
-    date TEXT NOT NULL,
+    date INTEGER NOT NULL,
     images TEXT,
     notes TEXT
 );

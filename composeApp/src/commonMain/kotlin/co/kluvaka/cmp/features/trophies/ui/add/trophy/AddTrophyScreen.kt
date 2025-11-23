@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package co.kluvaka.cmp.features.trophies.ui.add.trophy
 
 import androidx.compose.foundation.Image
@@ -52,6 +54,10 @@ import coil3.compose.rememberAsyncImagePainter
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
+import co.kluvaka.cmp.features.common.ui.DatePickerField
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+
 data class AddTrophyScreen(
   val trophy: Trophy? = null,
 ) : Screen {
@@ -63,14 +69,12 @@ data class AddTrophyScreen(
     val state by viewModel.state.collectAsState()
     val photoPicker = rememberPhotoPicker()
 
-    // Set current date as default
-    LaunchedEffect(Unit) {
-      val now = kotlinx.datetime.Clock.System.now()
-      val localDateTime = now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
-      val dateString = "${localDateTime.year}-${
-        localDateTime.monthNumber.toString().padStart(2, '0')
-      }-${localDateTime.dayOfMonth.toString().padStart(2, '0')}"
-      viewModel.updateDate(dateString)
+    // Set current date as default if not set
+    LaunchedEffect(state.trophyInput.date) {
+      if (state.trophyInput.date == 0L) {
+        val now = kotlinx.datetime.Clock.System.now()
+        viewModel.updateDate(now.toEpochMilliseconds())
+      }
     }
 
     // Set AddTrophyMode
@@ -132,10 +136,10 @@ data class AddTrophyScreen(
           modifier = Modifier.fillMaxWidth()
         )
 
-        OutlinedTextField(
-          value = state.trophyInput.date,
-          onValueChange = viewModel::updateDate,
-          label = { Text("Дата") },
+        DatePickerField(
+          value = state.trophyInput.date ?: Clock.System.now().toEpochMilliseconds(),
+          onDateSelected = viewModel::updateDate,
+          label = "Дата",
           modifier = Modifier.fillMaxWidth()
         )
 

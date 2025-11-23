@@ -6,7 +6,7 @@ data class Trophy(
   val weight: Double?,
   val length: Double?,
   val location: String?,
-  val date: String,
+  val date: Long?,
   val images: List<String>,
   val notes: String?,
 )
