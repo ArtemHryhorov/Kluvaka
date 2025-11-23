@@ -39,12 +39,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import coil3.compose.rememberAsyncImagePainter
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 
-object AddTrophyScreen : Screen {
+data class AddTrophyScreen(
+  val trophy: Trophy? = null,
+) : Screen {
   @OptIn(ExperimentalMaterial3Api::class)
   @Composable
   override fun Content() {
@@ -53,155 +56,169 @@ object AddTrophyScreen : Screen {
     val state by viewModel.state.collectAsState()
     val photoPicker = rememberPhotoPicker()
 
+    // Set current date as default
     LaunchedEffect(Unit) {
-      // Set current date as default
       val now = kotlinx.datetime.Clock.System.now()
       val localDateTime = now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
-      val dateString = "${localDateTime.year}-${localDateTime.monthNumber.toString().padStart(2, '0')}-${localDateTime.dayOfMonth.toString().padStart(2, '0')}"
+      val dateString = "${localDateTime.year}-${
+        localDateTime.monthNumber.toString().padStart(2, '0')
+      }-${localDateTime.dayOfMonth.toString().padStart(2, '0')}"
       viewModel.updateDate(dateString)
     }
 
-      Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-          windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text("Добавить трофей") },
-          navigationIcon = {
-            IconButton(onClick = { navigator?.pop() }) {
-              Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-            }
-          },
-          colors = TopAppBarDefaults.topAppBarColors()
+    // Set AddTrophyMode
+    LaunchedEffect(Unit) {
+      val trophyMode: AddTrophyMode = trophy
+        ?.let { AddTrophyMode.Edit(it) }
+        ?: AddTrophyMode.New
+
+      viewModel.setAddTrophyMode(trophyMode)
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+      TopAppBar(
+        windowInsets = WindowInsets(0, 0, 0, 0),
+        title = { Text("Добавить трофей") },
+        navigationIcon = {
+          IconButton(onClick = { navigator?.pop() }) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+          }
+        },
+        colors = TopAppBarDefaults.topAppBarColors()
+      )
+      Column(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(16.dp)
+          .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+      ) {
+        OutlinedTextField(
+          value = state.trophyInput.fishType,
+          onValueChange = viewModel::updateFishType,
+          label = { Text("Тип рыбы") },
+          modifier = Modifier.fillMaxWidth()
         )
-        Column(
-          modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-          verticalArrangement = Arrangement.spacedBy(16.dp)
+
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
           OutlinedTextField(
-            value = state.fishType,
-            onValueChange = viewModel::updateFishType,
-            label = { Text("Тип рыбы") },
-            modifier = Modifier.fillMaxWidth()
+            value = state.trophyInput.weight,
+            onValueChange = viewModel::updateWeight,
+            label = { Text("Вес (кг)") },
+            modifier = Modifier.weight(1f)
           )
-
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            OutlinedTextField(
-              value = state.weight,
-              onValueChange = viewModel::updateWeight,
-              label = { Text("Вес (кг)") },
-              modifier = Modifier.weight(1f)
-            )
-            OutlinedTextField(
-              value = state.length,
-              onValueChange = viewModel::updateLength,
-              label = { Text("Длина (см)") },
-              modifier = Modifier.weight(1f)
-            )
-          }
-
           OutlinedTextField(
-            value = state.location,
-            onValueChange = viewModel::updateLocation,
-            label = { Text("Место ловли") },
-            modifier = Modifier.fillMaxWidth()
+            value = state.trophyInput.length,
+            onValueChange = viewModel::updateLength,
+            label = { Text("Длина (см)") },
+            modifier = Modifier.weight(1f)
           )
+        }
 
-          OutlinedTextField(
-            value = state.date,
-            onValueChange = viewModel::updateDate,
-            label = { Text("Дата") },
-            modifier = Modifier.fillMaxWidth()
-          )
+        OutlinedTextField(
+          value = state.trophyInput.location,
+          onValueChange = viewModel::updateLocation,
+          label = { Text("Место ловли") },
+          modifier = Modifier.fillMaxWidth()
+        )
 
-          // Photo picker section
-          Text(
-            text = "Фото трофея",
-            style = MaterialTheme.typography.titleMedium
-          )
+        OutlinedTextField(
+          value = state.trophyInput.date,
+          onValueChange = viewModel::updateDate,
+          label = { Text("Дата") },
+          modifier = Modifier.fillMaxWidth()
+        )
 
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            // Camera button
-            Button(
-              onClick = {
-                photoPicker.pickFromCamera { imageUri ->
-                  imageUri?.let { viewModel.updateImage(it) }
-                }
-              },
-              modifier = Modifier.weight(1f)
-            ) {
-              Icon(Icons.Default.Camera, contentDescription = "Camera")
-              Spacer(modifier = Modifier.padding(4.dp))
-              Text("Камера")
-            }
+        // Photo picker section
+        Text(
+          text = "Фото трофея",
+          style = MaterialTheme.typography.titleMedium
+        )
 
-            // Gallery button
-            Button(
-              onClick = {
-                photoPicker.pickFromGallery { imageUri ->
-                  imageUri?.let { viewModel.updateImage(it) }
-                }
-              },
-              modifier = Modifier.weight(1f)
-            ) {
-              Icon(Icons.Default.Photo, contentDescription = "Gallery")
-              Spacer(modifier = Modifier.padding(4.dp))
-              Text("Галерея")
-            }
-          }
-
-          // Display selected image
-          state.image?.let { imageUri ->
-            Card(
-              modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(8.dp))
-            ) {
-              Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-              ) {
-                // Display the actual image
-                Image(
-                  painter = rememberAsyncImagePainter(imageUri),
-                  contentDescription = "Selected trophy photo",
-                  modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(8.dp)),
-                  contentScale = ContentScale.Crop
-                )
-              }
-            }
-          }
-
-          OutlinedTextField(
-            value = state.notes,
-            onValueChange = viewModel::updateNotes,
-            label = { Text("Заметки") },
-            modifier = Modifier.fillMaxWidth(),
-            minLines = 3
-          )
-
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          // Camera button
           Button(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(top = 8.dp),
             onClick = {
-              viewModel.addTrophy()
-              navigator?.pop()
+              photoPicker.pickFromCamera { imageUri ->
+                imageUri?.let { viewModel.updateImage(it) }
+              }
             },
+            modifier = Modifier.weight(1f)
           ) {
-            Text("Добавить трофей")
+            Icon(Icons.Default.Camera, contentDescription = "Camera")
+            Spacer(modifier = Modifier.padding(4.dp))
+            Text("Камера")
+          }
+
+          // Gallery button
+          Button(
+            onClick = {
+              photoPicker.pickFromGallery { imageUri ->
+                imageUri?.let { viewModel.updateImage(it) }
+              }
+            },
+            modifier = Modifier.weight(1f)
+          ) {
+            Icon(Icons.Default.Photo, contentDescription = "Gallery")
+            Spacer(modifier = Modifier.padding(4.dp))
+            Text("Галерея")
           }
         }
+
+        // Display selected image
+        state.trophyInput.image?.let { imageUri ->
+          Card(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(200.dp)
+              .clip(RoundedCornerShape(8.dp))
+          ) {
+            Box(
+              modifier = Modifier.fillMaxSize(),
+              contentAlignment = Alignment.Center
+            ) {
+              // Display the actual image
+              Image(
+                painter = rememberAsyncImagePainter(imageUri),
+                contentDescription = "Selected trophy photo",
+                modifier = Modifier
+                  .fillMaxSize()
+                  .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+              )
+            }
+          }
+        }
+
+        OutlinedTextField(
+          value = state.trophyInput.notes,
+          onValueChange = viewModel::updateNotes,
+          label = { Text("Заметки") },
+          modifier = Modifier.fillMaxWidth(),
+          minLines = 3
+        )
+
+        Button(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+          onClick = {
+            viewModel.save()
+            navigator?.pop()
+          },
+        ) {
+          when (state.mode) {
+            is AddTrophyMode.Edit -> Text("Сохранить изменения")
+            AddTrophyMode.New -> Text("Добавить трофей")
+          }
+        }
+      }
     }
   }
 }

@@ -14,6 +14,17 @@ interface TrophyRepository {
     notes: String?,
   )
 
+  suspend fun update(
+    id: Long,
+    fishType: String,
+    weight: Double,
+    length: Double?,
+    location: String,
+    date: String,
+    image: String?,
+    notes: String?,
+  )
+
   suspend fun getAll(): List<Trophy>
 
   suspend fun getById(id: Int): Trophy?

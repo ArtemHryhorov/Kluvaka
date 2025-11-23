@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -61,8 +63,21 @@ class TrophyDetailScreen(
           windowInsets = WindowInsets(0, 0, 0, 0),
           title = { Text(state.trophy?.fishType ?: "Детали трофея") },
           navigationIcon = {
-            IconButton(onClick = { navigator?.pop() }) {
+            IconButton(
+              onClick = {
+                navigator?.pop()
+              },
+            ) {
               Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+          },
+          actions = {
+            IconButton(
+              onClick = {
+                navigator?.push(AddTrophyScreen(state.trophy))
+              },
+            ) {
+              Icon(Icons.Filled.Edit, contentDescription = "Edit")
             }
           },
           colors = TopAppBarDefaults.topAppBarColors()
