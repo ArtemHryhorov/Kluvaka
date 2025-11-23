@@ -8,7 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class AddTrophyViewModel(
   private val addTrophy: AddTrophy,
   private val updateTrophy: UpdateTrophy,
@@ -79,7 +83,7 @@ class AddTrophyViewModel(
     }
   }
 
-  fun updateDate(date: String) {
+  fun updateDate(date: Long) {
     _mutableState.update { state ->
       state.copy(
         trophyInput = state.trophyInput.copy(
@@ -138,7 +142,7 @@ class AddTrophyViewModel(
         weight = trophyInput.weight.toDoubleOrNull(),
         length = trophyInput.length.toDoubleOrNull(),
         location = trophyInput.location.takeIf { it.isNotEmpty() },
-        date = trophyInput.date,
+        date = trophyInput.date ?: Clock.System.now().toEpochMilliseconds(),
         images = trophyInput.images,
         notes = trophyInput.notes.takeIf { it.isNotEmpty() },
       )
@@ -154,7 +158,7 @@ class AddTrophyViewModel(
         weight = trophyInput.weight.toDoubleOrNull() ?: 0.0,
         length = trophyInput.length.toDoubleOrNull(),
         location = trophyInput.location,
-        date = trophyInput.date,
+        date = trophyInput.date ?: Clock.System.now().toEpochMilliseconds(),
         images = trophyInput.images,
         notes = trophyInput.notes.takeIf { it.isNotEmpty() },
       )

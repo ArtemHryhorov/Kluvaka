@@ -36,10 +36,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.photos.ui.DetailedPhotoViewScreen
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
+
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class TrophyDetailScreen(
   private val trophyId: Int,
@@ -114,10 +119,12 @@ class TrophyDetailScreen(
               )
             }
 
-            Text(
-              text = "Дата: ${trophy.date}",
-              style = MaterialTheme.typography.bodyMedium
-            )
+            trophy.date?.let { date ->
+              Text(
+                text = "Дата: ${DateFormatter.format(date)}",
+                style = MaterialTheme.typography.bodyMedium
+              )
+            }
 
             if (trophy.images.isNotEmpty()) {
               Spacer(modifier = Modifier.padding(8.dp))

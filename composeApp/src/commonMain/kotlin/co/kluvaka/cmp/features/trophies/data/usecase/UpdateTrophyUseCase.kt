@@ -12,7 +12,7 @@ class UpdateTrophyUseCase(
     weight: Double,
     length: Double?,
     location: String,
-    date: String,
+    date: Long,
     images: List<String>,
     notes: String?
   ) = repository.update(
