@@ -7,6 +7,6 @@ data class Trophy(
   val length: Double?,
   val location: String,
   val date: String,
-  val image: String?,
+  val images: List<String>,
   val notes: String?,
 )

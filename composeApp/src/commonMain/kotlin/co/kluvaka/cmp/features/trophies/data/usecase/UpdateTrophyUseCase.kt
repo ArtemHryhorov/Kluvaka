@@ -13,7 +13,7 @@ class UpdateTrophyUseCase(
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?
   ) = repository.update(
     id = id,
@@ -22,7 +22,7 @@ class UpdateTrophyUseCase(
     length = length,
     location = location,
     date = date,
-    image = image,
+    images = images,
     notes = notes,
   )
 }

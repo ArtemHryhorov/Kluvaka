@@ -210,14 +210,16 @@ private fun TrophyCard(
         Text(text = "Дата: ${trophy.date}", style = MaterialTheme.typography.bodyMedium)
       }
       Spacer(modifier = Modifier.size(4.dp))
-      Image(
-        painter = rememberAsyncImagePainter(trophy.image),
-        contentDescription = "Trophy photo",
-        modifier = Modifier
-          .size(96.dp)
-          .clip(RoundedCornerShape(8.dp)),
-        contentScale = ContentScale.Crop
-      )
+      trophy.images.firstOrNull()?.let { image ->
+        Image(
+          painter = rememberAsyncImagePainter(image),
+          contentDescription = "Trophy photo",
+          modifier = Modifier
+            .size(96.dp)
+            .clip(RoundedCornerShape(8.dp)),
+          contentScale = ContentScale.Crop
+        )
+      }
     }
   }
 }

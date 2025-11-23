@@ -13,7 +13,7 @@ data class TrophyInput(
   val length: String = "",
   val location: String = "",
   val date: String = "",
-  val image: String? = null,
+  val images: List<String> = emptyList(),
   val notes: String = "",
 )
 

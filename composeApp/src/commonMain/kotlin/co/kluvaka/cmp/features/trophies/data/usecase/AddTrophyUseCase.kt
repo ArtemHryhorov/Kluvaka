@@ -12,7 +12,7 @@ class AddTrophyUseCase(
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   ) = repository.insert(
     fishType = fishType,
@@ -20,7 +20,7 @@ class AddTrophyUseCase(
     length = length,
     location = location,
     date = date,
-    image = image,
+    images = images,
     notes = notes
   )
 }

@@ -14,7 +14,7 @@ class TrophyRepositoryImpl(
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?,
   ) = database.insertTrophy(
     fishType = fishType,
@@ -22,7 +22,7 @@ class TrophyRepositoryImpl(
     length = length,
     location = location,
     date = date,
-    image = image,
+    images = images,
     notes = notes
   )
 
@@ -33,7 +33,7 @@ class TrophyRepositoryImpl(
     length: Double?,
     location: String,
     date: String,
-    image: String?,
+    images: List<String>,
     notes: String?
   ) = database.updateTrophy(
     id = id,
@@ -42,7 +42,7 @@ class TrophyRepositoryImpl(
     length = length,
     location = location,
     date = date,
-    image = image,
+    images = images,
     notes = notes
   )
 
