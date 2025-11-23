@@ -2,7 +2,7 @@ package co.kluvaka.cmp.features.trophies.ui.add.trophy
 
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 
-data class AddTrophyState(
+data class AddTrophyUiState(
   val trophyInput: TrophyInput = TrophyInput(),
   val mode: AddTrophyMode = AddTrophyMode.New,
 )
@@ -19,5 +19,5 @@ data class TrophyInput(
 
 sealed interface AddTrophyMode {
   object New : AddTrophyMode
-  data class  Edit(val trophy: Trophy) : AddTrophyMode
+  data class Edit(val trophy: Trophy) : AddTrophyMode
 }

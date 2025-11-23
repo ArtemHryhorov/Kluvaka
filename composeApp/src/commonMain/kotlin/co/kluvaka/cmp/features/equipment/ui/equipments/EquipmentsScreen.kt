@@ -88,7 +88,7 @@ object EquipmentsScreen : Screen {
               .align(Alignment.BottomEnd)
               .zIndex(3f),
             onClick = {
-              navigator?.push(AddEquipmentScreen)
+              navigator?.push(AddEquipmentScreen())
             },
           ) {
             Text(

@@ -16,3 +16,10 @@ INSERT INTO Equipment(id, title, images, price) VALUES (?, ?, ?, ?);
 
 deleteEquipment:
 DELETE FROM Equipment WHERE id = ?;
+
+updateEquipment:
+UPDATE Equipment
+SET title = :title,
+    images = :images,
+    price = :price
+WHERE id = :id;

@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -18,8 +17,8 @@ class AddTrophyViewModel(
   private val updateTrophy: UpdateTrophy,
 ) : ViewModel() {
 
-  private val _mutableState = MutableStateFlow(AddTrophyState())
-  val state: StateFlow<AddTrophyState> = _mutableState
+  private val _mutableState = MutableStateFlow(AddTrophyUiState())
+  val state: StateFlow<AddTrophyUiState> = _mutableState
 
   fun setAddTrophyMode(mode: AddTrophyMode) {
     _mutableState.update { state ->

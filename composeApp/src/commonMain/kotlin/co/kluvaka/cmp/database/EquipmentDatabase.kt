@@ -30,6 +30,22 @@ class EquipmentDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     }
   }
 
+  fun updateEquipment(
+    id: Int,
+    title: String,
+    images: List<String>,
+    price: Double,
+  ) {
+    dbQuery.transaction {
+      dbQuery.updateEquipment(
+        id = id.toLong(),
+        title = title,
+        images = images.joinToString("|"),
+        price = price,
+      )
+    }
+  }
+
   fun deleteEquipment(id: Int) {
     dbQuery.transaction {
       dbQuery.deleteEquipment(id.toLong())

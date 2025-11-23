@@ -1,7 +1,6 @@
 package co.kluvaka.cmp.features.equipment.ui.details
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,14 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentScreen
 import co.kluvaka.cmp.features.photos.ui.DetailedPhotoViewScreen
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,7 +50,7 @@ class EquipmentDetailsScreen(
   override fun Content() {
     val navigator = LocalNavigator.current
     val viewModel = koinViewModel<EquipmentDetailsViewModel>()
-    val state by viewModel.state.collectAsState()
+    val equipment by viewModel.equipment.collectAsState()
 
     LaunchedEffect(equipmentId) {
       viewModel.loadEquipment(equipmentId)
@@ -62,10 +60,19 @@ class EquipmentDetailsScreen(
       topBar = {
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text(state?.title ?: "Детали приблуды") },
+          title = { Text(equipment?.title ?: "Детали приблуды") },
           navigationIcon = {
             IconButton(onClick = { navigator?.pop() }) {
               Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+          },
+          actions = {
+            IconButton(
+              onClick = {
+                navigator?.push(AddEquipmentScreen(equipment))
+              },
+            ) {
+              Icon(Icons.Filled.Edit, contentDescription = "Edit")
             }
           },
           colors = TopAppBarDefaults.topAppBarColors()
@@ -78,7 +85,7 @@ class EquipmentDetailsScreen(
           .padding(top = paddingValues.calculateTopPadding())
           .verticalScroll(rememberScrollState()),
       ) {
-        state?.let { equipment ->
+        equipment?.let { equipment ->
           Spacer(modifier = Modifier.height(16.dp))
           Column(
             modifier = Modifier.padding(horizontal = 16.dp),
