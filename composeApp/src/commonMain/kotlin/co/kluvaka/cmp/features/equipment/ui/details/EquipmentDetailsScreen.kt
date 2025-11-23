@@ -8,13 +8,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.photos.ui.DetailedPhotoViewScreen
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -71,7 +76,6 @@ class EquipmentDetailsScreen(
         modifier = Modifier
           .fillMaxSize()
           .padding(top = paddingValues.calculateTopPadding())
-          .padding(horizontal = 16.dp)
           .verticalScroll(rememberScrollState()),
       ) {
         state?.let { equipment ->
@@ -84,25 +88,52 @@ class EquipmentDetailsScreen(
               text = "Стоимость: ${equipment.price} ГРН",
               style = MaterialTheme.typography.headlineMedium
             )
+          }
 
-            equipment.image?.let { image ->
-              Spacer(modifier = Modifier.padding(8.dp))
-              Text(
-                text = "Фото приблуды:",
-                style = MaterialTheme.typography.titleMedium
-              )
-              Box(
-                modifier = Modifier
-                  .fillMaxSize()
-                  .background(color = Color.Transparent),
-                contentAlignment = Alignment.Center
-              ) {
-                Image(
-                  painter = rememberAsyncImagePainter(image),
-                  contentDescription = "Trophy photo",
-                  modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                  contentScale = ContentScale.FillWidth,
-                )
+          if (equipment.images.isNotEmpty()) {
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(
+              text = "Фото приблуды:",
+              modifier = Modifier.padding(horizontal = 16.dp),
+              style = MaterialTheme.typography.titleMedium
+            )
+            LazyRow(
+              horizontalArrangement = Arrangement.spacedBy(8.dp),
+              modifier = Modifier.fillMaxWidth()
+            ) {
+              item {
+                Spacer(modifier = Modifier.width(16.dp))
+              }
+              items(equipment.images.size) { index ->
+                val image = equipment.images[index]
+                Box(
+                  modifier = Modifier
+                    .height(200.dp)
+                    .width(300.dp),
+                ) {
+                  Card(
+                    onClick = {
+                      navigator?.push(
+                        DetailedPhotoViewScreen(
+                          images = equipment.images,
+                          initialIndex = index,
+                        )
+                      )
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(8.dp)
+                  ) {
+                    Image(
+                      painter = rememberAsyncImagePainter(image),
+                      contentDescription = "Equipment photo",
+                      modifier = Modifier.fillMaxSize(),
+                      contentScale = ContentScale.Crop,
+                    )
+                  }
+                }
+              }
+              item {
+                Spacer(modifier = Modifier.width(16.dp))
               }
             }
           }

@@ -17,14 +17,14 @@ class EquipmentDatabase(databaseDriverFactory: DatabaseDriverFactory) {
 
   fun insertEquipment(
     title: String,
-    image: String?,
+    images: List<String>,
     price: Double,
   ) {
     dbQuery.transaction {
       dbQuery.insertEquipment(
         id = null,
         title = title,
-        image = image,
+        images = images.joinToString("|"),
         price = price,
       )
     }
@@ -39,12 +39,12 @@ class EquipmentDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   private fun mapEquipment(
     id: Long,
     title: String,
-    image: String?,
+    images: String?,
     price: Double,
   ) = Equipment(
     id = id.toInt(),
     title = title,
-    image = image,
+    images = images?.split("|")?.filter { it.isNotEmpty() } ?: emptyList(),
     price = price,
   )
 
@@ -53,7 +53,7 @@ class EquipmentDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   ) = Equipment(
     id = equipment.id.toInt(),
     title = equipment.title,
-    image = equipment.image,
+    images = equipment.images?.split("|")?.filter { it.isNotEmpty() } ?: emptyList(),
     price = equipment.price,
   )
 }

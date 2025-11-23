@@ -15,16 +15,38 @@ class AddEquipmentViewModel(
   private val _mutableState = MutableStateFlow(AddEquipmentState())
   val state: StateFlow<AddEquipmentState> = _mutableState
 
-  fun updateImage(image: String?) {
-    _mutableState.update { it.copy(image = image) }
+  fun updateTitle(title: String) {
+    _mutableState.update { it.copy(title = title) }
   }
 
-  fun addEquipment(
-    title: String,
-    price: Double,
-  ) {
+  fun updatePrice(price: String) {
+    _mutableState.update { it.copy(price = price) }
+  }
+
+  fun addImage(image: String?) {
+    if (image == null) return
+    _mutableState.update { state ->
+      state.copy(images = state.images + image)
+    }
+  }
+
+  fun removeImage(index: Int) {
+    _mutableState.update { state ->
+      val newImages = state.images.toMutableList().apply {
+        removeAt(index)
+      }
+      state.copy(images = newImages)
+    }
+  }
+
+  fun addEquipment() {
     viewModelScope.launch {
-      addEquipment(title, _mutableState.value.image, price)
+      val state = _mutableState.value
+      addEquipment(
+        title = state.title,
+        images = state.images,
+        price = state.price.toDoubleOrNull() ?: 0.0
+      )
     }
   }
 }
