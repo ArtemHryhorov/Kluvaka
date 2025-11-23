@@ -6,11 +6,13 @@ import co.kluvaka.cmp.features.equipment.data.usecase.AddEquipmentUseCase
 import co.kluvaka.cmp.features.equipment.data.usecase.DeleteEquipmentUseCase
 import co.kluvaka.cmp.features.equipment.data.usecase.GetAllEquipmentsUseCase
 import co.kluvaka.cmp.features.equipment.data.usecase.GetEquipmentByIdUseCase
+import co.kluvaka.cmp.features.equipment.data.usecase.UpdateEquipmentUseCase
 import co.kluvaka.cmp.features.equipment.domain.repository.EquipmentRepository
 import co.kluvaka.cmp.features.equipment.domain.usecase.AddEquipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipments
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetEquipmentById
+import co.kluvaka.cmp.features.equipment.domain.usecase.UpdateEquipment
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentViewModel
 import co.kluvaka.cmp.features.equipment.ui.details.EquipmentDetailsViewModel
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsViewModel
@@ -41,6 +43,9 @@ val equipmentModule = module {
   single<DeleteEquipment> {
     DeleteEquipmentUseCase(repository = get())
   }
+  single<UpdateEquipment> {
+    UpdateEquipmentUseCase(repository = get())
+  }
 
   // ViewModel
   viewModel {
@@ -53,6 +58,9 @@ val equipmentModule = module {
     EquipmentDetailsViewModel(getEquipmentById = get())
   }
   viewModel {
-    AddEquipmentViewModel(addEquipment = get())
+    AddEquipmentViewModel(
+      addEquipment = get(),
+      updateEquipment = get(),
+    )
   }
 }

@@ -10,6 +10,13 @@ interface EquipmentRepository {
     price: Double,
   )
 
+  suspend fun update(
+    id: Int,
+    title: String,
+    images: List<String>,
+    price: Double,
+  )
+
   suspend fun getAll(): List<Equipment>
 
   suspend fun getById(id: Int): Equipment?

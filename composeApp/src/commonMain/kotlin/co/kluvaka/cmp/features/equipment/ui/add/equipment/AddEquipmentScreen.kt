@@ -1,7 +1,18 @@
 package co.kluvaka.cmp.features.equipment.ui.add.equipment
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -12,11 +23,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Photo
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,18 +44,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.composable.AddEquipmentTopBar
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
-object AddEquipmentScreen : Screen {
+data class AddEquipmentScreen(
+  private val equipment: Equipment? = null,
+) : Screen {
   @Composable
   override fun Content() {
     val navigator = LocalNavigator.current
     val viewModel = koinViewModel<AddEquipmentViewModel>()
     val photoPicker = rememberPhotoPicker()
     val state by viewModel.state.collectAsState()
+
+    // Set AddTrophyMode
+    LaunchedEffect(Unit) {
+      val mode: AddEquipmentMode = equipment
+        ?.let { AddEquipmentMode.Edit(it) }
+        ?: AddEquipmentMode.New
+
+      viewModel.setAddEquipmentMode(mode)
+    }
 
     Column(
       modifier = Modifier
@@ -52,14 +84,14 @@ object AddEquipmentScreen : Screen {
         verticalArrangement = Arrangement.Top,
       ) {
         OutlinedTextField(
-          value = state.title,
+          value = state.input.title,
           onValueChange = viewModel::updateTitle,
           label = { Text("Name") },
           modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.padding(12.dp))
         OutlinedTextField(
-          value = state.price,
+          value = state.input.price,
           onValueChange = viewModel::updatePrice,
           label = { Text("Price") },
           keyboardOptions = KeyboardOptions(
@@ -108,14 +140,14 @@ object AddEquipmentScreen : Screen {
         }
 
         // Display selected images
-        if (state.images.isNotEmpty()) {
+        if (state.input.images.isNotEmpty()) {
           LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
               .fillMaxWidth()
               .padding(vertical = 8.dp)
           ) {
-            itemsIndexed(state.images) { index, imageUri ->
+            itemsIndexed(state.input.images) { index, imageUri ->
               Box(
                 modifier = Modifier
                   .height(120.dp)
@@ -160,10 +192,10 @@ object AddEquipmentScreen : Screen {
         Box {
           Button(
             onClick = {
-              viewModel.addEquipment()
+              viewModel.save()
               navigator?.pop()
             },
-            enabled = state.title.isNotBlank(),
+            enabled = state.input.title.isNotBlank(),
             modifier = Modifier
               .align(Alignment.BottomCenter)
               .fillMaxWidth()

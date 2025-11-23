@@ -14,7 +14,7 @@ class EquipmentDetailsViewModel(
 ) : ViewModel() {
 
   private val _mutableState = MutableStateFlow<Equipment?>(null)
-  val state: StateFlow<Equipment?> = _mutableState
+  val equipment: StateFlow<Equipment?> = _mutableState
 
   fun loadEquipment(equipmentId: Int) {
     viewModelScope.launch {

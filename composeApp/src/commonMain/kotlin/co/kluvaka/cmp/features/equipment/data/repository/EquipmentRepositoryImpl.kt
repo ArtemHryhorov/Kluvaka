@@ -16,6 +16,15 @@ class EquipmentRepositoryImpl(
     database.insertEquipment(title, images, price)
   }
 
+  override suspend fun update(
+    id: Int,
+    title: String,
+    images: List<String>,
+    price: Double
+  ) {
+    database.updateEquipment(id, title, images, price)
+  }
+
   override suspend fun getAll(): List<Equipment> {
     return database.getAllEquipment()
   }
