@@ -40,7 +40,7 @@ fun App() {
         Box(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(innerPadding) // ← This line is critical
+            .padding(innerPadding)
         ) {
           CurrentScreen()
         }
@@ -57,20 +57,28 @@ data class BottomNavItem(
 
 @Composable
 fun BottomNavigationBar(navigator: Navigator, items: List<BottomNavItem>) {
-  NavigationBar {
-    val current = navigator.lastItem
+  val current = navigator.lastItem
+  val rootScreens = listOf(
+    SessionsHistoryScreen,
+    TrophiesScreen,
+    EquipmentsScreen,
+  )
+  val isRootScreen = current in rootScreens
 
-    items.forEach { item ->
-      NavigationBarItem(
-        icon = { Icon(item.icon, contentDescription = item.label) },
-        label = { Text(item.label) },
-        selected = current == item.screen,
-        onClick = {
-          if (current != item.screen) {
-            navigator.push(item.screen)
+  if (isRootScreen) {
+    NavigationBar {
+      items.forEach { item ->
+        NavigationBarItem(
+          icon = { Icon(item.icon, contentDescription = item.label) },
+          label = { Text(item.label) },
+          selected = current == item.screen,
+          onClick = {
+            if (current != item.screen) {
+              navigator.push(item.screen)
+            }
           }
-        }
-      )
+        )
+      }
     }
   }
 }

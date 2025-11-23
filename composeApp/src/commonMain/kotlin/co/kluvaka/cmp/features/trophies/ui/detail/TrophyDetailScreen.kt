@@ -42,10 +42,6 @@ import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-
 class TrophyDetailScreen(
   private val trophyId: Int,
 ) : Screen {
@@ -92,13 +88,13 @@ class TrophyDetailScreen(
         modifier = Modifier
           .fillMaxSize()
           .padding(top = paddingValues.calculateTopPadding())
-          .padding(horizontal = 16.dp)
           .verticalScroll(rememberScrollState()),
       ) {
         state.trophy?.let { trophy ->
           Spacer(modifier = Modifier.height(16.dp))
           Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp)
           ) {
             trophy.weight?.let { weight ->
               Text(
@@ -126,47 +122,6 @@ class TrophyDetailScreen(
               )
             }
 
-            if (trophy.images.isNotEmpty()) {
-              Spacer(modifier = Modifier.padding(8.dp))
-              Text(
-                text = "Фото трофея:",
-                style = MaterialTheme.typography.titleMedium
-              )
-              LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-              ) {
-                items(trophy.images.size) { index ->
-                  val image = trophy.images[index]
-                  Box(
-                    modifier = Modifier
-                      .height(200.dp)
-                      .width(300.dp) // Fixed width for carousel items
-                  ) {
-                    Card(
-                      onClick = {
-                        navigator?.push(
-                          DetailedPhotoViewScreen(
-                            images = trophy.images,
-                            initialIndex = index,
-                          )
-                        )
-                      },
-                      modifier = Modifier.fillMaxSize(),
-                      shape = RoundedCornerShape(8.dp)
-                    ) {
-                      Image(
-                        painter = rememberAsyncImagePainter(image),
-                        contentDescription = "Trophy photo",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                      )
-                    }
-                  }
-                }
-              }
-            }
-
             trophy.notes?.let { notes ->
               Spacer(modifier = Modifier.padding(8.dp))
               Text(
@@ -177,6 +132,53 @@ class TrophyDetailScreen(
                 text = notes,
                 style = MaterialTheme.typography.bodyMedium
               )
+            }
+          }
+          if (trophy.images.isNotEmpty()) {
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(
+              text = "Фото трофея:",
+              modifier = Modifier.padding(horizontal = 16.dp),
+              style = MaterialTheme.typography.titleMedium
+            )
+            LazyRow(
+              horizontalArrangement = Arrangement.spacedBy(8.dp),
+              modifier = Modifier.fillMaxWidth()
+            ) {
+              item {
+                Spacer(modifier = Modifier.width(16.dp))
+              }
+              items(trophy.images.size) { index ->
+                val image = trophy.images[index]
+                Box(
+                  modifier = Modifier
+                    .height(200.dp)
+                    .width(300.dp),
+                ) {
+                  Card(
+                    onClick = {
+                      navigator?.push(
+                        DetailedPhotoViewScreen(
+                          images = trophy.images,
+                          initialIndex = index,
+                        )
+                      )
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(8.dp)
+                  ) {
+                    Image(
+                      painter = rememberAsyncImagePainter(image),
+                      contentDescription = "Trophy photo",
+                      modifier = Modifier.fillMaxSize(),
+                      contentScale = ContentScale.Crop,
+                    )
+                  }
+                }
+              }
+              item {
+                Spacer(modifier = Modifier.width(16.dp))
+              }
             }
           }
           Spacer(modifier = Modifier.height(16.dp))
