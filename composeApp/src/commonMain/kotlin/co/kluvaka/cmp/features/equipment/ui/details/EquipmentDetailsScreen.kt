@@ -1,15 +1,13 @@
-package co.kluvaka.cmp.features.trophies.ui.detail
+package co.kluvaka.cmp.features.equipment.ui.details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -40,26 +38,26 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
-class TrophyDetailScreen(
-  private val trophyId: Int,
+class EquipmentDetailsScreen(
+  private val equipmentId: Int
 ) : Screen {
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Composable
   override fun Content() {
     val navigator = LocalNavigator.current
-    val viewModel = koinViewModel<TrophyDetailViewModel>()
+    val viewModel = koinViewModel<EquipmentDetailsViewModel>()
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(trophyId) {
-      viewModel.loadTrophy(trophyId)
+    LaunchedEffect(equipmentId) {
+      viewModel.loadEquipment(equipmentId)
     }
 
     Scaffold(
       topBar = {
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text(state.trophy?.fishType ?: "Детали трофея") },
+          title = { Text(state?.title ?: "Детали приблуды") },
           navigationIcon = {
             IconButton(onClick = { navigator?.pop() }) {
               Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -76,41 +74,21 @@ class TrophyDetailScreen(
           .padding(horizontal = 16.dp)
           .verticalScroll(rememberScrollState()),
       ) {
-        state.trophy?.let { trophy ->
+        state?.let { equipment ->
           Spacer(modifier = Modifier.height(16.dp))
           Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
-            Row(
-              modifier = Modifier.fillMaxWidth(),
-              horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-              Text(
-                text = "Вес: ${trophy.weight} кг",
-                style = MaterialTheme.typography.bodyLarge
-              )
-              trophy.length?.let { length ->
-                Text(
-                  text = "Длина: $length см",
-                  style = MaterialTheme.typography.bodyLarge
-                )
-              }
-            }
-
             Text(
-              text = "Место: ${trophy.location}",
-              style = MaterialTheme.typography.bodyMedium
+              text = "Стоимость: ${equipment.price} ГРН",
+              style = MaterialTheme.typography.headlineMedium
             )
 
-            Text(
-              text = "Дата: ${trophy.date}",
-              style = MaterialTheme.typography.bodyMedium
-            )
-
-            trophy.image?.let { image ->
+            equipment.image?.let { image ->
               Spacer(modifier = Modifier.padding(8.dp))
               Text(
-                text = "Фото трофея:",
+                text = "Фото приблуды:",
                 style = MaterialTheme.typography.titleMedium
               )
               Box(
@@ -126,18 +104,6 @@ class TrophyDetailScreen(
                   contentScale = ContentScale.FillWidth,
                 )
               }
-            }
-
-            trophy.notes?.let { notes ->
-              Spacer(modifier = Modifier.padding(8.dp))
-              Text(
-                text = "Заметки:",
-                style = MaterialTheme.typography.titleMedium
-              )
-              Text(
-                text = notes,
-                style = MaterialTheme.typography.bodyMedium
-              )
             }
           }
           Spacer(modifier = Modifier.height(16.dp))

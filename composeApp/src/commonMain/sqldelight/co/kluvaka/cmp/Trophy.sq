@@ -14,7 +14,7 @@ SELECT * FROM trophy ORDER BY date DESC;
 
 insertTrophy:
 INSERT INTO trophy(fish_type, weight, length, location, date, image, notes)
-VALUES (:fishType, :weight, :length, :date, :location, :image, :notes);
+VALUES (:fishType, :weight, :length, :location, :date, :image, :notes);
 
 deleteTrophy:
 DELETE FROM trophy WHERE id = :id;

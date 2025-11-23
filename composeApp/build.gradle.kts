@@ -62,6 +62,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.material.icons.extended)
             implementation(libs.voyager.navigator)
+            implementation(libs.coil.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

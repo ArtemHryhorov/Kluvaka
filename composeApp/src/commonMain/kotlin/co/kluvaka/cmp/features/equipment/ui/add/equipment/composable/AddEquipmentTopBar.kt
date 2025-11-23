@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEquipmentTopBar(onClick: () -> Unit) {
+fun   AddEquipmentTopBar(onClick: () -> Unit) {
   TopAppBar(
     windowInsets = WindowInsets(0, 0, 0, 0),
     title = {

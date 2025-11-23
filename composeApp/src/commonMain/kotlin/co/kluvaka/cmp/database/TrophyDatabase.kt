@@ -10,26 +10,6 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     .selectAllTrophies(::mapTrophy)
     .executeAsList()
 
-  private fun mapTrophy(
-    id: Long,
-    fishType: String,
-    weight: Double,
-    length: Double?,
-    location: String,
-    date: String,
-    image: String?,
-    notes: String?,
-  ) = Trophy(
-    id = id.toInt(),
-    fishType = fishType,
-    weight = weight,
-    length = length,
-    location = location,
-    date = date,
-    image = image,
-    notes = notes,
-  )
-
   fun insertTrophy(
     fishType: String,
     weight: Double,
@@ -39,6 +19,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     image: String?,
     notes: String?,
   ) {
+    println("DEBUG: TrophyDatabase.insertTrophy called with image: $image")
     dbQuery.transaction {
       dbQuery.insertTrophy(
         fishType = fishType,
@@ -50,6 +31,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
         notes = notes,
       )
     }
+    println("DEBUG: TrophyDatabase.insertTrophy completed")
   }
 
   fun deleteTrophy(id: Int) {
@@ -74,4 +56,24 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
         )
       }
   }
+
+  private fun mapTrophy(
+    id: Long,
+    fishType: String,
+    weight: Double,
+    length: Double?,
+    location: String,
+    date: String,
+    image: String?,
+    notes: String?,
+  ) = Trophy(
+    id = id.toInt(),
+    fishType = fishType,
+    weight = weight,
+    length = length,
+    location = location,
+    date = date,
+    image = image,
+    notes = notes,
+  )
 }
