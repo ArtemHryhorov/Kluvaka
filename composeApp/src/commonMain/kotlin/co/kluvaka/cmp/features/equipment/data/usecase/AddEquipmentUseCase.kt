@@ -9,7 +9,7 @@ class AddEquipmentUseCase(
 
   override suspend fun invoke(
     title: String,
-    image: String?,
+    images: List<String>,
     price: Double,
-  ) = repository.insert(title, image, price)
+  ) = repository.insert(title, images, price)
 }

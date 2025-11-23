@@ -196,7 +196,7 @@ private fun EquipmentCard(
       }
       Spacer(modifier = Modifier.size(4.dp))
       Image(
-        painter = rememberAsyncImagePainter(item.image),
+        painter = rememberAsyncImagePainter(item.images.firstOrNull()),
         contentDescription = "Trophy photo",
         modifier = Modifier
           .size(64.dp)

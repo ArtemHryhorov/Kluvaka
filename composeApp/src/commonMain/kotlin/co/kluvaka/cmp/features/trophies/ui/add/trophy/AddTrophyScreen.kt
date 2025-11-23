@@ -100,7 +100,7 @@ data class AddTrophyScreen(
       Column(
         modifier = Modifier
           .fillMaxSize()
-          .padding(16.dp)
+          .padding(horizontal = 16.dp)
           .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
       ) {
@@ -110,7 +110,6 @@ data class AddTrophyScreen(
           label = { Text("Тип рыбы") },
           modifier = Modifier.fillMaxWidth()
         )
-
         Row(
           modifier = Modifier.fillMaxWidth(),
           horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -253,6 +252,8 @@ data class AddTrophyScreen(
             AddTrophyMode.New -> Text("Добавить трофей")
           }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
       }
     }
   }

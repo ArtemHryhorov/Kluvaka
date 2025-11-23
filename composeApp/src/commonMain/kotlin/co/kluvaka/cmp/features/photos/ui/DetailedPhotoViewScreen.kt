@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil3.compose.AsyncImage
@@ -35,46 +39,47 @@ data class DetailedPhotoViewScreen(
         val navigator = LocalNavigator.current
         val pagerState = rememberPagerState(initialPage = initialIndex) { images.size }
 
-      Scaffold(
-        topBar = {
-          TopAppBar(
-            title = {},
-            navigationIcon = {
-              IconButton(onClick = { navigator?.pop() }) {
-                Icon(
-                  imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                  contentDescription = "Back",
-                  tint = Color.Companion.White
-                )
-              }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-              containerColor = Color.Companion.Transparent
-            )
-          )
-        },
-        containerColor = Color.Companion.Black
-      ) { paddingValues ->
+      Scaffold(containerColor = Color.White) { paddingValues ->
         Box(
-          modifier = Modifier.Companion
+          modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
-            .background(Color.Companion.Black),
-          contentAlignment = Alignment.Companion.Center
+            .background(Color.White),
+          contentAlignment = Alignment.Center
         ) {
           HorizontalPager(
             state = pagerState,
-            modifier = Modifier.Companion.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
           ) { page ->
             Box(
-              modifier = Modifier.Companion.fillMaxSize(),
-              contentAlignment = Alignment.Companion.Center
+              modifier = Modifier.fillMaxSize(),
+              contentAlignment = Alignment.Center
             ) {
               AsyncImage(
                 model = images[page],
                 contentDescription = "Full screen photo",
-                modifier = Modifier.Companion.fillMaxWidth(),
-                contentScale = ContentScale.Companion.Fit
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.Fit
+              )
+            }
+          }
+          Box(
+            modifier = Modifier
+              .padding(horizontal = 24.dp)
+              .size(48.dp)
+              .background(
+                color = Color.Black,
+                shape = CircleShape,
+              )
+              .align(Alignment.TopEnd),
+          ) {
+            IconButton(
+              modifier = Modifier.align(Alignment.Center),
+              onClick = { navigator?.pop() },
+            ) {
+              Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Back",
+                tint = Color.White
               )
             }
           }

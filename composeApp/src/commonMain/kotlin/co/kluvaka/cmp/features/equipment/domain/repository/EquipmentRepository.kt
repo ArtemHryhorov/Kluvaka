@@ -6,7 +6,7 @@ interface EquipmentRepository {
 
   suspend fun insert(
     title: String,
-    image: String?,
+    images: List<String>,
     price: Double,
   )
 

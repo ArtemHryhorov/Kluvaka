@@ -10,10 +10,10 @@ class EquipmentRepositoryImpl(
 
   override suspend fun insert(
     title: String,
-    image: String?,
+    images: List<String>,
     price: Double,
   ) {
-    database.insertEquipment(title, image, price)
+    database.insertEquipment(title, images, price)
   }
 
   override suspend fun getAll(): List<Equipment> {

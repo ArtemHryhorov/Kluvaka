@@ -2,21 +2,26 @@ package co.kluvaka.cmp.features.equipment.ui.add.equipment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.composable.AddEquipmentTopBar
@@ -31,8 +36,6 @@ object AddEquipmentScreen : Screen {
     val viewModel = koinViewModel<AddEquipmentViewModel>()
     val photoPicker = rememberPhotoPicker()
     val state by viewModel.state.collectAsState()
-    var title by remember { mutableStateOf("") }
-    var price by remember { mutableStateOf("") }
 
     Column(
       modifier = Modifier
@@ -49,15 +52,15 @@ object AddEquipmentScreen : Screen {
         verticalArrangement = Arrangement.Top,
       ) {
         OutlinedTextField(
-          value = title,
-          onValueChange = { title = it },
+          value = state.title,
+          onValueChange = viewModel::updateTitle,
           label = { Text("Name") },
           modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.padding(12.dp))
         OutlinedTextField(
-          value = price,
-          onValueChange = { price = it },
+          value = state.price,
+          onValueChange = viewModel::updatePrice,
           label = { Text("Price") },
           keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -67,7 +70,7 @@ object AddEquipmentScreen : Screen {
         Spacer(modifier = Modifier.padding(12.dp))
         // Photo picker section
         Text(
-          text = "Фото трофея",
+          text = "Фото приблуды",
           style = MaterialTheme.typography.titleMedium
         )
 
@@ -79,7 +82,7 @@ object AddEquipmentScreen : Screen {
           Button(
             onClick = {
               photoPicker.pickFromCamera { imageUri ->
-                imageUri?.let { viewModel.updateImage(it) }
+                imageUri?.let { viewModel.addImage(it) }
               }
             },
             modifier = Modifier.weight(1f)
@@ -92,8 +95,8 @@ object AddEquipmentScreen : Screen {
           // Gallery button
           Button(
             onClick = {
-              photoPicker.pickFromGallery { imageUri ->
-                imageUri?.let { viewModel.updateImage(it) }
+              photoPicker.pickMultipleFromGallery { imageUris ->
+                imageUris.forEach { viewModel.addImage(it) }
               }
             },
             modifier = Modifier.weight(1f)
@@ -104,27 +107,52 @@ object AddEquipmentScreen : Screen {
           }
         }
 
-        // Display selected image
-        state.image?.let { imageUri ->
-          Card(
+        // Display selected images
+        if (state.images.isNotEmpty()) {
+          LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
               .fillMaxWidth()
-              .height(200.dp)
-              .clip(RoundedCornerShape(8.dp))
+              .padding(vertical = 8.dp)
           ) {
-            Box(
-              modifier = Modifier.fillMaxSize(),
-              contentAlignment = Alignment.Center
-            ) {
-              // Display the actual image
-              Image(
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = "Selected trophy photo",
+            itemsIndexed(state.images) { index, imageUri ->
+              Box(
                 modifier = Modifier
-                  .fillMaxSize()
-                  .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-              )
+                  .height(120.dp)
+                  .width(120.dp)
+              ) {
+                // Delete button
+                IconButton(
+                  onClick = { viewModel.removeImage(index) },
+                  modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .zIndex(1f)
+                    .padding(4.dp)
+                    .size(24.dp),
+                  colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Black.copy(alpha = 0.5f),
+                    contentColor = Color.White
+                  )
+                ) {
+                  Icon(
+                    Icons.Default.Close,
+                    contentDescription = "Remove image",
+                    modifier = Modifier.padding(4.dp)
+                  )
+                }
+
+                Card(
+                  modifier = Modifier.fillMaxSize(),
+                  shape = RoundedCornerShape(8.dp)
+                ) {
+                  Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = "Selected equipment photo",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                  )
+                }
+              }
             }
           }
         }
@@ -132,14 +160,10 @@ object AddEquipmentScreen : Screen {
         Box {
           Button(
             onClick = {
-              if (title.isNotBlank() && price.isNotBlank()) {
-                viewModel.addEquipment(
-                  title = title,
-                  price = price.toDouble(),
-                )
-                navigator?.pop()
-              }
+              viewModel.addEquipment()
+              navigator?.pop()
             },
+            enabled = state.title.isNotBlank(),
             modifier = Modifier
               .align(Alignment.BottomCenter)
               .fillMaxWidth()
