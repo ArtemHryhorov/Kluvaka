@@ -7,7 +7,6 @@ import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 data class ActiveSessionState(
   val session: FishingSession?,
   val events: List<FishingSessionEvent> = emptyList(),
-  val showAddEventDialog: Boolean = false,
   val showEventTypeDialog: Boolean = false,
   val showRodSelectionDialog: Boolean = false,
   val showFishEventDialog: Boolean = false,

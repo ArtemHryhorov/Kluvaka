@@ -1,7 +1,6 @@
 package co.kluvaka.cmp.features.sessions.ui.active
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -66,31 +67,27 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
     Scaffold(
       topBar = {
         TopAppBar(
-          title = { Text("Active Session") },
+          title = { Text("Активная сессия") },
           navigationIcon = {
             IconButton(onClick = { navigator?.pop() }) {
               Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+            }
+          },
+          actions = {
+            IconButton(onClick = { viewModel.showFinishSessionDialog() }) {
+              Icon(Icons.Default.Done, contentDescription = "Finish")
             }
           },
           colors = TopAppBarDefaults.topAppBarColors()
         )
       },
       floatingActionButton = {
-        Row(
-          horizontalArrangement = Arrangement.spacedBy(8.dp)
+        FloatingActionButton(
+          onClick = { viewModel.showEventTypeDialog() },
+          containerColor = MaterialTheme.colorScheme.primary,
+          contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
-          FloatingActionButton(
-            onClick = { viewModel.showAddEventDialog() },
-            containerColor = Color.Green
-          ) {
-            Text("Новое событие", color = Color.White)
-          }
-          FloatingActionButton(
-            onClick = { viewModel.showFinishSessionDialog() },
-            containerColor = Color.Red
-          ) {
-            Text("Finish", color = Color.White)
-          }
+          Icon(Icons.Default.Add, contentDescription = "Новое событие")
         }
       }
     ) { paddingValues ->
@@ -98,43 +95,70 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
         modifier = Modifier
           .fillMaxSize()
           .padding(paddingValues)
-          .padding(16.dp)
+          .padding(horizontal = 16.dp)
       ) {
         // Session info
         state.session?.let { session ->
+          Spacer(modifier = Modifier.height(16.dp))
           Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            colors = CardDefaults.cardColors(
+              containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
           ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-              Text("Location: ${session.location}", fontWeight = FontWeight.Bold)
-              Text("Date: ${session.date}")
-              Text("Rods: ${session.rods.size}")
+            Column(
+              modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+              verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+              Text(
+                text = session.location,
+                style = MaterialTheme.typography.headlineSmall
+              )
+              Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+              ) {
+                Text(
+                  text = session.date,
+                  style = MaterialTheme.typography.bodyMedium,
+                  color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                  text = "Удочек: ${session.rods.size}",
+                  style = MaterialTheme.typography.bodyMedium,
+                  color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+              }
             }
           }
-          Spacer(modifier = Modifier.height(16.dp))
+          Spacer(modifier = Modifier.height(24.dp))
         }
 
         // Events list
-        Text("События", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        LazyColumn(
-          verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-          items(state.events) { event ->
-            EventCard(event = event)
+        if (state.events.isNotEmpty()) {
+          Text(
+            text = "События",
+            style = MaterialTheme.typography.titleLarge
+          )
+          Spacer(modifier = Modifier.height(16.dp))
+          
+          LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxSize()
+          ) {
+            items(state.events.reversed()) { event ->
+              EventCard(event = event)
+            }
           }
+        } else {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Пока нет событий", style = MaterialTheme.typography.bodyLarge, color = Color.Gray)
+            }
         }
       }
-    }
-
-    // Dialogs
-    if (state.showAddEventDialog) {
-      AddEventDialog(
-        onDismiss = { viewModel.hideAddEventDialog() },
-        onAddEvent = { viewModel.showEventTypeDialog() }
-      )
     }
 
     if (state.showEventTypeDialog) {
@@ -189,12 +213,9 @@ fun EventCard(event: FishingSessionEvent) {
   Card(
     modifier = Modifier.fillMaxWidth(),
     colors = CardDefaults.cardColors(
-      containerColor = when (event.type) {
-        is FishingSessionEventType.Fish -> Color.Green.copy(alpha = 0.1f)
-        is FishingSessionEventType.Loose -> Color.Red.copy(alpha = 0.1f)
-        is FishingSessionEventType.Spomb -> Color.Yellow.copy(alpha = 0.1f)
-      }
-    )
+      containerColor = MaterialTheme.colorScheme.surface
+    ),
+    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
   ) {
     Row(
       modifier = Modifier
@@ -218,57 +239,48 @@ fun EventCard(event: FishingSessionEvent) {
       Spacer(modifier = Modifier.width(12.dp))
       
       Column {
-        Text(
-          text = when (event.type) {
-            is FishingSessionEventType.Fish -> "Карп"
-            is FishingSessionEventType.Loose -> "Сход"
-            is FishingSessionEventType.Spomb -> "Спомб"
-          },
-          fontWeight = FontWeight.Bold
-        )
-        Text(
-          text = event.timestamp,
-          style = MaterialTheme.typography.bodySmall
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+              text = when (event.type) {
+                is FishingSessionEventType.Fish -> "Карп"
+                is FishingSessionEventType.Loose -> "Сход"
+                is FishingSessionEventType.Spomb -> "Спомб"
+              },
+              style = MaterialTheme.typography.titleMedium,
+              fontWeight = FontWeight.Bold
+            )
+            Text(
+              text = event.timestamp,
+              style = MaterialTheme.typography.bodySmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(4.dp))
+        
         when (event.type) {
           is FishingSessionEventType.Fish -> {
-            event.weight?.let { weight ->
-              Text("Weight: ${weight}kg")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                event.weight?.let { weight ->
+                  Text("Вес: ${weight} кг", style = MaterialTheme.typography.bodyMedium)
+                }
+                Text("Удочка: ${event.type.rodId}", style = MaterialTheme.typography.bodyMedium)
             }
-            Text("Rod: ${event.type.rodId}")
           }
           is FishingSessionEventType.Loose -> {
-            Text("Rod: ${event.type.rodId}")
+            Text("Удочка: ${event.type.rodId}", style = MaterialTheme.typography.bodyMedium)
           }
           is FishingSessionEventType.Spomb -> {
-            Text("Count: ${event.type.count} шт")
+            Text("Количество: ${event.type.count} шт", style = MaterialTheme.typography.bodyMedium)
           }
         }
       }
     }
   }
-}
-
-@Composable
-fun AddEventDialog(
-  onDismiss: () -> Unit,
-  onAddEvent: () -> Unit
-) {
-  androidx.compose.material3.AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text("Событие") },
-    text = { Text("Выберите тип события") },
-    confirmButton = {
-      Button(onClick = onAddEvent) {
-        Text("Продолжить")
-      }
-    },
-    dismissButton = {
-      Button(onClick = onDismiss) {
-        Text("Отмена")
-      }
-    }
-  )
 }
 
 @Composable

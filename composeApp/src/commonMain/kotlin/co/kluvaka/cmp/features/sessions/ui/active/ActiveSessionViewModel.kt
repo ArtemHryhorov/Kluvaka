@@ -45,19 +45,9 @@ class ActiveSessionViewModel(
       }
     }
   }
-
-  fun showAddEventDialog() {
-    _mutableState.update { it.copy(showAddEventDialog = true) }
-  }
-
-  fun hideAddEventDialog() {
-    _mutableState.update { it.copy(showAddEventDialog = false) }
-  }
-
   fun showEventTypeDialog() {
     _mutableState.update { 
       it.copy(
-        showAddEventDialog = false,
         showEventTypeDialog = true
       ) 
     }
