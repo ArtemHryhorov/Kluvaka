@@ -14,4 +14,6 @@ interface FishingSessionRepository {
   suspend fun updateSession(session: FishingSession)
 
   suspend fun addEvent(sessionId: Int, event: FishingSessionEvent)
+
+  suspend fun deleteSession(sessionId: Int)
 }

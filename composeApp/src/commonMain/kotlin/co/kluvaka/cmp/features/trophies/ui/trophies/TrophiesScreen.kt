@@ -46,6 +46,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.common.ui.Dialog
+import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
 import co.kluvaka.cmp.features.trophies.ui.detail.TrophyDetailScreen

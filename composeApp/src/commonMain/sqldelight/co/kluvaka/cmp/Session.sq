@@ -55,3 +55,7 @@ SELECT * FROM fishing_session_event WHERE session_id = :sessionId ORDER BY times
 insertEvent:
 INSERT INTO fishing_session_event(session_id, event_type, rod_id, count, timestamp, weight, photos, notes)
 VALUES (:sessionId, :eventType, :rodId, :count, :timestamp, :weight, :photos, :notes);
+
+deleteSession:
+DELETE FROM fishing_session
+WHERE id = :id;

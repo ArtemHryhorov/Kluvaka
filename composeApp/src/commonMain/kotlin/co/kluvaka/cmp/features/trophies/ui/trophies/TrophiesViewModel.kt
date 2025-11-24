@@ -2,6 +2,7 @@ package co.kluvaka.cmp.features.trophies.ui.trophies
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.domain.usecase.DeleteTrophy
 import co.kluvaka.cmp.features.trophies.domain.usecase.GetAllTrophies

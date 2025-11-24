@@ -160,4 +160,8 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
       notes = event.notes
     )
   }
+
+  fun deleteSession(sessionId: Int) {
+    dbQuery.deleteSession(id = sessionId.toLong())
+  }
 }
