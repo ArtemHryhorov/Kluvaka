@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -279,7 +280,8 @@ fun EventCard(event: FishingSessionEvent) {
       modifier = Modifier
         .fillMaxWidth()
         .padding(16.dp),
-      verticalAlignment = Alignment.CenterVertically
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
       // Event type indicator
       Box(
@@ -294,32 +296,19 @@ fun EventCard(event: FishingSessionEvent) {
             }
           )
       )
-      Spacer(modifier = Modifier.width(12.dp))
-      
-      Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-              text = when (event.type) {
-                is FishingSessionEventType.Fish -> "Карп"
-                is FishingSessionEventType.Loose -> "Сход"
-                is FishingSessionEventType.Spomb -> "Спомб"
-              },
-              style = MaterialTheme.typography.titleMedium,
-              fontWeight = FontWeight.Bold
-            )
-            Text(
-              text = event.timestamp,
-              style = MaterialTheme.typography.bodySmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        
+      Column(
+        modifier = Modifier.weight(1f)
+      ) {
+        Text(
+          text = when (event.type) {
+            is FishingSessionEventType.Fish -> "Карп"
+            is FishingSessionEventType.Loose -> "Сход"
+            is FishingSessionEventType.Spomb -> "Спомб"
+          },
+          style = MaterialTheme.typography.titleMedium,
+          fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(4.dp))
-        
         when (event.type) {
           is FishingSessionEventType.Fish -> {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -345,17 +334,27 @@ fun EventCard(event: FishingSessionEvent) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
           )
         }
-
+      }
+      Column(
+        modifier = Modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.End,
+      ) {
+        Text(
+          text = event.timestamp,
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         if (event.photos.isNotEmpty()) {
           Spacer(modifier = Modifier.height(8.dp))
           Image(
             painter = rememberAsyncImagePainter(event.photos.first()),
             contentDescription = "Event photo",
             modifier = Modifier
-              .height(150.dp)
+              .size(64.dp)
               .fillMaxWidth()
               .clip(RoundedCornerShape(8.dp)),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
           )
         }
       }

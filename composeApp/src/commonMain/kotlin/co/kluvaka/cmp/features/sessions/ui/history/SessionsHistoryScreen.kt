@@ -1,10 +1,14 @@
 package co.kluvaka.cmp.features.sessions.ui.history
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,21 +54,24 @@ object SessionsHistoryScreen : Screen {
     Box(
       modifier = Modifier.fillMaxSize()
     ) {
-      FishingSessionList(
-        sessions = state.sessions,
-        onSessionClick = { session ->
-          if (session.isActive) {
-            navigator?.push(SessionScreen(mode = SessionMode.Active, sessionId = session.id))
-          } else {
-            session.id?.let { sessionId ->
-              navigator?.push(SessionScreen(mode = SessionMode.Completed, sessionId = sessionId))
+      Column {
+        SessionsHistoryTopBar()
+        FishingSessionList(
+          sessions = state.sessions,
+          onSessionClick = { session ->
+            if (session.isActive) {
+              navigator?.push(SessionScreen(mode = SessionMode.Active, sessionId = session.id))
+            } else {
+              session.id?.let { sessionId ->
+                navigator?.push(SessionScreen(mode = SessionMode.Completed, sessionId = sessionId))
+              }
             }
-          }
           },
-        onSessionDelete = { session ->
-          viewModel.showDeleteDialog(session)
-        }
-      )
+          onSessionDelete = { session ->
+            viewModel.showDeleteDialog(session)
+          }
+        )
+      }
       FloatingActionButton(
         modifier = Modifier
           .align(Alignment.BottomEnd)
@@ -90,4 +97,17 @@ object SessionsHistoryScreen : Screen {
       }
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SessionsHistoryTopBar() {
+  TopAppBar(
+    windowInsets = WindowInsets(0, 0, 0, 0),
+    title = {
+      Text(
+        text = "Мои Рыбацкие Сессии",
+      )
+    }
+  )
 }
