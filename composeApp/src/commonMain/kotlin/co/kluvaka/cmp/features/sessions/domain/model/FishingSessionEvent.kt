@@ -6,4 +6,5 @@ data class FishingSessionEvent(
   val timestamp: String,
   val weight: String? = null, // For fish events
   val photos: List<String> = emptyList(), // For fish events
+  val notes: String? = null,
 )

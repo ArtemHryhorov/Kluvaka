@@ -16,6 +16,7 @@ data class ActiveSessionState(
   val selectedEventType: FishingSessionEventType? = null,
   val selectedRodId: Int? = null,
   val newEventWeight: String = "",
+  val newEventNotes: String = "",
   val newEventPhotos: List<String> = emptyList(),
   val newSpombCount: String = "",
   val sessionNotes: String = "",

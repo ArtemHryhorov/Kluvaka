@@ -1,6 +1,8 @@
 package co.kluvaka.cmp.features.sessions.ui.active
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +15,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -45,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -52,6 +58,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
+import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
+import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
 class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
@@ -61,6 +69,7 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
     val navigator = LocalNavigator.current
     val viewModel = koinViewModel<ActiveSessionViewModel>()
     val state by viewModel.state.collectAsState()
+    val photoPicker = rememberPhotoPicker()
 
     LaunchedEffect(sessionId) {
       if (sessionId != null) {
@@ -187,7 +196,16 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
         onDismiss = { viewModel.hideFishEventDialog() },
         onAddEvent = { viewModel.addFishEvent() },
         weight = state.newEventWeight,
-        onWeightChange = { viewModel.updateEventWeight(it) }
+        onWeightChange = { viewModel.updateEventWeight(it) },
+        notes = state.newEventNotes,
+        onNotesChange = { viewModel.updateEventNotes(it) },
+        photos = state.newEventPhotos,
+        onAddPhoto = {
+          photoPicker.pickMultipleFromGallery { uris ->
+            uris.forEach { viewModel.addEventPhoto(it) }
+          }
+        },
+        onRemovePhoto = { viewModel.removeEventPhoto(it) }
       )
     }
 
@@ -196,7 +214,32 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
         onDismiss = { viewModel.hideSpombEventDialog() },
         onAddEvent = { viewModel.addSpombEvent() },
         count = state.newSpombCount,
-        onCountChange = { viewModel.updateSpombCount(it) }
+        onCountChange = { viewModel.updateSpombCount(it) },
+        notes = state.newEventNotes,
+        onNotesChange = { viewModel.updateEventNotes(it) },
+        photos = state.newEventPhotos,
+        onAddPhoto = {
+          photoPicker.pickMultipleFromGallery { uris ->
+            uris.forEach { viewModel.addEventPhoto(it) }
+          }
+        },
+        onRemovePhoto = { viewModel.removeEventPhoto(it) }
+      )
+    }
+
+    if (state.showFishLooseDialog) {
+      LooseEventDialog(
+        onDismiss = { viewModel.hideFishLooseDialog() },
+        onAddEvent = { viewModel.confirmFishLooseEvent() },
+        notes = state.newEventNotes,
+        onNotesChange = { viewModel.updateEventNotes(it) },
+        photos = state.newEventPhotos,
+        onAddPhoto = {
+          photoPicker.pickMultipleFromGallery { uris ->
+            uris.forEach { viewModel.addEventPhoto(it) }
+          }
+        },
+        onRemovePhoto = { viewModel.removeEventPhoto(it) }
       )
     }
 
@@ -284,6 +327,86 @@ fun EventCard(event: FishingSessionEvent) {
             Text("Количество: ${event.type.count} шт", style = MaterialTheme.typography.bodyMedium)
           }
         }
+
+        if (!event.notes.isNullOrBlank()) {
+          Spacer(modifier = Modifier.height(4.dp))
+          Text(
+            text = event.notes,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+          )
+        }
+
+        if (event.photos.isNotEmpty()) {
+          Spacer(modifier = Modifier.height(8.dp))
+          Image(
+            painter = rememberAsyncImagePainter(event.photos.first()),
+            contentDescription = "Event photo",
+            modifier = Modifier
+              .height(150.dp)
+              .fillMaxWidth()
+              .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+          )
+        }
+      }
+    }
+  }
+}
+
+@Composable
+fun PhotoSelectionRow(
+  photos: List<String>,
+  onAddPhotoClick: () -> Unit,
+  onRemovePhotoClick: (Int) -> Unit,
+) {
+  LazyRow(
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    itemsIndexed(photos) { index, photo ->
+      Box(
+        modifier = Modifier
+          .size(80.dp)
+      ) {
+        Image(
+          painter = rememberAsyncImagePainter(photo),
+          contentDescription = null,
+          modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(8.dp)),
+          contentScale = ContentScale.Crop
+        )
+        IconButton(
+          onClick = { onRemovePhotoClick(index) },
+          modifier = Modifier
+            .align(Alignment.TopEnd)
+            .size(24.dp)
+            .padding(4.dp)
+        ) {
+          Icon(
+            Icons.Default.Close,
+            contentDescription = "Remove",
+            tint = Color.White,
+            modifier = Modifier.background(Color.Black.copy(alpha=0.5f), CircleShape)
+          )
+        }
+      }
+    }
+    item {
+      Box(
+        modifier = Modifier
+          .size(80.dp)
+          .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(8.dp))
+          .clip(RoundedCornerShape(8.dp))
+          .clickable { onAddPhotoClick() },
+        contentAlignment = Alignment.Center
+      ) {
+        Icon(
+          Icons.Default.Add,
+          contentDescription = "Add photo",
+          tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
       }
     }
   }
@@ -346,8 +469,9 @@ fun RodSelectionDialog(
           Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { onSelectRod(index + 1) },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
           ) {
-            Text("Удочка #${index + 1}")
+            Text("Удочка #${index + 1}", color = Color.White)
           }
         }
       }
@@ -366,32 +490,19 @@ fun FishEventDialog(
   onDismiss: () -> Unit,
   onAddEvent: () -> Unit,
   weight: String,
-  onWeightChange: (String) -> Unit
+  onWeightChange: (String) -> Unit,
+  notes: String,
+  onNotesChange: (String) -> Unit,
+  photos: List<String>,
+  onAddPhoto: () -> Unit,
+  onRemovePhoto: (Int) -> Unit
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
     title = { Text("Улов") },
     text = {
       Column {
-        // Photo placeholders
-        Row(
-          horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-          repeat(3) {
-            Box(
-              modifier = Modifier
-                .size(60.dp)
-                .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(8.dp)),
-              contentAlignment = Alignment.Center
-            ) {
-              Icon(
-                Icons.Default.Add,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-              )
-            }
-          }
-        }
+        PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
           value = weight,
@@ -399,6 +510,14 @@ fun FishEventDialog(
           label = { Text("Вес (кг)") },
           modifier = Modifier.fillMaxWidth(),
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+          value = notes,
+          onValueChange = onNotesChange,
+          label = { Text("Заметки") },
+          modifier = Modifier.fillMaxWidth(),
+          minLines = 2
         )
       }
     },
@@ -420,19 +539,75 @@ fun SpombEventDialog(
   onDismiss: () -> Unit,
   onAddEvent: () -> Unit,
   count: String,
-  onCountChange: (String) -> Unit
+  onCountChange: (String) -> Unit,
+  notes: String,
+  onNotesChange: (String) -> Unit,
+  photos: List<String>,
+  onAddPhoto: () -> Unit,
+  onRemovePhoto: (Int) -> Unit
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
     title = { Text("Кормление") },
     text = {
-      OutlinedTextField(
-        value = count,
-        onValueChange = onCountChange,
-        label = { Text("Количество") },
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-      )
+      Column {
+        PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+          value = count,
+          onValueChange = onCountChange,
+          label = { Text("Количество") },
+          modifier = Modifier.fillMaxWidth(),
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+          value = notes,
+          onValueChange = onNotesChange,
+          label = { Text("Заметки") },
+          modifier = Modifier.fillMaxWidth(),
+          minLines = 2
+        )
+      }
+    },
+    confirmButton = {
+      Button(onClick = onAddEvent) {
+        Text("Добавить")
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismiss) {
+        Text("Отмена")
+      }
+    }
+  )
+}
+
+@Composable
+fun LooseEventDialog(
+  onDismiss: () -> Unit,
+  onAddEvent: () -> Unit,
+  notes: String,
+  onNotesChange: (String) -> Unit,
+  photos: List<String>,
+  onAddPhoto: () -> Unit,
+  onRemovePhoto: (Int) -> Unit
+) {
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text("Сход") },
+    text = {
+      Column {
+        PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+          value = notes,
+          onValueChange = onNotesChange,
+          label = { Text("Заметки") },
+          modifier = Modifier.fillMaxWidth(),
+          minLines = 3
+        )
+      }
     },
     confirmButton = {
       Button(onClick = onAddEvent) {

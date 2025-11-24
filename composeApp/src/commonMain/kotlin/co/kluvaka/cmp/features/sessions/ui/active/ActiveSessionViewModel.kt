@@ -64,9 +64,25 @@ class ActiveSessionViewModel(
         showEventTypeDialog = false
       ) 
     }
+
+    val sessionRods = state.value.session?.rods
+    val singleRodId = if (sessionRods?.size == 1) sessionRods.first().order else null
+
     when (eventType) {
-      is FishingSessionEventType.Fish -> showRodSelectionDialog()
-      is FishingSessionEventType.Loose -> showRodSelectionDialog()
+      is FishingSessionEventType.Fish -> {
+        if (singleRodId != null) {
+          selectRod(singleRodId)
+        } else {
+          showRodSelectionDialog()
+        }
+      }
+      is FishingSessionEventType.Loose -> {
+        if (singleRodId != null) {
+          selectRod(singleRodId)
+        } else {
+          showRodSelectionDialog()
+        }
+      }
       is FishingSessionEventType.Spomb -> showSpombEventDialog()
     }
   }
@@ -88,7 +104,7 @@ class ActiveSessionViewModel(
     }
     when (state.value.selectedEventType) {
       is FishingSessionEventType.Fish -> showFishEventDialog()
-      is FishingSessionEventType.Loose -> addFishLooseEvent()
+      is FishingSessionEventType.Loose -> showFishLooseDialog()
       else -> {}
     }
   }
@@ -109,8 +125,34 @@ class ActiveSessionViewModel(
     _mutableState.update { it.copy(showSpombEventDialog = false) }
   }
 
+  fun showFishLooseDialog() {
+    _mutableState.update { it.copy(showFishLooseDialog = true) }
+  }
+
+  fun hideFishLooseDialog() {
+    _mutableState.update { it.copy(showFishLooseDialog = false) }
+  }
+
   fun updateEventWeight(weight: String) {
     _mutableState.update { it.copy(newEventWeight = weight) }
+  }
+
+  fun updateEventNotes(notes: String) {
+    _mutableState.update { it.copy(newEventNotes = notes) }
+  }
+
+  fun addEventPhoto(photo: String) {
+    _mutableState.update { it.copy(newEventPhotos = it.newEventPhotos + photo) }
+  }
+
+  fun removeEventPhoto(index: Int) {
+    _mutableState.update {
+      val photos = it.newEventPhotos.toMutableList()
+      if (index in photos.indices) {
+        photos.removeAt(index)
+      }
+      it.copy(newEventPhotos = photos)
+    }
   }
 
   fun updateSpombCount(count: String) {
@@ -123,13 +165,15 @@ class ActiveSessionViewModel(
       type = FishingSessionEventType.Fish(state.value.selectedRodId ?: 1),
       timestamp = getCurrentTimestamp(),
       weight = state.value.newEventWeight.takeIf { it.isNotEmpty() },
-      photos = state.value.newEventPhotos
+      photos = state.value.newEventPhotos,
+      notes = state.value.newEventNotes.takeIf { it.isNotEmpty() }
     )
     _mutableState.update { 
       it.copy(
         events = it.events + event,
         showFishEventDialog = false,
         newEventWeight = "",
+        newEventNotes = "",
         newEventPhotos = emptyList(),
         selectedEventType = null,
         selectedRodId = null
@@ -141,28 +185,36 @@ class ActiveSessionViewModel(
     val event = FishingSessionEvent(
       id = (state.value.events.size + 1),
       type = FishingSessionEventType.Spomb(state.value.newSpombCount.toIntOrNull() ?: 1),
-      timestamp = getCurrentTimestamp()
+      timestamp = getCurrentTimestamp(),
+      photos = state.value.newEventPhotos,
+      notes = state.value.newEventNotes.takeIf { it.isNotEmpty() }
     )
     _mutableState.update { 
       it.copy(
         events = it.events + event,
         showSpombEventDialog = false,
         newSpombCount = "",
+        newEventNotes = "",
+        newEventPhotos = emptyList(),
         selectedEventType = null
       ) 
     }
   }
 
-  fun addFishLooseEvent() {
+  fun confirmFishLooseEvent() {
     val event = FishingSessionEvent(
       id = (state.value.events.size + 1),
       type = FishingSessionEventType.Loose(state.value.selectedRodId ?: 1),
-      timestamp = getCurrentTimestamp()
+      timestamp = getCurrentTimestamp(),
+      photos = state.value.newEventPhotos,
+      notes = state.value.newEventNotes.takeIf { it.isNotEmpty() }
     )
     _mutableState.update { 
       it.copy(
         events = it.events + event,
         showFishLooseDialog = false,
+        newEventNotes = "",
+        newEventPhotos = emptyList(),
         selectedEventType = null,
         selectedRodId = null
       ) 
