@@ -15,11 +15,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -41,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -288,36 +294,37 @@ fun EventTypeDialog(
   onDismiss: () -> Unit,
   onSelectEventType: (FishingSessionEventType) -> Unit
 ) {
-  androidx.compose.material3.AlertDialog(
+  AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Событие") },
+    title = { Text("Тип события") },
     text = {
-      Column {
+      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Button(
+          modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Fish(1)) },
-          colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Green)
+          colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
         ) {
-          Text("Рыба", color = Color.White)
+          Text("Рыба")
         }
-        Spacer(modifier = Modifier.height(8.dp))
         Button(
+          modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Spomb(1)) },
-          colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Yellow)
+          colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107), contentColor = Color.Black)
         ) {
-          Text("Спомб", color = Color.White)
+          Text("Спомб")
         }
-        Spacer(modifier = Modifier.height(8.dp))
         Button(
+          modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Loose(1)) },
-          colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Red)
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
         ) {
-          Text("Сход", color = Color.White)
+          Text("Сход")
         }
       }
     },
     confirmButton = {},
     dismissButton = {
-      Button(onClick = onDismiss) {
+      TextButton(onClick = onDismiss) {
         Text("Отмена")
       }
     }
@@ -330,27 +337,24 @@ fun RodSelectionDialog(
   onSelectRod: (Int) -> Unit,
   rodsCount: Int
 ) {
-  androidx.compose.material3.AlertDialog(
+  AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Удочка") },
+    title = { Text("Выберите удочку") },
     text = {
-      Column {
+      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         repeat(rodsCount) { index ->
           Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = { onSelectRod(index + 1) },
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Green)
           ) {
-            Text("${index + 1}", color = Color.White)
-          }
-          if (index < rodsCount - 1) {
-            Spacer(modifier = Modifier.height(8.dp))
+            Text("Удочка #${index + 1}")
           }
         }
       }
     },
     confirmButton = {},
     dismissButton = {
-      Button(onClick = onDismiss) {
+      TextButton(onClick = onDismiss) {
         Text("Отмена")
       }
     }
@@ -364,9 +368,9 @@ fun FishEventDialog(
   weight: String,
   onWeightChange: (String) -> Unit
 ) {
-  androidx.compose.material3.AlertDialog(
+  AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Фото рыбы") },
+    title = { Text("Улов") },
     text = {
       Column {
         // Photo placeholders
@@ -377,11 +381,13 @@ fun FishEventDialog(
             Box(
               modifier = Modifier
                 .size(60.dp)
-                .background(Color.Gray.copy(alpha = 0.3f))
+                .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(8.dp)),
+              contentAlignment = Alignment.Center
             ) {
-              Text(
-                text = "+",
-                modifier = Modifier.align(Alignment.Center)
+              Icon(
+                Icons.Default.Add,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
               )
             }
           }
@@ -390,8 +396,9 @@ fun FishEventDialog(
         OutlinedTextField(
           value = weight,
           onValueChange = onWeightChange,
-          label = { Text("Weight (kg)") },
-          modifier = Modifier.fillMaxWidth()
+          label = { Text("Вес (кг)") },
+          modifier = Modifier.fillMaxWidth(),
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
       }
     },
@@ -401,7 +408,7 @@ fun FishEventDialog(
       }
     },
     dismissButton = {
-      Button(onClick = onDismiss) {
+      TextButton(onClick = onDismiss) {
         Text("Отмена")
       }
     }
@@ -415,15 +422,16 @@ fun SpombEventDialog(
   count: String,
   onCountChange: (String) -> Unit
 ) {
-  androidx.compose.material3.AlertDialog(
+  AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Кол спомбов") },
+    title = { Text("Кормление") },
     text = {
       OutlinedTextField(
         value = count,
         onValueChange = onCountChange,
         label = { Text("Количество") },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
       )
     },
     confirmButton = {
@@ -432,7 +440,7 @@ fun SpombEventDialog(
       }
     },
     dismissButton = {
-      Button(onClick = onDismiss) {
+      TextButton(onClick = onDismiss) {
         Text("Отмена")
       }
     }
@@ -446,18 +454,19 @@ fun FinishSessionDialog(
   notes: String,
   onNotesChange: (String) -> Unit
 ) {
-  androidx.compose.material3.AlertDialog(
+  AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Закончить") },
+    title = { Text("Завершить сессию") },
     text = {
       Column {
-        Text("Вы можете добавить заметки и фото позже")
+        Text("Вы можете добавить заметки и фото позже", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
           value = notes,
           onValueChange = onNotesChange,
           label = { Text("Заметки") },
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier.fillMaxWidth(),
+          minLines = 3
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Photo placeholders
@@ -468,11 +477,13 @@ fun FinishSessionDialog(
             Box(
               modifier = Modifier
                 .size(60.dp)
-                .background(Color.Gray.copy(alpha = 0.3f))
+                .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(8.dp)),
+              contentAlignment = Alignment.Center
             ) {
-              Text(
-                text = "+",
-                modifier = Modifier.align(Alignment.Center)
+              Icon(
+                Icons.Default.Add,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
               )
             }
           }
@@ -482,13 +493,13 @@ fun FinishSessionDialog(
     confirmButton = {
       Button(
         onClick = onFinish,
-        colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Red)
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
       ) {
-        Text("Finish", color = Color.White)
+        Text("Завершить")
       }
     },
     dismissButton = {
-      Button(onClick = onDismiss) {
+      TextButton(onClick = onDismiss) {
         Text("Отмена")
       }
     }
