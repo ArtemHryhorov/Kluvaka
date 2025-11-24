@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
+import co.kluvaka.cmp.features.sessions.domain.usecase.AddSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.usecase.FinishActiveSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetActiveFishingSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
@@ -17,6 +18,7 @@ class ActiveSessionViewModel(
   private val getActiveFishingSession: GetActiveFishingSession,
   private val getSessionById: GetSessionById,
   private val finishActiveSession: FinishActiveSession,
+  private val addSessionEvent: AddSessionEvent,
 ) : ViewModel() {
 
   private val _mutableState = MutableStateFlow(ActiveSessionState(null))
@@ -24,16 +26,25 @@ class ActiveSessionViewModel(
 
   fun getActiveSession() {
     viewModelScope.launch {
+      val activeSession = getActiveFishingSession()
+      val session = activeSession?.id?.let { getSessionById(it) } ?: activeSession
       _mutableState.update {
-        it.copy(session = getActiveFishingSession())
+        it.copy(
+          session = session,
+          events = session?.events ?: emptyList()
+        )
       }
     }
   }
 
   fun getActiveSessionById(sessionId: Int) {
     viewModelScope.launch {
+      val session = getSessionById(sessionId)
       _mutableState.update {
-        it.copy(session = getSessionById(sessionId))
+        it.copy(
+          session = session,
+          events = session.events
+        )
       }
     }
   }
@@ -168,9 +179,14 @@ class ActiveSessionViewModel(
       photos = state.value.newEventPhotos,
       notes = state.value.newEventNotes.takeIf { it.isNotEmpty() }
     )
+    viewModelScope.launch {
+      state.value.session?.id?.let { sessionId ->
+        addSessionEvent(sessionId, event)
+        refreshCurrentSessionFromDb(sessionId)
+      }
+    }
     _mutableState.update { 
       it.copy(
-        events = it.events + event,
         showFishEventDialog = false,
         newEventWeight = "",
         newEventNotes = "",
@@ -189,9 +205,14 @@ class ActiveSessionViewModel(
       photos = state.value.newEventPhotos,
       notes = state.value.newEventNotes.takeIf { it.isNotEmpty() }
     )
+    viewModelScope.launch {
+      state.value.session?.id?.let { sessionId ->
+        addSessionEvent(sessionId, event)
+        refreshCurrentSessionFromDb(sessionId)
+      }
+    }
     _mutableState.update { 
       it.copy(
-        events = it.events + event,
         showSpombEventDialog = false,
         newSpombCount = "",
         newEventNotes = "",
@@ -209,9 +230,14 @@ class ActiveSessionViewModel(
       photos = state.value.newEventPhotos,
       notes = state.value.newEventNotes.takeIf { it.isNotEmpty() }
     )
+    viewModelScope.launch {
+      state.value.session?.id?.let { sessionId ->
+        addSessionEvent(sessionId, event)
+        refreshCurrentSessionFromDb(sessionId)
+      }
+    }
     _mutableState.update { 
       it.copy(
-        events = it.events + event,
         showFishLooseDialog = false,
         newEventNotes = "",
         newEventPhotos = emptyList(),
@@ -250,5 +276,17 @@ class ActiveSessionViewModel(
     val now = kotlinx.datetime.Clock.System.now()
     val localDateTime = now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
     return "${localDateTime.hour.toString().padStart(2, '0')}:${localDateTime.minute.toString().padStart(2, '0')}"
+  }
+
+  private fun refreshCurrentSessionFromDb(sessionId: Int) {
+    viewModelScope.launch {
+      val session = getSessionById(sessionId)
+      _mutableState.update {
+        it.copy(
+          session = session,
+          events = session.events
+        )
+      }
+    }
   }
 }
