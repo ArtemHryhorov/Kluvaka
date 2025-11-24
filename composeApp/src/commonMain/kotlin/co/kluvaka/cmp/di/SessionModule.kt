@@ -15,8 +15,7 @@ import co.kluvaka.cmp.features.sessions.domain.usecase.FinishActiveSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetActiveFishingSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetAllFishingSessions
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
-import co.kluvaka.cmp.features.sessions.ui.active.ActiveSessionViewModel
-import co.kluvaka.cmp.features.sessions.ui.completed.CompletedSessionViewModel
+import co.kluvaka.cmp.features.sessions.ui.active.SessionViewModel
 import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryViewModel
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionViewModel
 import org.koin.core.module.dsl.viewModel
@@ -55,7 +54,7 @@ val sessionModule = module {
 
   // ViewModel
   viewModel {
-    ActiveSessionViewModel(
+    SessionViewModel(
       getActiveFishingSession = get(),
       getSessionById = get(),
       finishActiveSession = get(),
@@ -67,8 +66,5 @@ val sessionModule = module {
   }
   viewModel {
     StartSessionViewModel(createFishingSession = get())
-  }
-  viewModel {
-    CompletedSessionViewModel(getSessionById = get())
   }
 }

@@ -59,52 +59,59 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
+import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 
-class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
+class SessionScreen(
+  private val mode: SessionMode,
+  private val sessionId: Int? = null,
+) : Screen {
   @OptIn(ExperimentalMaterial3Api::class)
   @Composable
   override fun Content() {
     val navigator = LocalNavigator.current
-    val viewModel = koinViewModel<ActiveSessionViewModel>()
+    val viewModel = koinViewModel<SessionViewModel>()
     val state by viewModel.state.collectAsState()
     val photoPicker = rememberPhotoPicker()
+    val isActiveMode = state.mode == SessionMode.Active
 
-    LaunchedEffect(sessionId) {
-      if (sessionId != null) {
-        viewModel.getActiveSessionById(sessionId)
-      } else {
-        viewModel.getActiveSession()
-      }
+    LaunchedEffect(mode, sessionId) {
+      viewModel.loadSession(mode, sessionId)
     }
 
     Scaffold(
       topBar = {
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text("Активная сессия") },
+          title = {
+            Text(if (isActiveMode) "Активная сессия" else "Сессия")
+          },
           navigationIcon = {
             IconButton(onClick = { navigator?.pop() }) {
               Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
             }
           },
           actions = {
-            IconButton(onClick = { viewModel.showFinishSessionDialog() }) {
-              Icon(Icons.Default.Done, contentDescription = "Finish")
+            if (isActiveMode) {
+              IconButton(onClick = { viewModel.showFinishSessionDialog() }) {
+                Icon(Icons.Default.Done, contentDescription = "Finish")
+              }
             }
           },
           colors = TopAppBarDefaults.topAppBarColors()
         )
       },
       floatingActionButton = {
-        FloatingActionButton(
-          onClick = { viewModel.showEventTypeDialog() },
-          containerColor = MaterialTheme.colorScheme.primary,
-          contentColor = MaterialTheme.colorScheme.onPrimary
-        ) {
-          Icon(Icons.Default.Add, contentDescription = "Новое событие")
+        if (isActiveMode) {
+          FloatingActionButton(
+            onClick = { viewModel.showEventTypeDialog() },
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+          ) {
+            Icon(Icons.Default.Add, contentDescription = "Новое событие")
+          }
         }
       }
     ) { paddingValues ->
@@ -178,14 +185,14 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
       }
     }
 
-    if (state.showEventTypeDialog) {
+    if (isActiveMode && state.showEventTypeDialog) {
       EventTypeDialog(
         onDismiss = { viewModel.hideEventTypeDialog() },
         onSelectEventType = { eventType -> viewModel.selectEventType(eventType) }
       )
     }
 
-    if (state.showRodSelectionDialog) {
+    if (isActiveMode && state.showRodSelectionDialog) {
       RodSelectionDialog(
         onDismiss = { viewModel.hideRodSelectionDialog() },
         onSelectRod = { rodId -> viewModel.selectRod(rodId) },
@@ -193,7 +200,7 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
       )
     }
 
-    if (state.showFishEventDialog) {
+    if (isActiveMode && state.showFishEventDialog) {
       FishEventDialog(
         onDismiss = { viewModel.hideFishEventDialog() },
         onAddEvent = { viewModel.addFishEvent() },
@@ -211,7 +218,7 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
       )
     }
 
-    if (state.showSpombEventDialog) {
+    if (isActiveMode && state.showSpombEventDialog) {
       SpombEventDialog(
         onDismiss = { viewModel.hideSpombEventDialog() },
         onAddEvent = { viewModel.addSpombEvent() },
@@ -229,7 +236,7 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
       )
     }
 
-    if (state.showFishLooseDialog) {
+    if (isActiveMode && state.showFishLooseDialog) {
       LooseEventDialog(
         onDismiss = { viewModel.hideFishLooseDialog() },
         onAddEvent = { viewModel.confirmFishLooseEvent() },
@@ -245,7 +252,7 @@ class ActiveSessionScreen(private val sessionId: Int? = null) : Screen {
       )
     }
 
-    if (state.showFinishSessionDialog) {
+    if (isActiveMode && state.showFinishSessionDialog) {
       FinishSessionDialog(
         onDismiss = { viewModel.hideFinishSessionDialog() },
         onFinish = { 

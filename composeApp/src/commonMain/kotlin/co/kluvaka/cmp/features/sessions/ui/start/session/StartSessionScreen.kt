@@ -41,7 +41,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.common.ui.DatePickerField
 import co.kluvaka.cmp.features.sessions.domain.model.Rod
-import co.kluvaka.cmp.features.sessions.ui.active.ActiveSessionScreen
+import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
+import co.kluvaka.cmp.features.sessions.ui.active.SessionScreen
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -113,7 +114,7 @@ object StartSessionScreen : Screen {
             .padding(top = 8.dp, bottom = 16.dp),
           onClick = {
             viewModel.saveSession()
-            navigator?.replace(ActiveSessionScreen())
+            navigator?.replace(SessionScreen(mode = SessionMode.Active))
           },
           enabled = state.isStartSessionEnabled,
         ) {

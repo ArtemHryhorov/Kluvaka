@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import co.kluvaka.cmp.features.sessions.ui.active.ActiveSessionScreen
-import co.kluvaka.cmp.features.sessions.ui.completed.CompletedSessionScreen
+import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
+import co.kluvaka.cmp.features.sessions.ui.active.SessionScreen
 import co.kluvaka.cmp.features.sessions.ui.history.composable.FishingSessionList
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionScreen
 import org.koin.compose.viewmodel.koinViewModel
@@ -38,10 +38,10 @@ object SessionsHistoryScreen : Screen {
         sessions = state.sessions,
         onSessionClick = { session ->
           if (session.isActive) {
-            navigator?.push(ActiveSessionScreen(session.id))
+            navigator?.push(SessionScreen(mode = SessionMode.Active, sessionId = session.id))
           } else {
             session.id?.let { sessionId ->
-              navigator?.push(CompletedSessionScreen(sessionId))
+              navigator?.push(SessionScreen(mode = SessionMode.Completed, sessionId = sessionId))
             }
           }
         }
@@ -52,7 +52,7 @@ object SessionsHistoryScreen : Screen {
           .padding(all = 16.dp),
         onClick = {
           if (state.anyActiveSession) {
-            navigator?.push(ActiveSessionScreen())
+            navigator?.push(SessionScreen(mode = SessionMode.Active))
           } else {
             navigator?.push(StartSessionScreen)
           }

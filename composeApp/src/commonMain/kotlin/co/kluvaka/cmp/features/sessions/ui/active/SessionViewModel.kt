@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
+import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
 import co.kluvaka.cmp.features.sessions.domain.usecase.AddSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.usecase.FinishActiveSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetActiveFishingSession
@@ -14,22 +15,31 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toLocalDateTime
 
-class ActiveSessionViewModel(
+class SessionViewModel(
   private val getActiveFishingSession: GetActiveFishingSession,
   private val getSessionById: GetSessionById,
   private val finishActiveSession: FinishActiveSession,
   private val addSessionEvent: AddSessionEvent,
 ) : ViewModel() {
 
-  private val _mutableState = MutableStateFlow(ActiveSessionState(null))
-  val state: StateFlow<ActiveSessionState> = _mutableState
+  private val _mutableState = MutableStateFlow(SessionState(null))
+  val state: StateFlow<SessionState> = _mutableState
 
-  fun getActiveSession() {
+  fun loadSession(mode: SessionMode, sessionId: Int?) {
     viewModelScope.launch {
-      val activeSession = getActiveFishingSession()
-      val session = activeSession?.id?.let { getSessionById(it) } ?: activeSession
+      val session = when (mode) {
+        SessionMode.Active -> {
+          sessionId?.let { getSessionById(it) } ?: run {
+            val activeSession = getActiveFishingSession()
+            activeSession?.id?.let { getSessionById(it) } ?: activeSession
+          }
+        }
+        SessionMode.Completed -> sessionId?.let { getSessionById(it) }
+      }
+
       _mutableState.update {
         it.copy(
+          mode = mode,
           session = session,
           events = session?.events ?: emptyList()
         )
@@ -37,26 +47,8 @@ class ActiveSessionViewModel(
     }
   }
 
-  fun getActiveSessionById(sessionId: Int) {
-    viewModelScope.launch {
-      val session = getSessionById(sessionId)
-      _mutableState.update {
-        it.copy(
-          session = session,
-          events = session.events
-        )
-      }
-    }
-  }
-
-  fun finishSession() {
-    viewModelScope.launch {
-      state.value.session?.let { activeSession ->
-        finishActiveSession(activeSession.copy(isActive = false))
-      }
-    }
-  }
   fun showEventTypeDialog() {
+    if (isReadOnlyMode()) return
     _mutableState.update { 
       it.copy(
         showEventTypeDialog = true
@@ -69,6 +61,7 @@ class ActiveSessionViewModel(
   }
 
   fun selectEventType(eventType: FishingSessionEventType) {
+    if (isReadOnlyMode()) return
     _mutableState.update { 
       it.copy(
         selectedEventType = eventType,
@@ -99,6 +92,7 @@ class ActiveSessionViewModel(
   }
 
   fun showRodSelectionDialog() {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(showRodSelectionDialog = true) }
   }
 
@@ -107,6 +101,7 @@ class ActiveSessionViewModel(
   }
 
   fun selectRod(rodId: Int) {
+    if (isReadOnlyMode()) return
     _mutableState.update { 
       it.copy(
         selectedRodId = rodId,
@@ -121,6 +116,7 @@ class ActiveSessionViewModel(
   }
 
   fun showFishEventDialog() {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(showFishEventDialog = true) }
   }
 
@@ -129,6 +125,7 @@ class ActiveSessionViewModel(
   }
 
   fun showSpombEventDialog() {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(showSpombEventDialog = true) }
   }
 
@@ -137,6 +134,7 @@ class ActiveSessionViewModel(
   }
 
   fun showFishLooseDialog() {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(showFishLooseDialog = true) }
   }
 
@@ -145,18 +143,22 @@ class ActiveSessionViewModel(
   }
 
   fun updateEventWeight(weight: String) {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(newEventWeight = weight) }
   }
 
   fun updateEventNotes(notes: String) {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(newEventNotes = notes) }
   }
 
   fun addEventPhoto(photo: String) {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(newEventPhotos = it.newEventPhotos + photo) }
   }
 
   fun removeEventPhoto(index: Int) {
+    if (isReadOnlyMode()) return
     _mutableState.update {
       val photos = it.newEventPhotos.toMutableList()
       if (index in photos.indices) {
@@ -167,10 +169,12 @@ class ActiveSessionViewModel(
   }
 
   fun updateSpombCount(count: String) {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(newSpombCount = count) }
   }
 
   fun addFishEvent() {
+    if (isReadOnlyMode()) return
     val event = FishingSessionEvent(
       id = (state.value.events.size + 1),
       type = FishingSessionEventType.Fish(state.value.selectedRodId ?: 1),
@@ -198,6 +202,7 @@ class ActiveSessionViewModel(
   }
 
   fun addSpombEvent() {
+    if (isReadOnlyMode()) return
     val event = FishingSessionEvent(
       id = (state.value.events.size + 1),
       type = FishingSessionEventType.Spomb(state.value.newSpombCount.toIntOrNull() ?: 1),
@@ -223,6 +228,7 @@ class ActiveSessionViewModel(
   }
 
   fun confirmFishLooseEvent() {
+    if (isReadOnlyMode()) return
     val event = FishingSessionEvent(
       id = (state.value.events.size + 1),
       type = FishingSessionEventType.Loose(state.value.selectedRodId ?: 1),
@@ -248,6 +254,7 @@ class ActiveSessionViewModel(
   }
 
   fun showFinishSessionDialog() {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(showFinishSessionDialog = true) }
   }
 
@@ -256,10 +263,12 @@ class ActiveSessionViewModel(
   }
 
   fun updateSessionNotes(notes: String) {
+    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(sessionNotes = notes) }
   }
 
   fun finishSessionWithNotes() {
+    if (state.value.mode == SessionMode.Completed) return
     viewModelScope.launch {
       state.value.session?.let { activeSession ->
         val sessionWithEvents = activeSession.copy(
@@ -289,4 +298,6 @@ class ActiveSessionViewModel(
       }
     }
   }
+
+  private fun isReadOnlyMode(): Boolean = state.value.mode == SessionMode.Completed
 }
