@@ -21,7 +21,8 @@ CREATE TABLE fishing_session_event (
     count INTEGER, -- For SPOMB events
     timestamp TEXT NOT NULL,
     weight TEXT, -- For FISH events
-    photos TEXT -- JSON array of photo paths
+    photos TEXT, -- JSON array of photo paths
+    notes TEXT
 );
 
 lastInsertRowId:
@@ -52,5 +53,9 @@ getEventsBySession:
 SELECT * FROM fishing_session_event WHERE session_id = :sessionId ORDER BY timestamp;
 
 insertEvent:
-INSERT INTO fishing_session_event(session_id, event_type, rod_id, count, timestamp, weight, photos)
-VALUES (:sessionId, :eventType, :rodId, :count, :timestamp, :weight, :photos);
+INSERT INTO fishing_session_event(session_id, event_type, rod_id, count, timestamp, weight, photos, notes)
+VALUES (:sessionId, :eventType, :rodId, :count, :timestamp, :weight, :photos, :notes);
+
+deleteSession:
+DELETE FROM fishing_session
+WHERE id = :id;

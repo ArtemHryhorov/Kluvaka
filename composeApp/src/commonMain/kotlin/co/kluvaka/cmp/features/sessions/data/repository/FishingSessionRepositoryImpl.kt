@@ -2,6 +2,7 @@ package co.kluvaka.cmp.features.sessions.data.repository
 
 import co.kluvaka.cmp.database.SessionDatabase
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
 
 class FishingSessionRepositoryImpl(
@@ -22,5 +23,13 @@ class FishingSessionRepositoryImpl(
 
   override suspend fun updateSession(session: FishingSession) {
     database.updateSession(session)
+  }
+
+  override suspend fun addEvent(sessionId: Int, event: FishingSessionEvent) {
+    database.insertEvent(sessionId, event)
+  }
+
+  override suspend fun deleteSession(sessionId: Int) {
+    database.deleteSession(sessionId)
   }
 }

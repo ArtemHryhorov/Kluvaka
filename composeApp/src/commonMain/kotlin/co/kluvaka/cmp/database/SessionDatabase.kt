@@ -130,7 +130,8 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
           type = eventType,
           timestamp = eventRow.timestamp,
           weight = eventRow.weight,
-          photos = photos
+          photos = photos,
+          notes = eventRow.notes
         )
       }
   }
@@ -155,7 +156,12 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
       count = count,
       timestamp = event.timestamp,
       weight = event.weight,
-      photos = photosJson
+      photos = photosJson,
+      notes = event.notes
     )
+  }
+
+  fun deleteSession(sessionId: Int) {
+    dbQuery.deleteSession(id = sessionId.toLong())
   }
 }

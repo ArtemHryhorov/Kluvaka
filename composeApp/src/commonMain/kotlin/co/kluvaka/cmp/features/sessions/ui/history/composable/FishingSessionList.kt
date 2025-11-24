@@ -13,7 +13,8 @@ import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 @Composable
 fun FishingSessionList(
   sessions: List<FishingSession>,
-  onSessionClick: ((FishingSession) -> Unit)? = null
+  onSessionClick: ((FishingSession) -> Unit)? = null,
+  onSessionDelete: (FishingSession) -> Unit = {},
 ) {
   LazyColumn(
     modifier = Modifier
@@ -28,6 +29,7 @@ fun FishingSessionList(
       FishingSessionCard(
         session = session,
         onClick = { onSessionClick?.invoke(session) },
+        onRemove = { onSessionDelete(session) },
       )
     }
   }
