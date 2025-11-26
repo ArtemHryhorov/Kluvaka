@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
+import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,7 +104,17 @@ fun FishingSessionCard(
           style = MaterialTheme.typography.bodyMedium,
           color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        val fishCount = session.events.totalFishCount()
+        val fishWeight = session.events.totalFishWeight()
+        if (fishCount > 0) {
+          Text(
+            text = "Карпов: $fishCount шт · ${formatWeight(fishWeight)} кг",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary
+          )
+          Spacer(modifier = Modifier.height(8.dp))
+        }
         Text(
           text = if (session.isActive) "Статус: Активная" else "Статус: Завершена",
           style = MaterialTheme.typography.bodySmall,
@@ -112,3 +124,6 @@ fun FishingSessionCard(
     }
   }
 }
+
+private fun formatWeight(weight: Double): String =
+  if (weight == 0.0) "0" else String.format("%.2f", weight).trimEnd('0').trimEnd('.')

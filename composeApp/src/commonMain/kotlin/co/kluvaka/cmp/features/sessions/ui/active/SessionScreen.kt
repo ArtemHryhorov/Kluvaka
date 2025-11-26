@@ -62,6 +62,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
+import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
+import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
 import co.kluvaka.cmp.features.sessions.ui.detail.DetailedSessionEventScreen
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import coil3.compose.rememberAsyncImagePainter
@@ -127,6 +129,8 @@ class SessionScreen(
         // Session info
         state.session?.let { session ->
           Spacer(modifier = Modifier.height(16.dp))
+          val fishCount = state.events.totalFishCount()
+          val fishWeight = state.events.totalFishWeight()
           Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -158,6 +162,23 @@ class SessionScreen(
                   style = MaterialTheme.typography.bodyMedium,
                   color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+              }
+              if (fishCount > 0) {
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                  Text(
+                    text = "Карпов поймано",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                  )
+                  Text(
+                    text = "$fishCount шт · ${formatWeight(fishWeight)} кг",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                  )
+                }
               }
             }
           }
@@ -481,6 +502,9 @@ fun EventTypeDialog(
     }
   )
 }
+
+private fun formatWeight(weight: Double): String =
+  if (weight == 0.0) "0" else String.format("%.2f", weight).trimEnd('0').trimEnd('.')
 
 @Composable
 fun RodSelectionDialog(
