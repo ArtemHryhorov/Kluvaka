@@ -59,3 +59,6 @@ VALUES (:sessionId, :eventType, :rodId, :count, :timestamp, :weight, :photos, :n
 deleteSession:
 DELETE FROM fishing_session
 WHERE id = :id;
+
+getEventById:
+SELECT * FROM fishing_session_event WHERE id = :id;

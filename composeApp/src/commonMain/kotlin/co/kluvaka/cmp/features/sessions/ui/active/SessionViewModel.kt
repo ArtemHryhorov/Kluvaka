@@ -271,10 +271,7 @@ class SessionViewModel(
     if (state.value.mode == SessionMode.Completed) return
     viewModelScope.launch {
       state.value.session?.let { activeSession ->
-        val sessionWithEvents = activeSession.copy(
-          isActive = false,
-          events = state.value.events
-        )
+        val sessionWithEvents = activeSession.copy(isActive = false)
         finishActiveSession(sessionWithEvents)
       }
       _mutableState.update { it.copy(showFinishSessionDialog = false) }
