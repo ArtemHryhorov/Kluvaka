@@ -96,13 +96,6 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
       date = session.date,
       isActive = if (session.isActive) 1L else 0L,
     )
-    
-    // Persist events for the session
-    session.id?.let { sessionId ->
-      session.events.forEach { event ->
-        insertEvent(sessionId, event)
-      }
-    }
   }
 
   fun getEventsBySession(sessionId: Int): List<FishingSessionEvent> {
@@ -163,5 +156,32 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
 
   fun deleteSession(sessionId: Int) {
     dbQuery.deleteSession(id = sessionId.toLong())
+  }
+
+  fun getEventById(eventId: Int): FishingSessionEvent? {
+    val eventRow = dbQuery.getEventById(id = eventId.toLong()).executeAsOneOrNull() ?: return null
+    val eventType = when (eventRow.event_type) {
+      "FISH" -> FishingSessionEventType.Fish(eventRow.rod_id?.toInt() ?: 0)
+      "LOOSE" -> FishingSessionEventType.Loose(eventRow.rod_id?.toInt() ?: 0)
+      "SPOMB" -> FishingSessionEventType.Spomb(eventRow.count?.toInt() ?: 0)
+      else -> throw IllegalArgumentException("Unknown event type: ${eventRow.event_type}")
+    }
+    val photos = if (eventRow.photos.isNullOrBlank()) {
+      emptyList()
+    } else {
+      try {
+        Json.decodeFromString<List<String>>(eventRow.photos)
+      } catch (_: Exception) {
+        emptyList()
+      }
+    }
+    return FishingSessionEvent(
+      id = eventRow.id.toInt(),
+      type = eventType,
+      timestamp = eventRow.timestamp,
+      weight = eventRow.weight,
+      photos = photos,
+      notes = eventRow.notes
+    )
   }
 }

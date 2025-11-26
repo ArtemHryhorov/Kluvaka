@@ -3,6 +3,7 @@ package co.kluvaka.cmp.features.sessions.ui.active
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,6 +62,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
+import co.kluvaka.cmp.features.sessions.ui.detail.DetailedSessionEventScreen
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
@@ -170,12 +172,19 @@ class SessionScreen(
           )
           Spacer(modifier = Modifier.height(16.dp))
           
+          val events = state.events.reversed()
           LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxSize()
           ) {
-            items(state.events.reversed()) { event ->
-              EventCard(event = event)
+            items(events, key = { it.id }) { event ->
+              val currentSessionId = state.session?.id
+              EventCard(
+                event = event,
+                onClick = currentSessionId?.let { sessionId ->
+                  { navigator?.push(DetailedSessionEventScreen(sessionId = sessionId, eventId = event.id)) }
+                }
+              )
             }
           }
         } else {
@@ -268,9 +277,20 @@ class SessionScreen(
 }
 
 @Composable
-fun EventCard(event: FishingSessionEvent) {
+fun EventCard(
+  event: FishingSessionEvent,
+  onClick: (() -> Unit)? = null,
+) {
   Card(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+      .fillMaxWidth()
+      .let {
+        if (onClick != null) {
+          it.clickable { onClick() }
+        } else {
+          it
+        }
+      },
     colors = CardDefaults.cardColors(
       containerColor = MaterialTheme.colorScheme.surface
     ),

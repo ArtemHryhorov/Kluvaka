@@ -9,6 +9,7 @@ import co.kluvaka.cmp.features.sessions.data.usecase.FinishActiveSessionUseCase
 import co.kluvaka.cmp.features.sessions.data.usecase.GetActiveFishingSessionUseCase
 import co.kluvaka.cmp.features.sessions.data.usecase.GetAllFishingSessionsUseCase
 import co.kluvaka.cmp.features.sessions.data.usecase.GetSessionByIdUseCase
+import co.kluvaka.cmp.features.sessions.data.usecase.GetSessionEventByIdUseCase
 import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
 import co.kluvaka.cmp.features.sessions.domain.usecase.AddSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.usecase.CreateFishingSession
@@ -17,7 +18,9 @@ import co.kluvaka.cmp.features.sessions.domain.usecase.FinishActiveSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetActiveFishingSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetAllFishingSessions
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
+import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionEventById
 import co.kluvaka.cmp.features.sessions.ui.active.SessionViewModel
+import co.kluvaka.cmp.features.sessions.ui.detail.DetailedSessionEventViewModel
 import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryViewModel
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionViewModel
 import org.koin.core.module.dsl.viewModel
@@ -56,6 +59,9 @@ val sessionModule = module {
   single<DeleteFishingSession> {
     DeleteFishingSessionUseCase(repository = get())
   }
+  single<GetSessionEventById> {
+    GetSessionEventByIdUseCase(repository = get())
+  }
 
   // ViewModel
   viewModel {
@@ -74,5 +80,13 @@ val sessionModule = module {
   }
   viewModel {
     StartSessionViewModel(createFishingSession = get())
+  }
+  viewModel { (sessionId: Int, eventId: Int) ->
+    DetailedSessionEventViewModel(
+      getSessionById = get(),
+      getSessionEventById = get(),
+      sessionId = sessionId,
+      eventId = eventId,
+    )
   }
 }

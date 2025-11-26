@@ -32,4 +32,8 @@ class FishingSessionRepositoryImpl(
   override suspend fun deleteSession(sessionId: Int) {
     database.deleteSession(sessionId)
   }
+
+  override suspend fun getEventById(eventId: Int): FishingSessionEvent? {
+    return database.getEventById(eventId)
+  }
 }

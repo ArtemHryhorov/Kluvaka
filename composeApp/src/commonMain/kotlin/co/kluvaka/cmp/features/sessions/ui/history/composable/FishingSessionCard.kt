@@ -85,7 +85,7 @@ fun FishingSessionCard(
       elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
       colors = CardDefaults.cardColors(
         containerColor = if (session.isActive) {
-          MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+          Color(0xFF8ADB6B)
         } else {
           MaterialTheme.colorScheme.surface
         },
@@ -106,7 +106,7 @@ fun FishingSessionCard(
         Text(
           text = if (session.isActive) "Статус: Активная" else "Статус: Завершена",
           style = MaterialTheme.typography.bodySmall,
-          color = if (session.isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
       }
     }

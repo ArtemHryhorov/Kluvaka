@@ -21,7 +21,7 @@ class SessionsHistoryViewModel(
 
   fun getAllSessions() {
     viewModelScope.launch {
-      val sessions = getAllFishingSessions()
+      val sessions = getAllFishingSessions().reversed()
       _mutableState.update {
         it.copy(
           sessions = sessions,
