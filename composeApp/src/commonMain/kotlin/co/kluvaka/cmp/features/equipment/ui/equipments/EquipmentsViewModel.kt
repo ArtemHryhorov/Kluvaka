@@ -2,6 +2,8 @@ package co.kluvaka.cmp.features.equipment.ui.equipments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.kluvaka.cmp.features.common.ui.DialogState
+import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipments
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +31,18 @@ class EquipmentsViewModel(
     viewModelScope.launch {
       deleteEquipment(id)
       fetchEquipments()
+    }
+  }
+
+  fun showDeleteConfirmationDialog(equipment: Equipment) {
+    _mutableState.update {
+      it.copy(deleteConfirmationDialog = DialogState.Shown(equipment))
+    }
+  }
+
+  fun hideDeleteConfirmationDialog() {
+    _mutableState.update {
+      it.copy(deleteConfirmationDialog = DialogState.Hidden)
     }
   }
 }

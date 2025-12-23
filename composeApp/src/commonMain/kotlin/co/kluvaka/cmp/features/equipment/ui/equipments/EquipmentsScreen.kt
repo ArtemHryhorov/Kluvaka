@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.common.ui.Dialog
+import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentScreen
 import co.kluvaka.cmp.features.equipment.ui.details.EquipmentDetailsScreen
@@ -58,6 +60,19 @@ object EquipmentsScreen : Screen {
 
     LaunchedEffect(Unit) {
       viewModel.fetchEquipments()
+    }
+
+    (state.deleteConfirmationDialog as? DialogState.Shown<Equipment>)?.value?.let { equipment ->
+      Dialog(
+        title = "Удалить ${equipment.title} из Вашего арсенала?",
+        cancelButtonText = "Отмена",
+        confirmButtonText = "Да, удалить",
+        onConfirmClick = {
+          viewModel.delete(equipment.id)
+          viewModel.hideDeleteConfirmationDialog()
+        },
+        onDismissClick = { viewModel.hideDeleteConfirmationDialog() },
+      )
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -79,7 +94,7 @@ object EquipmentsScreen : Screen {
               EquipmentItem(
                 equipment = equipment,
                 onClick = { navigator?.push(EquipmentDetailsScreen(equipment.id)) },
-                onRemove = { viewModel.delete(equipment.id) },
+                onRemove = {viewModel.showDeleteConfirmationDialog(equipment) },
               )
             }
           }
@@ -134,9 +149,12 @@ fun EquipmentItem(
 ) {
   val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
     confirmValueChange = {
-      if (it == SwipeToDismissBoxValue.EndToStart) onRemove(equipment)
-      // Reset item when toggling done status
-      it != SwipeToDismissBoxValue.StartToEnd
+      if (it == SwipeToDismissBoxValue.EndToStart) {
+        onRemove(equipment)
+        false
+      } else {
+        it != SwipeToDismissBoxValue.StartToEnd
+      }
     }
   )
 

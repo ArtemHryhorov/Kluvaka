@@ -163,18 +163,24 @@ class SessionScreen(
                   color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
               }
-              if (fishCount > 0) {
+              val sessionsStatisticText = when {
+                fishCount > 0 && fishWeight > 0 -> "$fishCount шт · $fishWeight кг"
+                fishCount > 0 -> "$fishCount шт"
+                fishWeight > 0 -> "$fishWeight кг"
+                else -> null
+              }
+              sessionsStatisticText?.let { text ->
                 Row(
                   modifier = Modifier.fillMaxWidth(),
                   horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                   Text(
-                    text = "Карпов поймано",
+                    text = "Рыбы поймано",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                   )
                   Text(
-                    text = "$fishCount шт · ${formatWeight(fishWeight)} кг",
+                    text = text,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                   )
@@ -342,7 +348,7 @@ fun EventCard(
       ) {
         Text(
           text = when (event.type) {
-            is FishingSessionEventType.Fish -> "Карп"
+            is FishingSessionEventType.Fish -> "Рыба"
             is FishingSessionEventType.Loose -> "Сход"
             is FishingSessionEventType.Spomb -> "Спомб"
           },
@@ -502,9 +508,6 @@ fun EventTypeDialog(
     }
   )
 }
-
-private fun formatWeight(weight: Double): String =
-  if (weight == 0.0) "0" else String.format("%.2f", weight).trimEnd('0').trimEnd('.')
 
 @Composable
 fun RodSelectionDialog(

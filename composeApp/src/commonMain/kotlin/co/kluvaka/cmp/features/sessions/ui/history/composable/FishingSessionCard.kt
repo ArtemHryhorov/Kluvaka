@@ -107,9 +107,15 @@ fun FishingSessionCard(
         Spacer(modifier = Modifier.height(8.dp))
         val fishCount = session.events.totalFishCount()
         val fishWeight = session.events.totalFishWeight()
-        if (fishCount > 0) {
+        val sessionsStatisticText = when {
+          fishCount > 0 && fishWeight > 0 -> "Рыбы поймано: $fishCount шт · $fishWeight кг"
+          fishCount > 0 -> "Рыбы поймано: $fishCount шт"
+          fishWeight > 0 -> "Рыбы поймано: $fishWeight кг"
+          else -> null
+        }
+          sessionsStatisticText?.let { text ->
           Text(
-            text = "Карпов: $fishCount шт · ${formatWeight(fishWeight)} кг",
+            text = text,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary
           )
@@ -124,6 +130,3 @@ fun FishingSessionCard(
     }
   }
 }
-
-private fun formatWeight(weight: Double): String =
-  if (weight == 0.0) "0" else String.format("%.2f", weight).trimEnd('0').trimEnd('.')
