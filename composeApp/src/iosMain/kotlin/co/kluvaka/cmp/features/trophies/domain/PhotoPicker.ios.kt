@@ -19,22 +19,49 @@ object ImagePickerProvider {
     fun get(): NativeImagePicker? = picker
 }
 
-class IOSPhotoPicker : PhotoPicker {
+class IOSPhotoPicker(
+    private val permissionManager: PermissionManager
+) : PhotoPicker {
     
     override fun pickFromGallery(onResult: (String?) -> Unit) {
-        ImagePickerProvider.get()?.pickImage(onResult)
+        // iOS handles permissions automatically via Info.plist
+        // The system will prompt when accessing photo library
+        permissionManager.requestGalleryPermission { granted ->
+            if (granted) {
+                ImagePickerProvider.get()?.pickImage(onResult)
+            } else {
+                onResult(null)
+            }
+        }
     }
 
     override fun pickMultipleFromGallery(onResult: (List<String>) -> Unit) {
-        ImagePickerProvider.get()?.pickImages(onResult)
+        // iOS handles permissions automatically via Info.plist
+        // The system will prompt when accessing photo library
+        permissionManager.requestGalleryPermission { granted ->
+            if (granted) {
+                ImagePickerProvider.get()?.pickImages(onResult)
+            } else {
+                onResult(emptyList())
+            }
+        }
     }
 
     override fun pickFromCamera(onResult: (String?) -> Unit) {
-        ImagePickerProvider.get()?.pickFromCamera(onResult)
+        // iOS handles permissions automatically via Info.plist
+        // The system will prompt when accessing camera
+        permissionManager.requestCameraPermission { granted ->
+            if (granted) {
+                ImagePickerProvider.get()?.pickFromCamera(onResult)
+            } else {
+                onResult(null)
+            }
+        }
     }
 }
 
 @Composable
 actual fun rememberPhotoPicker(): PhotoPicker {
-    return remember { IOSPhotoPicker() }
+    val permissionManager = rememberPermissionManager()
+    return remember { IOSPhotoPicker(permissionManager) }
 }

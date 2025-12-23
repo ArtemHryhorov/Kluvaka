@@ -11,7 +11,8 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 class AndroidPhotoPicker(
-    private val context: Context
+    private val context: Context,
+    private val permissionManager: PermissionManager
 ) : PhotoPicker {
     
     private var galleryCallback: ((String?) -> Unit)? = null
@@ -33,26 +34,44 @@ class AndroidPhotoPicker(
     }
     
     override fun pickFromGallery(onResult: (String?) -> Unit) {
-        galleryCallback = onResult
-        galleryLauncher?.launch("image/*")
+        permissionManager.requestGalleryPermission { granted ->
+            if (granted) {
+                galleryCallback = onResult
+                galleryLauncher?.launch("image/*")
+            } else {
+                onResult(null)
+            }
+        }
     }
 
     override fun pickMultipleFromGallery(onResult: (List<String>) -> Unit) {
-        galleryMultipleCallback = onResult
-        galleryMultipleLauncher?.launch("image/*")
+        permissionManager.requestGalleryPermission { granted ->
+            if (granted) {
+                galleryMultipleCallback = onResult
+                galleryMultipleLauncher?.launch("image/*")
+            } else {
+                onResult(emptyList())
+            }
+        }
     }
     
     override fun pickFromCamera(onResult: (String?) -> Unit) {
-        cameraCallback = onResult
-        // Create a temporary file for the camera result
-        val tempFile = File(context.cacheDir, "camera_${System.currentTimeMillis()}.jpg")
-        // Use FileProvider to create a content URI
-        currentPhotoUri = FileProvider.getUriForFile(
-            context,
-            "${context.packageName}.fileprovider",
-            tempFile
-        )
-        cameraLauncher?.launch(currentPhotoUri!!)
+        permissionManager.requestCameraPermission { granted ->
+            if (granted) {
+                cameraCallback = onResult
+                // Create a temporary file for the camera result
+                val tempFile = File(context.cacheDir, "camera_${System.currentTimeMillis()}.jpg")
+                // Use FileProvider to create a content URI
+                currentPhotoUri = FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.fileprovider",
+                    tempFile
+                )
+                cameraLauncher?.launch(currentPhotoUri!!)
+            } else {
+                onResult(null)
+            }
+        }
     }
     
     fun handleGalleryResult(uri: Uri?) {
@@ -110,7 +129,8 @@ class AndroidPhotoPicker(
 @Composable
 actual fun rememberPhotoPicker(): PhotoPicker {
     val context = LocalContext.current
-    val photoPicker = remember { AndroidPhotoPicker(context) }
+    val permissionManager = rememberPermissionManager()
+    val photoPicker = remember { AndroidPhotoPicker(context, permissionManager) }
     
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
