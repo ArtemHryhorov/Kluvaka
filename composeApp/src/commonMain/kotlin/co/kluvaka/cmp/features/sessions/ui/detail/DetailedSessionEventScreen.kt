@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -39,8 +37,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.photos.ui.DetailedPhotoViewScreen
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Fish
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Loose
+import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Spomb
 import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -162,18 +163,18 @@ private fun EventDetailsContent(
     }
 
     when (event.type) {
-      is co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Fish -> {
+      is Fish -> {
         InfoRow(label = "Удочка", value = "#${event.type.rodId}")
         event.weight?.let { weight ->
           InfoRow(label = "Вес", value = "$weight кг")
         }
       }
 
-      is co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Loose -> {
+      is Loose -> {
         InfoRow(label = "Удочка", value = "#${event.type.rodId}")
       }
 
-      is co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Spomb -> {
+      is Spomb -> {
         InfoRow(label = "Количество", value = "${event.type.count} шт")
       }
     }
@@ -242,8 +243,8 @@ private fun InfoRow(label: String, value: String) {
 
 private fun co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.readableName(): String =
   when (this) {
-    is co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Fish -> "Карп"
-    is co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Loose -> "Сход"
-    is co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Spomb -> "Спомб"
+    is Fish -> "Рыба"
+    is Loose -> "Сход"
+    is Spomb -> "Спомб"
   }
 
