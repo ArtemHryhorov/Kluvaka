@@ -162,8 +162,8 @@ data class AddEquipmentScreen(
                     .padding(4.dp)
                     .size(24.dp),
                   colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Black.copy(alpha = 0.5f),
-                    contentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
+                    contentColor = MaterialTheme.colorScheme.onSurface
                   )
                 ) {
                   Icon(

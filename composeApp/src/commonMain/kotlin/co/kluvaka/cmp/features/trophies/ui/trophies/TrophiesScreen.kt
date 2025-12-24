@@ -170,12 +170,12 @@ fun TrophyItem(
             modifier = Modifier
               .fillMaxSize()
               .background(
-                color = Color.Red,
+                color = MaterialTheme.colorScheme.error,
                 shape = RoundedCornerShape(8.dp),
               )
               .wrapContentSize(Alignment.CenterEnd)
               .padding(12.dp),
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onError
           )
         }
         SwipeToDismissBoxValue.StartToEnd -> {}

@@ -60,7 +60,7 @@ fun FishingSessionCard(
             modifier = Modifier
               .fillMaxSize()
               .background(
-                color = Color.Red,
+                color = MaterialTheme.colorScheme.error,
                 shape = RoundedCornerShape(12.dp),
               )
               .wrapContentSize(Alignment.CenterEnd)
@@ -69,7 +69,7 @@ fun FishingSessionCard(
             Icon(
               imageVector = Icons.Default.Delete,
               contentDescription = "Delete session",
-              tint = Color.White
+              tint = MaterialTheme.colorScheme.onError
             )
           }
         }
@@ -87,7 +87,7 @@ fun FishingSessionCard(
       elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
       colors = CardDefaults.cardColors(
         containerColor = if (session.isActive) {
-          Color(0xFF8ADB6B)
+          MaterialTheme.colorScheme.primaryContainer
         } else {
           MaterialTheme.colorScheme.surface
         },
