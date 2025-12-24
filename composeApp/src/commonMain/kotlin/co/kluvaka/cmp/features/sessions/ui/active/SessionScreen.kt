@@ -216,7 +216,7 @@ class SessionScreen(
           }
         } else {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Пока нет событий", style = MaterialTheme.typography.bodyLarge, color = Color.Gray)
+                Text("Пока нет событий", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
       }
@@ -337,9 +337,9 @@ fun EventCard(
           .clip(CircleShape)
           .background(
             when (event.type) {
-              is FishingSessionEventType.Fish -> Color.Green
-              is FishingSessionEventType.Loose -> Color.Red
-              is FishingSessionEventType.Spomb -> Color.Yellow
+              is FishingSessionEventType.Fish -> MaterialTheme.colorScheme.primary
+              is FishingSessionEventType.Loose -> MaterialTheme.colorScheme.error
+              is FishingSessionEventType.Spomb -> MaterialTheme.colorScheme.tertiary
             }
           )
       )
@@ -442,8 +442,8 @@ fun PhotoSelectionRow(
           Icon(
             Icons.Default.Close,
             contentDescription = "Remove",
-            tint = Color.White,
-            modifier = Modifier.background(Color.Black.copy(alpha=0.5f), CircleShape)
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.background(MaterialTheme.colorScheme.scrim.copy(alpha=0.5f), CircleShape)
           )
         }
       }
@@ -480,14 +480,14 @@ fun EventTypeDialog(
         Button(
           modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Fish(1)) },
-          colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
           Text("Рыба")
         }
         Button(
           modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Spomb(1)) },
-          colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107), contentColor = Color.Black)
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
         ) {
           Text("Спомб")
         }
@@ -524,9 +524,9 @@ fun RodSelectionDialog(
           Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { onSelectRod(index + 1) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
           ) {
-            Text("Удочка #${index + 1}", color = Color.White)
+            Text("Удочка #${index + 1}")
           }
         }
       }

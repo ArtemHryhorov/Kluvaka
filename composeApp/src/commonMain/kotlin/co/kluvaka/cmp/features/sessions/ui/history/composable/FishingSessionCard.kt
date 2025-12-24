@@ -25,7 +25,6 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
@@ -60,7 +59,7 @@ fun FishingSessionCard(
             modifier = Modifier
               .fillMaxSize()
               .background(
-                color = Color.Red,
+                color = MaterialTheme.colorScheme.error,
                 shape = RoundedCornerShape(12.dp),
               )
               .wrapContentSize(Alignment.CenterEnd)
@@ -69,7 +68,7 @@ fun FishingSessionCard(
             Icon(
               imageVector = Icons.Default.Delete,
               contentDescription = "Delete session",
-              tint = Color.White
+              tint = MaterialTheme.colorScheme.onError
             )
           }
         }
@@ -85,13 +84,6 @@ fun FishingSessionCard(
           onClick?.invoke()
         },
       elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-      colors = CardDefaults.cardColors(
-        containerColor = if (session.isActive) {
-          Color(0xFF8ADB6B)
-        } else {
-          MaterialTheme.colorScheme.surface
-        },
-      )
     ) {
       Column(modifier = Modifier.padding(16.dp)) {
         Text(

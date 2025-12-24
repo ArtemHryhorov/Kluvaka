@@ -235,7 +235,7 @@ private fun InfoRow(label: String, value: String) {
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Text(text = label, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+      Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
       Text(text = value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
     }
   }

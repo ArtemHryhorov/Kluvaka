@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -22,10 +21,11 @@ import cafe.adriel.voyager.navigator.Navigator
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsScreen
 import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryScreen
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesScreen
+import co.kluvaka.cmp.theme.KluvakaTheme
 
 @Composable
 fun App() {
-  MaterialTheme {
+  KluvakaTheme {
     Navigator(SessionsHistoryScreen) { navigator ->
       val bottomNavItems = listOf(
         BottomNavItem(SessionsHistoryScreen, "Sessions", Icons.Default.History),

@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -37,7 +38,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -170,12 +170,12 @@ fun TrophyItem(
             modifier = Modifier
               .fillMaxSize()
               .background(
-                color = Color.Red,
+                color = MaterialTheme.colorScheme.error,
                 shape = RoundedCornerShape(8.dp),
               )
               .wrapContentSize(Alignment.CenterEnd)
               .padding(12.dp),
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onError
           )
         }
         SwipeToDismissBoxValue.StartToEnd -> {}
@@ -195,7 +195,8 @@ private fun TrophyCard(
 ) {
   Card(
     modifier = modifier.fillMaxWidth(),
-    onClick = onClick
+    onClick = onClick,
+    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
   ) {
     Row(
       modifier = Modifier

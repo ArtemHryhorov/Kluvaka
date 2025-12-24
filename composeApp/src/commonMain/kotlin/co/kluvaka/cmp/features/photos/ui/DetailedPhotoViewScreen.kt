@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -39,11 +40,11 @@ data class DetailedPhotoViewScreen(
         val navigator = LocalNavigator.current
         val pagerState = rememberPagerState(initialPage = initialIndex) { images.size }
 
-      Scaffold(containerColor = Color.White) { paddingValues ->
+      Scaffold(containerColor = MaterialTheme.colorScheme.background) { paddingValues ->
         Box(
           modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.background),
           contentAlignment = Alignment.Center
         ) {
           HorizontalPager(
@@ -67,7 +68,7 @@ data class DetailedPhotoViewScreen(
               .padding(horizontal = 24.dp)
               .size(48.dp)
               .background(
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.scrim,
                 shape = CircleShape,
               )
               .align(Alignment.TopEnd),
@@ -79,7 +80,7 @@ data class DetailedPhotoViewScreen(
               Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "Back",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onSurface
               )
             }
           }

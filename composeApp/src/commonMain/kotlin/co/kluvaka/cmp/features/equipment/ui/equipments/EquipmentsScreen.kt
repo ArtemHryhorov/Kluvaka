@@ -170,10 +170,10 @@ fun EquipmentItem(
             contentDescription = "Remove item",
             modifier = Modifier
               .fillMaxSize()
-              .background(Color.Red)
+              .background(MaterialTheme.colorScheme.error)
               .wrapContentSize(Alignment.CenterEnd)
               .padding(12.dp),
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onError
           )
         }
         SwipeToDismissBoxValue.StartToEnd -> {}
