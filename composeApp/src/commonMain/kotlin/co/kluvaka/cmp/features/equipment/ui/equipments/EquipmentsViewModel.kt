@@ -17,7 +17,7 @@ class EquipmentsViewModel(
   private val reducer: EquipmentsReducer,
 ) : ViewModel() {
 
-  private val _mutableState = MutableStateFlow(EquipmentsState())
+  private val _mutableState = MutableStateFlow(EquipmentsState.Initial)
   val state: StateFlow<EquipmentsState> = _mutableState
 
   fun handleAction(action: Actions) {

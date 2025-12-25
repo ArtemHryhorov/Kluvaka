@@ -40,5 +40,6 @@ class EquipmentsReducer {
     event: Events.FetchEquipmentsObserved,
   ): EquipmentsState = currentState.copy(
     equipments = event.payload,
+    totalPrice = event.payload.sumOf { it.price },
   )
 }
