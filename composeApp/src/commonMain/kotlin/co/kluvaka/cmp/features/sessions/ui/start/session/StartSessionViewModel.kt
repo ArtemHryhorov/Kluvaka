@@ -20,8 +20,12 @@ class StartSessionViewModel(
   val state: StateFlow<StartSessionState> = _mutableState
 
   init {
-    val now = Clock.System.now().toEpochMilliseconds()
-    _mutableState.update { it.copy(date = now) }
+    _mutableState.update {
+      it.copy(
+        date = Clock.System.now().toEpochMilliseconds(),
+        rods = it.rods + createNewEmptyRod()
+      )
+    }
   }
 
   fun addEmptyRod() {
@@ -43,7 +47,7 @@ class StartSessionViewModel(
   fun changeSessionLocation(location: String) {
     _mutableState.update { currentState ->
       currentState.copy(
-        location = location,
+        location = location.ifEmpty { null },
       )
     }
   }
@@ -88,7 +92,7 @@ class StartSessionViewModel(
   fun saveSession() {
     val session = FishingSession(
       id = null,
-      location = _mutableState.value.location,
+      location = _mutableState.value.location ?: DateFormatter.format(_mutableState.value.date),
       date = DateFormatter.format(_mutableState.value.date),
       rods = _mutableState.value.rods,
       isActive = true,
