@@ -30,6 +30,25 @@ import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Actio
 import org.koin.compose.viewmodel.koinViewModel
 
 object EquipmentsScreen : Screen {
+
+  data class Actions(
+    val onAddEquipmentClick: () -> Unit,
+    val onDeleteCancel: () -> Unit,
+    val onDeleteConfirm: (id: Int) -> Unit,
+    val onDeleteRequest: (equipment: Equipment) -> Unit,
+    val onEquipmentClick: (id: Int) -> Unit,
+  ) {
+    companion object {
+      val Empty = Actions(
+        onAddEquipmentClick = {},
+        onDeleteCancel = {},
+        onDeleteConfirm = {},
+        onDeleteRequest = {},
+        onEquipmentClick = {},
+      )
+    }
+  }
+
   @Composable
   override fun Content() {
     val navigator = LocalNavigator.current
@@ -39,7 +58,7 @@ object EquipmentsScreen : Screen {
     // TODO: Delete when migrated to flow
     viewModel.handleAction(FetchEquipments)
 
-    val actions = EquipmentScreen.Actions(
+    val actions = Actions(
       onAddEquipmentClick = { navigator?.push(AddEquipmentScreen()) },
       onDeleteCancel = { viewModel.handleAction(DeleteEquipmentCancel) },
       onDeleteConfirm = { id -> viewModel.handleAction(DeleteEquipmentConfirm(id)) },
@@ -57,7 +76,7 @@ object EquipmentsScreen : Screen {
 @Composable
 private fun EquipmentsScreenContent(
   state: EquipmentsState,
-  actions: EquipmentScreen.Actions,
+  actions: EquipmentsScreen.Actions,
 ) {
   (state.deleteConfirmationDialog as? DialogState.Shown<Equipment>)?.value?.let { equipment ->
     Dialog(
@@ -105,26 +124,6 @@ private fun EquipmentsScreenContent(
           text = "Добавить",
         )
       }
-    }
-  }
-}
-
-private object EquipmentScreen {
-  data class Actions(
-    val onAddEquipmentClick: () -> Unit,
-    val onDeleteCancel: () -> Unit,
-    val onDeleteConfirm: (id: Int) -> Unit,
-    val onDeleteRequest: (equipment: Equipment) -> Unit,
-    val onEquipmentClick: (id: Int) -> Unit,
-  ) {
-    companion object {
-      val Empty = Actions(
-        onAddEquipmentClick = {},
-        onDeleteCancel = {},
-        onDeleteConfirm = {},
-        onDeleteRequest = {},
-        onEquipmentClick = {},
-      )
     }
   }
 }

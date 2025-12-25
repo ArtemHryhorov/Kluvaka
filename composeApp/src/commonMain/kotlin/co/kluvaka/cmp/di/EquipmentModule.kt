@@ -13,6 +13,7 @@ import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipments
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetEquipmentById
 import co.kluvaka.cmp.features.equipment.domain.usecase.UpdateEquipment
+import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentReducer
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentViewModel
 import co.kluvaka.cmp.features.equipment.ui.details.EquipmentDetailsViewModel
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsReducer
@@ -49,6 +50,7 @@ val equipmentModule = module {
   }
 
   // Reducer
+  single { AddEquipmentReducer() }
   single { EquipmentsReducer() }
 
   // ViewModel
@@ -65,6 +67,7 @@ val equipmentModule = module {
   viewModel {
     AddEquipmentViewModel(
       addEquipment = get(),
+      reducer = get(),
       updateEquipment = get(),
     )
   }
