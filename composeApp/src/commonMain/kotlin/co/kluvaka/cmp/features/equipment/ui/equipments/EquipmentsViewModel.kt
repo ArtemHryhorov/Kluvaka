@@ -2,10 +2,10 @@ package co.kluvaka.cmp.features.equipment.ui.equipments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kluvaka.cmp.features.common.ui.DialogState
-import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipments
+import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Actions
+import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Events.FetchEquipmentsObserved
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -14,35 +14,41 @@ import kotlinx.coroutines.launch
 class EquipmentsViewModel(
   private val getAllEquipments: GetAllEquipments,
   private val deleteEquipment: DeleteEquipment,
+  private val reducer: EquipmentsReducer,
 ) : ViewModel() {
 
   private val _mutableState = MutableStateFlow(EquipmentsState())
   val state: StateFlow<EquipmentsState> = _mutableState
 
-  fun fetchEquipments() {
+  fun handleAction(action: Actions) {
+    when (action) {
+      is Actions.FetchEquipments -> handleFetchEquipments()
+      is Actions.DeleteEquipmentCancel -> dispatchOperation(action)
+      is Actions.DeleteEquipmentConfirm -> handleDeleteEquipment(action)
+      is Actions.DeleteEquipmentRequest -> dispatchOperation(action)
+    }
+  }
+
+  private fun dispatchOperation(operation: EquipmentsOperation) {
+    _mutableState.update { currentState ->
+      reducer.updateState(currentState, operation)
+    }
+  }
+
+  private fun handleFetchEquipments() {
     viewModelScope.launch {
-      _mutableState.update {
-        it.copy(equipments = getAllEquipments())
-      }
+      dispatchOperation(
+        operation = FetchEquipmentsObserved(
+          payload = getAllEquipments(),
+        )
+      )
     }
   }
 
-  fun delete(id: Int) {
+  private fun handleDeleteEquipment(action: Actions.DeleteEquipmentConfirm) {
     viewModelScope.launch {
-      deleteEquipment(id)
-      fetchEquipments()
-    }
-  }
-
-  fun showDeleteConfirmationDialog(equipment: Equipment) {
-    _mutableState.update {
-      it.copy(deleteConfirmationDialog = DialogState.Shown(equipment))
-    }
-  }
-
-  fun hideDeleteConfirmationDialog() {
-    _mutableState.update {
-      it.copy(deleteConfirmationDialog = DialogState.Hidden)
+      deleteEquipment(action.id)
+      handleAction(Actions.FetchEquipments)
     }
   }
 }

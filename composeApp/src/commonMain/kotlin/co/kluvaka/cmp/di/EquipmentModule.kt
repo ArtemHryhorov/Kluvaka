@@ -15,6 +15,7 @@ import co.kluvaka.cmp.features.equipment.domain.usecase.GetEquipmentById
 import co.kluvaka.cmp.features.equipment.domain.usecase.UpdateEquipment
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentViewModel
 import co.kluvaka.cmp.features.equipment.ui.details.EquipmentDetailsViewModel
+import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsReducer
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -47,11 +48,15 @@ val equipmentModule = module {
     UpdateEquipmentUseCase(repository = get())
   }
 
+  // Reducer
+  single { EquipmentsReducer() }
+
   // ViewModel
   viewModel {
     EquipmentsViewModel(
       getAllEquipments = get(),
       deleteEquipment = get(),
+      reducer = get(),
     )
   }
   viewModel {
