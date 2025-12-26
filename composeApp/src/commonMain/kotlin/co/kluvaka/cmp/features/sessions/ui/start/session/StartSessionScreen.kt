@@ -77,7 +77,7 @@ object StartSessionScreen : Screen {
         verticalArrangement = Arrangement.spacedBy(16.dp)
       ) {
         OutlinedTextField(
-          value = state.location,
+          value = state.location ?: "",
           onValueChange = viewModel::changeSessionLocation,
           label = { Text("Локация") },
           modifier = Modifier.fillMaxWidth()
@@ -116,7 +116,7 @@ object StartSessionScreen : Screen {
             viewModel.saveSession()
             navigator?.replace(SessionScreen(mode = SessionMode.Active))
           },
-          enabled = state.isStartSessionEnabled,
+          enabled = state.rods.isNotEmpty(),
         ) {
           Text("Начать")
         }

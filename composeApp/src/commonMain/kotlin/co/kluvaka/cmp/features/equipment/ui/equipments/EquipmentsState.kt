@@ -4,8 +4,15 @@ import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 
 data class EquipmentsState(
-  val equipments: List<Equipment> = emptyList(),
-  val deleteConfirmationDialog: DialogState<Equipment> = DialogState.Hidden,
+  val equipments: List<Equipment>,
+  val deleteConfirmationDialog: DialogState<Equipment>,
+  val totalPrice: Double,
 ) {
-  val totalPrice: Double = equipments.sumOf { it.price }
+  companion object {
+    val Initial = EquipmentsState(
+      equipments = emptyList(),
+      deleteConfirmationDialog = DialogState.Hidden,
+      totalPrice = 0.0,
+    )
+  }
 }
