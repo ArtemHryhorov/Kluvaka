@@ -1,3 +1,57 @@
 <resources>
     <string name="app_name">Kluvaka</string>
+
+    <!--  Common  -->
+    <string name="cancel">Cancel</string>
+    <string name="navigate_back_icon_content_description">Navigate back</string>
+
+    <!--  Bottom Navigation  -->
+    <string name="bottom_nav_equipments">Equipments</string>
+    <string name="bottom_nav_sessions">Journal</string>
+    <string name="bottom_nav_trophies">Trophies</string>
+
+    <!--  Sessions Screen  -->
+    <string name="sessions_empty_state">You don’t have any fishing trips yet\nIt’s the perfect time to add your first one 🎣</string>
+    <string name="sessions_empty_state_content_description">Sessions empty state image</string>
+    <string name="sessions_topbar">Fishing journal</string>
+    <string name="delete_session_dialog_confirm">Yes, delete</string>
+    <string name="delete_session_dialog_title">Do you want to delete that session?</string>
+
+    <!--  StartSession Screen  -->
+    <string name="start_session_topbar">Start session</string>
+    <string name="start_session_date">Date</string>
+    <string name="start_session_location">Location</string>
+    <string name="start_session_add_rod">Add rod</string>
+    <string name="start_session">Start</string>
+    <string name="rod">Rod</string>
+    <string name="rod_distance">Distance (m)</string>
+    <string name="rod_bite">Bite</string>
+    <string name="remove_rod_content_description">Remove rod</string>
+
+    <!--  Session Screen  -->
+    <string name="active_session">Active session</string>
+    <string name="session">Session</string>
+    <string name="finish_session_content_description">Finish session</string>
+    <string name="new_event">New event</string>
+    <string name="rods">Rods</string>
+    <string name="choose_rod">Choose rod</string>
+    <string name="peaces">pts</string>
+    <string name="kilogram">kg</string>
+    <string name="fish_caught">Fish caught</string>
+    <string name="weight">Weight</string>
+    <string name="events">Events</string>
+    <string name="count">Count</string>
+    <string name="caught">Caught</string>
+    <string name="session_empty_state">No events yet</string>
+    <string name="finish_session_dialog_title">Do you want to finish the current session?</string>
+    <string name="finish_session_dialog_confirm">Yes, finish</string>
+    <string name="event_type_fish">Fish</string>
+    <string name="event_type_spomb">Spomb</string>
+    <string name="event_type_loose">Loose</string>
+    <string name="event_type_media_content_description">Event's image</string>
+    <string name="event_type">Event type</string>
+    <string name="remove_image_content_description">Remove image</string>
+    <string name="add_photo_content_description">Add photo</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="notes">Notes</string>
 </resources>

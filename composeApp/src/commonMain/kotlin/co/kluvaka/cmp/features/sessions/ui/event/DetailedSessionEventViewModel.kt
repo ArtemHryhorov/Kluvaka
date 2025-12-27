@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.detail
+package co.kluvaka.cmp.features.sessions.ui.event
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

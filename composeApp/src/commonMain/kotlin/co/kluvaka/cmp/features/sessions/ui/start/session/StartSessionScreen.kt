@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -42,8 +41,19 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.common.ui.DatePickerField
 import co.kluvaka.cmp.features.sessions.domain.model.Rod
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
-import co.kluvaka.cmp.features.sessions.ui.active.SessionScreen
-import org.jetbrains.compose.resources.painterResource
+import co.kluvaka.cmp.features.sessions.ui.session.SessionScreen
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.navigate_back_icon_content_description
+import kluvaka.composeapp.generated.resources.remove_rod_content_description
+import kluvaka.composeapp.generated.resources.rod_bite
+import kluvaka.composeapp.generated.resources.rod_distance
+import kluvaka.composeapp.generated.resources.rod_number
+import kluvaka.composeapp.generated.resources.start_session
+import kluvaka.composeapp.generated.resources.start_session_add_rod
+import kluvaka.composeapp.generated.resources.start_session_date
+import kluvaka.composeapp.generated.resources.start_session_location
+import kluvaka.composeapp.generated.resources.start_session_topbar
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 object StartSessionScreen : Screen {
@@ -57,10 +67,19 @@ object StartSessionScreen : Screen {
       topBar = {
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text("Начать сессию") },
+          title = {
+            Text(
+              text = stringResource(Res.string.start_session_topbar),
+            )
+          },
           navigationIcon = {
-            IconButton(onClick = { navigator?.pop() }) {
-              Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            IconButton(
+              onClick = { navigator?.pop() },
+            ) {
+              Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(Res.string.navigate_back_icon_content_description),
+              )
             }
           },
           colors = TopAppBarDefaults.topAppBarColors()
@@ -79,14 +98,18 @@ object StartSessionScreen : Screen {
         OutlinedTextField(
           value = state.location ?: "",
           onValueChange = viewModel::changeSessionLocation,
-          label = { Text("Локация") },
+          label = {
+            Text(
+              text = stringResource(Res.string.start_session_location),
+            )
+          },
           modifier = Modifier.fillMaxWidth()
         )
 
         DatePickerField(
           value = state.date,
           onDateSelected = viewModel::changeSessionDate,
-          label = "Дата",
+          label = stringResource(Res.string.start_session_date),
           modifier = Modifier.fillMaxWidth()
         )
 
@@ -103,7 +126,9 @@ object StartSessionScreen : Screen {
           modifier = Modifier.fillMaxWidth(),
           onClick = { viewModel.addEmptyRod() }
         ) {
-          Text("Добавить удочку")
+          Text(
+            text = stringResource(Res.string.start_session_add_rod),
+          )
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -118,7 +143,9 @@ object StartSessionScreen : Screen {
           },
           enabled = state.rods.isNotEmpty(),
         ) {
-          Text("Начать")
+          Text(
+            text = stringResource(Res.string.start_session),
+          )
         }
       }
     }
@@ -148,7 +175,7 @@ fun RodCard(
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Text(
-          text = "Удочка #${rod.order}",
+          text = stringResource(Res.string.rod_number, rod.order.toString()),
           style = MaterialTheme.typography.titleMedium
         )
         IconButton(
@@ -156,7 +183,7 @@ fun RodCard(
         ) {
           Icon(
             imageVector = Icons.Default.Delete,
-            contentDescription = "Remove",
+            contentDescription = stringResource(Res.string.remove_rod_content_description),
           )
         }
       }
@@ -166,7 +193,11 @@ fun RodCard(
           modifier = Modifier.weight(1f),
           value = if (rod.distance == 0) "" else rod.distance.toString(),
           onValueChange = onDistanceChange,
-          label = { Text("Дистанция (м)") },
+          label = {
+            Text(
+              text = stringResource(Res.string.rod_distance),
+            )
+          },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
@@ -174,7 +205,11 @@ fun RodCard(
           modifier = Modifier.weight(1f),
           value = rod.bait,
           onValueChange = onBaitChange,
-          label = { Text("Наживка") }
+          label = {
+            Text(
+              text = stringResource(Res.string.rod_bite),
+            )
+          }
         )
       }
     }

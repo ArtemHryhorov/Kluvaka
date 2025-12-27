@@ -14,6 +14,7 @@ import kluvaka.composeapp.generated.resources.bottom_nav_equipments
 import kluvaka.composeapp.generated.resources.bottom_nav_sessions
 import kluvaka.composeapp.generated.resources.bottom_nav_trophies
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BottomNavigationBar(navigator: Navigator) {
@@ -21,17 +22,17 @@ fun BottomNavigationBar(navigator: Navigator) {
   val bottomNavItems = listOf(
     BottomNavItem(
       screen = SessionsScreen,
-      label = "Sessions",
+      label = stringResource(Res.string.bottom_nav_sessions),
       icon = painterResource(Res.drawable.bottom_nav_sessions),
     ),
     BottomNavItem(
       screen = TrophiesScreen,
-      label = "Trophies",
+      label = stringResource(Res.string.bottom_nav_trophies),
       icon = painterResource(Res.drawable.bottom_nav_trophies),
     ),
     BottomNavItem(
       screen = EquipmentsScreen,
-      label = "Equipments",
+      label = stringResource(Res.string.bottom_nav_equipments),
       icon = painterResource(Res.drawable.bottom_nav_equipments),
     ),
   )
