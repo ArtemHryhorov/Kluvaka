@@ -45,9 +45,9 @@ import co.kluvaka.cmp.features.sessions.ui.session.SessionScreen
 import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.navigate_back_icon_content_description
 import kluvaka.composeapp.generated.resources.remove_rod_content_description
+import kluvaka.composeapp.generated.resources.rod
 import kluvaka.composeapp.generated.resources.rod_bite
 import kluvaka.composeapp.generated.resources.rod_distance
-import kluvaka.composeapp.generated.resources.rod_number
 import kluvaka.composeapp.generated.resources.start_session
 import kluvaka.composeapp.generated.resources.start_session_add_rod
 import kluvaka.composeapp.generated.resources.start_session_date
@@ -175,7 +175,7 @@ fun RodCard(
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Text(
-          text = stringResource(Res.string.rod_number, rod.order.toString()),
+          text = stringResource(Res.string.rod) + " #${rod.order}",
           style = MaterialTheme.typography.titleMedium
         )
         IconButton(

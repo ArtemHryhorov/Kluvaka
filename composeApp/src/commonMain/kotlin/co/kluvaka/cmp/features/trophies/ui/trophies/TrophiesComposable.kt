@@ -36,6 +36,15 @@ import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.date_format
+import kluvaka.composeapp.generated.resources.length_format
+import kluvaka.composeapp.generated.resources.location_format
+import kluvaka.composeapp.generated.resources.my_trophies
+import kluvaka.composeapp.generated.resources.remove_item_content_description
+import kluvaka.composeapp.generated.resources.trophy_photo_content_description
+import kluvaka.composeapp.generated.resources.weight_format
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +53,7 @@ internal fun TrophiesTopBar() {
     windowInsets = WindowInsets(0, 0, 0, 0),
     title = {
       Text(
-        text = "Мои Трофеи",
+        text = stringResource(Res.string.my_trophies),
       )
     }
   )
@@ -77,7 +86,7 @@ internal fun TrophyItem(
         SwipeToDismissBoxValue.EndToStart -> {
           Icon(
             imageVector = Icons.Default.Delete,
-            contentDescription = "Remove item",
+            contentDescription = stringResource(Res.string.remove_item_content_description),
             modifier = Modifier
               .fillMaxSize()
               .background(
@@ -130,25 +139,25 @@ internal fun TrophyCard(
         )
         trophy.weight?.let { weight ->
           Text(
-            text = "Вес: $weight кг",
+            text = stringResource(Res.string.weight_format, weight),
             style = MaterialTheme.typography.bodyMedium,
           )
         }
         trophy.length?.let { length ->
           Text(
-            text = "Длина: $length см",
+            text = stringResource(Res.string.length_format, length),
             style = MaterialTheme.typography.bodyMedium,
           )
         }
         trophy.location?.let { location ->
           Text(
-            text = "Место: $location",
+            text = stringResource(Res.string.location_format, location),
             style = MaterialTheme.typography.bodyMedium,
           )
         }
         trophy.date?.let { date ->
           Text(
-            text = "Дата: ${DateFormatter.format(date)}",
+            text = stringResource(Res.string.date_format, DateFormatter.format(date)),
             style = MaterialTheme.typography.bodyMedium,
           )
         }
@@ -157,7 +166,7 @@ internal fun TrophyCard(
       trophy.images.firstOrNull()?.let { image ->
         Image(
           painter = rememberAsyncImagePainter(image),
-          contentDescription = "Trophy photo",
+          contentDescription = stringResource(Res.string.trophy_photo_content_description),
           modifier = Modifier
             .size(96.dp)
             .clip(RoundedCornerShape(8.dp)),

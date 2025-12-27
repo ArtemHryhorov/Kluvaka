@@ -24,6 +24,9 @@ import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentScreen
 import co.kluvaka.cmp.features.equipment.ui.details.EquipmentDetailsOperation.Action
 import co.kluvaka.cmp.features.photos.ui.DetailedPhotoViewScreen
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.price_format
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 class EquipmentDetailsScreen(
@@ -101,7 +104,7 @@ private fun EquipmentDetailsScreenContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
       ) {
         Text(
-          text = "Стоимость: ${equipment.price} ГРН",
+          text = stringResource(Res.string.price_format, equipment.price),
           style = MaterialTheme.typography.bodyMedium
         )
       }

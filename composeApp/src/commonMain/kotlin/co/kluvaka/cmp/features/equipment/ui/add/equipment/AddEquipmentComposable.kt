@@ -36,6 +36,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.add_equipment_title
+import kluvaka.composeapp.generated.resources.camera
+import kluvaka.composeapp.generated.resources.camera_content_description
+import kluvaka.composeapp.generated.resources.gallery
+import kluvaka.composeapp.generated.resources.gallery_content_description
+import kluvaka.composeapp.generated.resources.navigate_back_icon_content_description
+import kluvaka.composeapp.generated.resources.remove_image_content_description
+import kluvaka.composeapp.generated.resources.save_button
+import kluvaka.composeapp.generated.resources.selected_equipment_photo_content_description
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +55,7 @@ internal fun AddEquipmentTopBar(onClick: () -> Unit) {
     windowInsets = WindowInsets(0, 0, 0, 0),
     title = {
       Text(
-        text = "Новая Приблуда",
+        text = stringResource(Res.string.add_equipment_title),
       )
     },
     navigationIcon = {
@@ -53,7 +64,7 @@ internal fun AddEquipmentTopBar(onClick: () -> Unit) {
         content = {
           Icon(
             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-            contentDescription = "Navigate back",
+            contentDescription = stringResource(Res.string.navigate_back_icon_content_description),
           )
         }
       )
@@ -93,7 +104,7 @@ internal fun ImagesList(
         ) {
           Icon(
             Icons.Default.Close,
-            contentDescription = "Remove image",
+            contentDescription = stringResource(Res.string.remove_image_content_description),
             modifier = Modifier.padding(4.dp)
           )
         }
@@ -104,7 +115,7 @@ internal fun ImagesList(
         ) {
           Image(
             painter = rememberAsyncImagePainter(imageUri),
-            contentDescription = "Selected equipment photo",
+            contentDescription = stringResource(Res.string.selected_equipment_photo_content_description),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
           )
@@ -127,17 +138,17 @@ internal fun MediaSelection(
       onClick = onOpenCamera,
       modifier = Modifier.weight(1f)
     ) {
-      Icon(Icons.Default.Camera, contentDescription = "Camera")
+      Icon(Icons.Default.Camera, contentDescription = stringResource(Res.string.camera_content_description))
       Spacer(modifier = Modifier.padding(4.dp))
-      Text("Камера")
+      Text(stringResource(Res.string.camera))
     }
     Button(
       onClick = onOpenGallery,
       modifier = Modifier.weight(1f)
     ) {
-      Icon(Icons.Default.Photo, contentDescription = "Gallery")
+      Icon(Icons.Default.Photo, contentDescription = stringResource(Res.string.gallery_content_description))
       Spacer(modifier = Modifier.padding(4.dp))
-      Text("Галерея")
+      Text(stringResource(Res.string.gallery))
     }
   }
 }
@@ -156,7 +167,7 @@ internal fun SaveButton(
         .fillMaxWidth()
         .padding(bottom = 16.dp)
     ) {
-      Text("Save")
+      Text(stringResource(Res.string.save_button))
     }
   }
 }

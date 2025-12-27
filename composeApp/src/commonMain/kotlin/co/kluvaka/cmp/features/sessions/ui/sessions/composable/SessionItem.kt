@@ -29,6 +29,14 @@ import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.delete_session_content_description
+import kluvaka.composeapp.generated.resources.fish_caught_count_format
+import kluvaka.composeapp.generated.resources.fish_caught_format
+import kluvaka.composeapp.generated.resources.fish_caught_weight_format
+import kluvaka.composeapp.generated.resources.session_status_active
+import kluvaka.composeapp.generated.resources.session_status_completed
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +75,7 @@ fun SessionItem(
           ) {
             Icon(
               imageVector = Icons.Default.Delete,
-              contentDescription = "Delete session",
+              contentDescription = stringResource(Res.string.delete_session_content_description),
               tint = MaterialTheme.colorScheme.onError
             )
           }
@@ -100,9 +108,9 @@ fun SessionItem(
         val fishCount = session.events.totalFishCount()
         val fishWeight = session.events.totalFishWeight()
         val sessionsStatisticText = when {
-          fishCount > 0 && fishWeight > 0 -> "Рыбы поймано: $fishCount шт · $fishWeight кг"
-          fishCount > 0 -> "Рыбы поймано: $fishCount шт"
-          fishWeight > 0 -> "Рыбы поймано: $fishWeight кг"
+          fishCount > 0 && fishWeight > 0 -> stringResource(Res.string.fish_caught_format, fishCount, fishWeight)
+          fishCount > 0 -> stringResource(Res.string.fish_caught_count_format, fishCount)
+          fishWeight > 0 -> stringResource(Res.string.fish_caught_weight_format, fishWeight)
           else -> null
         }
           sessionsStatisticText?.let { text ->
@@ -114,7 +122,7 @@ fun SessionItem(
           Spacer(modifier = Modifier.height(8.dp))
         }
         Text(
-          text = if (session.isActive) "Статус: Активная" else "Статус: Завершена",
+          text = if (session.isActive) stringResource(Res.string.session_status_active) else stringResource(Res.string.session_status_completed),
           style = MaterialTheme.typography.bodySmall,
           color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

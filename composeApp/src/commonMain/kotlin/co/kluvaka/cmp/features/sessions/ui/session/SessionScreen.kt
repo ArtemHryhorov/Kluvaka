@@ -67,11 +67,13 @@ import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import coil3.compose.rememberAsyncImagePainter
 import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.active_session
+import kluvaka.composeapp.generated.resources.add
 import kluvaka.composeapp.generated.resources.add_photo_content_description
 import kluvaka.composeapp.generated.resources.cancel
 import kluvaka.composeapp.generated.resources.caught
 import kluvaka.composeapp.generated.resources.choose_rod
 import kluvaka.composeapp.generated.resources.count
+import kluvaka.composeapp.generated.resources.count_label
 import kluvaka.composeapp.generated.resources.event_type
 import kluvaka.composeapp.generated.resources.event_type_fish
 import kluvaka.composeapp.generated.resources.event_type_loose
@@ -83,6 +85,7 @@ import kluvaka.composeapp.generated.resources.finish_session_dialog_confirm
 import kluvaka.composeapp.generated.resources.finish_session_dialog_title
 import kluvaka.composeapp.generated.resources.fish_caught
 import kluvaka.composeapp.generated.resources.kilogram
+import kluvaka.composeapp.generated.resources.loose_event_dialog_title
 import kluvaka.composeapp.generated.resources.navigate_back_icon_content_description
 import kluvaka.composeapp.generated.resources.new_event
 import kluvaka.composeapp.generated.resources.notes
@@ -92,6 +95,7 @@ import kluvaka.composeapp.generated.resources.rod
 import kluvaka.composeapp.generated.resources.rods
 import kluvaka.composeapp.generated.resources.session
 import kluvaka.composeapp.generated.resources.session_empty_state
+import kluvaka.composeapp.generated.resources.spomb_event_dialog_title
 import kluvaka.composeapp.generated.resources.weight
 import kluvaka.composeapp.generated.resources.weight_kg
 import org.jetbrains.compose.resources.stringResource
@@ -700,12 +704,12 @@ fun FishEventDialog(
     },
     confirmButton = {
       Button(onClick = onAddEvent) {
-        Text("Добавить")
+        Text(stringResource(Res.string.add))
       }
     },
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(stringResource(Res.string.cancel))
       }
     }
   )
@@ -725,7 +729,7 @@ fun SpombEventDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Кормление") },
+    title = { Text(stringResource(Res.string.spomb_event_dialog_title)) },
     text = {
       Column {
         PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
@@ -733,7 +737,7 @@ fun SpombEventDialog(
         OutlinedTextField(
           value = count,
           onValueChange = onCountChange,
-          label = { Text("Количество") },
+          label = { Text(stringResource(Res.string.count_label)) },
           modifier = Modifier.fillMaxWidth(),
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -741,7 +745,7 @@ fun SpombEventDialog(
         OutlinedTextField(
           value = notes,
           onValueChange = onNotesChange,
-          label = { Text("Заметки") },
+          label = { Text(stringResource(Res.string.notes)) },
           modifier = Modifier.fillMaxWidth(),
           minLines = 2
         )
@@ -749,12 +753,12 @@ fun SpombEventDialog(
     },
     confirmButton = {
       Button(onClick = onAddEvent) {
-        Text("Добавить")
+        Text(stringResource(Res.string.add))
       }
     },
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(stringResource(Res.string.cancel))
       }
     }
   )
@@ -772,7 +776,7 @@ fun LooseEventDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Сход") },
+    title = { Text(stringResource(Res.string.loose_event_dialog_title)) },
     text = {
       Column {
         PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
@@ -780,7 +784,7 @@ fun LooseEventDialog(
         OutlinedTextField(
           value = notes,
           onValueChange = onNotesChange,
-          label = { Text("Заметки") },
+          label = { Text(stringResource(Res.string.notes)) },
           modifier = Modifier.fillMaxWidth(),
           minLines = 3
         )
@@ -788,12 +792,12 @@ fun LooseEventDialog(
     },
     confirmButton = {
       Button(onClick = onAddEvent) {
-        Text("Добавить")
+        Text(stringResource(Res.string.add))
       }
     },
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(stringResource(Res.string.cancel))
       }
     }
   )

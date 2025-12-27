@@ -34,6 +34,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.equipment_photo_content_description
+import kluvaka.composeapp.generated.resources.my_arsenal
+import kluvaka.composeapp.generated.resources.remove_item_content_description
+import org.jetbrains.compose.resources.stringResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +52,7 @@ internal fun EquipmentsTopBar(totalPrice: Double) {
         horizontalArrangement = Arrangement.SpaceBetween,
       ) {
         Text(
-          text = "Мой Арсенал",
+          text = stringResource(Res.string.my_arsenal),
         )
         Text(
           modifier = Modifier.padding(end = 16.dp),
@@ -85,7 +90,7 @@ internal fun EquipmentItem(
         SwipeToDismissBoxValue.EndToStart -> {
           Icon(
             imageVector = Icons.Default.Delete,
-            contentDescription = "Remove item",
+            contentDescription = stringResource(Res.string.remove_item_content_description),
             modifier = Modifier
               .fillMaxSize()
               .background(MaterialTheme.colorScheme.error)
@@ -144,7 +149,7 @@ internal fun EquipmentCard(
       Spacer(modifier = Modifier.size(4.dp))
       Image(
         painter = rememberAsyncImagePainter(item.images.firstOrNull()),
-        contentDescription = "Trophy photo",
+        contentDescription = stringResource(Res.string.equipment_photo_content_description),
         modifier = Modifier
           .size(64.dp)
           .clip(RoundedCornerShape(8.dp)),

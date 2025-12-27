@@ -28,6 +28,12 @@ import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Actio
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Actions.DeleteEquipmentConfirm
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Actions.DeleteEquipmentRequest
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Actions.FetchEquipments
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.add_equipment_button
+import kluvaka.composeapp.generated.resources.cancel
+import kluvaka.composeapp.generated.resources.delete_equipment_dialog_confirm
+import kluvaka.composeapp.generated.resources.delete_equipment_dialog_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 object EquipmentsScreen : Screen {
@@ -83,9 +89,9 @@ private fun EquipmentsScreenContent(
 ) {
   (state.deleteConfirmationDialog as? DialogState.Shown<Equipment>)?.value?.let { equipment ->
     Dialog(
-      title = "Удалить ${equipment.title} из Вашего арсенала?",
-      cancelButtonText = "Отмена",
-      confirmButtonText = "Да, удалить",
+      title = stringResource(Res.string.delete_equipment_dialog_title, equipment.title),
+      cancelButtonText = stringResource(Res.string.cancel),
+      confirmButtonText = stringResource(Res.string.delete_equipment_dialog_confirm),
       onConfirmClick = { actions.onDeleteConfirm(equipment.id) },
       onDismissClick = actions.onDeleteCancel,
     )
@@ -124,7 +130,7 @@ private fun EquipmentsScreenContent(
       ) {
         Text(
           modifier = Modifier.padding(horizontal = 16.dp),
-          text = "Добавить",
+          text = stringResource(Res.string.add_equipment_button),
         )
       }
     }

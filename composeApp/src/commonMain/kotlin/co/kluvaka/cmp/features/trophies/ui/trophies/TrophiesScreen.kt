@@ -30,6 +30,12 @@ import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesOperation.Actions.De
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesOperation.Actions.DeleteTrophyConfirm
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesOperation.Actions.DeleteTrophyRequest
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesOperation.Actions.FetchTrophies
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.add_trophy_button
+import kluvaka.composeapp.generated.resources.cancel
+import kluvaka.composeapp.generated.resources.delete_trophy_dialog_confirm
+import kluvaka.composeapp.generated.resources.delete_trophy_dialog_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 object TrophiesScreen : Screen {
@@ -85,9 +91,9 @@ private fun TrophiesScreenContent(
 ) {
   (state.deleteConfirmationDialog as? DialogState.Shown<Trophy>)?.value?.let { trophy ->
     Dialog(
-      title = "Удалить ${trophy.fishType} из Ваших трофеев?",
-      cancelButtonText = "Отмена",
-      confirmButtonText = "Да, удалить",
+      title = stringResource(Res.string.delete_trophy_dialog_title, trophy.fishType),
+      cancelButtonText = stringResource(Res.string.cancel),
+      confirmButtonText = stringResource(Res.string.delete_trophy_dialog_confirm),
       onConfirmClick = { actions.onDeleteConfirm(trophy.id) },
       onDismissClick = actions.onDeleteCancel,
     )
@@ -132,7 +138,7 @@ private fun TrophiesScreenContent(
       ) {
         Text(
           modifier = Modifier.padding(horizontal = 16.dp),
-          text = "Добавить",
+          text = stringResource(Res.string.add_trophy_button),
         )
       }
     }

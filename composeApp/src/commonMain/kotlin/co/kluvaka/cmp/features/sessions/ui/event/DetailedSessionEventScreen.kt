@@ -42,6 +42,24 @@ import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Fis
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Loose
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Spomb
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.back
+import kluvaka.composeapp.generated.resources.count_label
+import kluvaka.composeapp.generated.resources.count_value_format
+import kluvaka.composeapp.generated.resources.event_details_title
+import kluvaka.composeapp.generated.resources.event_not_found
+import kluvaka.composeapp.generated.resources.event_photo_content_description
+import kluvaka.composeapp.generated.resources.event_time_label
+import kluvaka.composeapp.generated.resources.event_type_fish
+import kluvaka.composeapp.generated.resources.event_type_label
+import kluvaka.composeapp.generated.resources.event_type_loose
+import kluvaka.composeapp.generated.resources.event_type_spomb
+import kluvaka.composeapp.generated.resources.notes_label
+import kluvaka.composeapp.generated.resources.photos_label
+import kluvaka.composeapp.generated.resources.rod_label
+import kluvaka.composeapp.generated.resources.weight_label
+import kluvaka.composeapp.generated.resources.weight_value_format
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -62,12 +80,12 @@ class DetailedSessionEventScreen(
       topBar = {
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
-          title = { Text("Детали события") },
+          title = { Text(stringResource(Res.string.event_details_title)) },
           navigationIcon = {
             androidx.compose.material3.IconButton(onClick = { navigator?.pop() }) {
               androidx.compose.material3.Icon(
                 Icons.AutoMirrored.Outlined.ArrowBack,
-                contentDescription = "Back"
+                contentDescription = stringResource(Res.string.back)
               )
             }
           },
@@ -95,7 +113,7 @@ class DetailedSessionEventScreen(
             contentAlignment = Alignment.Center
           ) {
             Text(
-              text = state.errorMessage ?: "Событие не найдено",
+              text = state.errorMessage ?: stringResource(Res.string.event_not_found),
               style = MaterialTheme.typography.bodyLarge
             )
           }
@@ -150,12 +168,19 @@ private fun EventDetailsContent(
         Text(sessionName, style = MaterialTheme.typography.titleMedium)
         Text(sessionDate, style = MaterialTheme.typography.bodyMedium)
         Text(
-          text = "Тип события: ${event.type.readableName()}",
+          text = stringResource(
+            Res.string.event_type_label,
+            when (event.type) {
+              is Fish -> stringResource(Res.string.event_type_fish)
+              is Loose -> stringResource(Res.string.event_type_loose)
+              is Spomb -> stringResource(Res.string.event_type_spomb)
+            }
+          ),
           style = MaterialTheme.typography.bodyMedium,
           fontWeight = FontWeight.Medium
         )
         Text(
-          text = "Время: ${event.timestamp}",
+          text = stringResource(Res.string.event_time_label, event.timestamp),
           style = MaterialTheme.typography.bodyMedium
         )
       }
@@ -163,24 +188,24 @@ private fun EventDetailsContent(
 
     when (event.type) {
       is Fish -> {
-        InfoRow(label = "Удочка", value = "#${event.type.rodId}")
+        InfoRow(label = stringResource(Res.string.rod_label), value = "#${event.type.rodId}")
         event.weight?.let { weight ->
-          InfoRow(label = "Вес", value = "$weight кг")
+          InfoRow(label = stringResource(Res.string.weight_label), value = stringResource(Res.string.weight_value_format, weight))
         }
       }
 
       is Loose -> {
-        InfoRow(label = "Удочка", value = "#${event.type.rodId}")
+        InfoRow(label = stringResource(Res.string.rod_label), value = "#${event.type.rodId}")
       }
 
       is Spomb -> {
-        InfoRow(label = "Количество", value = "${event.type.count} шт")
+        InfoRow(label = stringResource(Res.string.count_label), value = stringResource(Res.string.count_value_format, event.type.count))
       }
     }
 
     if (!event.notes.isNullOrBlank()) {
       Text(
-        text = "Заметки",
+        text = stringResource(Res.string.notes_label),
         style = MaterialTheme.typography.titleMedium
       )
       Card(
@@ -198,7 +223,7 @@ private fun EventDetailsContent(
 
     if (event.photos.isNotEmpty()) {
       Text(
-        text = "Фото",
+        text = stringResource(Res.string.photos_label),
         style = MaterialTheme.typography.titleMedium
       )
       LazyRow(
@@ -207,7 +232,7 @@ private fun EventDetailsContent(
         itemsIndexed(event.photos) { index, photo ->
           Image(
             painter = rememberAsyncImagePainter(photo),
-            contentDescription = "Event photo",
+            contentDescription = stringResource(Res.string.event_photo_content_description),
             modifier = Modifier
               .size(160.dp)
               .clip(RoundedCornerShape(12.dp))
@@ -240,10 +265,4 @@ private fun InfoRow(label: String, value: String) {
   }
 }
 
-private fun co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.readableName(): String =
-  when (this) {
-    is Fish -> "Рыба"
-    is Loose -> "Сход"
-    is Spomb -> "Спомб"
-  }
 
