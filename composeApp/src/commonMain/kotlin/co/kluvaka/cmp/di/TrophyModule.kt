@@ -13,6 +13,7 @@ import co.kluvaka.cmp.features.trophies.domain.usecase.DeleteTrophy
 import co.kluvaka.cmp.features.trophies.domain.usecase.GetAllTrophies
 import co.kluvaka.cmp.features.trophies.domain.usecase.GetTrophyById
 import co.kluvaka.cmp.features.trophies.domain.usecase.UpdateTrophy
+import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyReducer
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyViewModel
 import co.kluvaka.cmp.features.trophies.ui.details.TrophyDetailsReducer
 import co.kluvaka.cmp.features.trophies.ui.details.TrophyDetailsViewModel
@@ -50,6 +51,7 @@ val trophyModule = module {
   }
 
   // Reducer
+  single { AddTrophyReducer() }
   single { TrophiesReducer() }
   single { TrophyDetailsReducer() }
 
@@ -64,6 +66,8 @@ val trophyModule = module {
   viewModel {
     AddTrophyViewModel(
       addTrophy = get(),
+      getTrophyById = get(),
+      reducer = get(),
       updateTrophy = get(),
     )
   }

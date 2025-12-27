@@ -29,7 +29,7 @@ class TrophyDetailsScreen(
 
   data class Actions(
     val onNavigateBack: () -> Unit,
-    val onNavigateToEditTrophyClick: (Trophy) -> Unit,
+    val onNavigateToEditTrophyClick: (Int) -> Unit,
     val onNavigateToImageDetails: (Int, List<String>) -> Unit,
   ) {
     companion object {
@@ -50,7 +50,7 @@ class TrophyDetailsScreen(
 
     val actions = Actions(
       onNavigateBack = { navigator?.pop() },
-      onNavigateToEditTrophyClick = { trophy -> navigator?.push(AddTrophyScreen(trophy)) },
+      onNavigateToEditTrophyClick = { id -> navigator?.push(AddTrophyScreen(id)) },
       onNavigateToImageDetails = { index, images ->
         navigator?.push(DetailedPhotoViewScreen(images, index))
       },
@@ -79,7 +79,7 @@ private fun TrophyDetailsScreenContent(
       TrophyDetailsTopAppBar(
         title = trophy.fishType,
         onNavigateBack = actions.onNavigateBack,
-        onNavigateToEdit = { actions.onNavigateToEditTrophyClick(trophy) },
+        onNavigateToEdit = { actions.onNavigateToEditTrophyClick(trophy.id) },
       )
     }
   ) { paddingValues ->

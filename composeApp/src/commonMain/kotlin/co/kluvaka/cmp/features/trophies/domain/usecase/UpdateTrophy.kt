@@ -1,14 +1,10 @@
 package co.kluvaka.cmp.features.trophies.domain.usecase
 
+import co.kluvaka.cmp.features.trophies.domain.model.TrophyInput
+
 fun interface UpdateTrophy {
   suspend operator fun invoke(
-    id: Long,
-    fishType: String,
-    weight: Double,
-    length: Double?,
-    location: String,
-    date: Long,
-    images: List<String>,
-    notes: String?,
+    id: Int,
+    input: TrophyInput,
   )
 }
