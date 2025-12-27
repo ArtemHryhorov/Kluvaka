@@ -22,7 +22,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentOperation.Actions.AddCameraImage
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentOperation.Actions.AddGalleryImages
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentOperation.Actions.DeleteImage
@@ -34,11 +33,11 @@ import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import org.koin.compose.viewmodel.koinViewModel
 
 data class AddEquipmentScreen(
-  private val equipment: Equipment? = null,
+  private val equipmentId: Int? = null,
 ) : Screen {
 
   data class Actions(
-    val onEditEquipment: (Equipment) -> Unit,
+    val onEditEquipment: (Int) -> Unit,
     val onImageDelete: (Int) -> Unit,
     val onNavigateBack: () -> Unit,
     val onOpenCamera: () -> Unit,
@@ -69,7 +68,7 @@ data class AddEquipmentScreen(
     val state by viewModel.state.collectAsState()
 
     val actions = Actions(
-      onEditEquipment = { equipment -> viewModel.handleAction(EditEquipment(equipment)) },
+      onEditEquipment = { id -> viewModel.handleAction(EditEquipment(id)) },
       onImageDelete = { index -> viewModel.handleAction(DeleteImage(index))  },
       onNavigateBack = { navigator?.pop() },
       onOpenCamera = {
@@ -90,8 +89,8 @@ data class AddEquipmentScreen(
       onTitleUpdate = { title -> viewModel.handleAction(TitleUpdate(title)) },
     )
 
-    LaunchedEffect(equipment) {
-      equipment?.let { actions.onEditEquipment(it) }
+    LaunchedEffect(equipmentId) {
+      equipmentId?.let { actions.onEditEquipment(it) }
     }
 
     AddEquipmentScreenContent(

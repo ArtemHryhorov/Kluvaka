@@ -27,7 +27,7 @@ class TrophyRepositoryImpl(
   )
 
   override suspend fun update(
-    id: Long,
+    id: Int,
     fishType: String,
     weight: Double?,
     length: Double?,

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import co.kluvaka.cmp.features.equipment.domain.usecase.DeleteEquipment
 import co.kluvaka.cmp.features.equipment.domain.usecase.GetAllEquipments
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Actions
-import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Events.FetchEquipmentsObserved
+import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsOperation.Events
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -22,10 +22,10 @@ class EquipmentsViewModel(
 
   fun handleAction(action: Actions) {
     when (action) {
-      is Actions.FetchEquipments -> handleFetchEquipments()
       is Actions.DeleteEquipmentCancel -> dispatchOperation(action)
       is Actions.DeleteEquipmentConfirm -> handleDeleteEquipment(action)
       is Actions.DeleteEquipmentRequest -> dispatchOperation(action)
+      is Actions.FetchEquipments -> handleFetchEquipments()
     }
   }
 
@@ -38,7 +38,7 @@ class EquipmentsViewModel(
   private fun handleFetchEquipments() {
     viewModelScope.launch {
       dispatchOperation(
-        operation = FetchEquipmentsObserved(
+        operation = Events.FetchEquipmentsObserved(
           payload = getAllEquipments(),
         )
       )

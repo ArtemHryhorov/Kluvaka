@@ -72,6 +72,7 @@ val equipmentModule = module {
   viewModel {
     AddEquipmentViewModel(
       addEquipment = get(),
+      getEquipmentById = get(),
       reducer = get(),
       updateEquipment = get(),
     )

@@ -13,8 +13,11 @@ import co.kluvaka.cmp.features.trophies.domain.usecase.DeleteTrophy
 import co.kluvaka.cmp.features.trophies.domain.usecase.GetAllTrophies
 import co.kluvaka.cmp.features.trophies.domain.usecase.GetTrophyById
 import co.kluvaka.cmp.features.trophies.domain.usecase.UpdateTrophy
+import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyReducer
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyViewModel
-import co.kluvaka.cmp.features.trophies.ui.detail.TrophyDetailViewModel
+import co.kluvaka.cmp.features.trophies.ui.details.TrophyDetailsReducer
+import co.kluvaka.cmp.features.trophies.ui.details.TrophyDetailsViewModel
+import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesReducer
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -47,20 +50,31 @@ val trophyModule = module {
     UpdateTrophyUseCase(repository = get())
   }
 
+  // Reducer
+  single { AddTrophyReducer() }
+  single { TrophiesReducer() }
+  single { TrophyDetailsReducer() }
+
   // ViewModel
   viewModel {
     TrophiesViewModel(
       getAllTrophies = get(),
       deleteTrophy = get(),
+      reducer = get(),
     )
   }
   viewModel {
     AddTrophyViewModel(
       addTrophy = get(),
+      getTrophyById = get(),
+      reducer = get(),
       updateTrophy = get(),
     )
   }
   viewModel {
-    TrophyDetailViewModel(getTrophyById = get())
+    TrophyDetailsViewModel(
+      getTrophyById = get(),
+      reducer = get(),
+    )
   }
 }

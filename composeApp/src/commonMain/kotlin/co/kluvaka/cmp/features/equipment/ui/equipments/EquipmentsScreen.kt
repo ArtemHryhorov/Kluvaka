@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -55,9 +56,6 @@ object EquipmentsScreen : Screen {
     val viewModel = koinViewModel<EquipmentsViewModel>()
     val state by viewModel.state.collectAsState()
 
-    // TODO: Delete when migrated to flow
-    viewModel.handleAction(FetchEquipments)
-
     val actions = Actions(
       onAddEquipmentClick = { navigator?.push(AddEquipmentScreen()) },
       onDeleteCancel = { viewModel.handleAction(DeleteEquipmentCancel) },
@@ -65,6 +63,11 @@ object EquipmentsScreen : Screen {
       onDeleteRequest = { equipment -> viewModel.handleAction(DeleteEquipmentRequest(equipment)) },
       onEquipmentClick = { id -> navigator?.push(EquipmentDetailsScreen(id)) },
     )
+
+    // TODO: Delete when migrated to flow
+    LaunchedEffect(Unit) {
+      viewModel.handleAction(FetchEquipments)
+    }
 
     EquipmentsScreenContent(
       state = state,

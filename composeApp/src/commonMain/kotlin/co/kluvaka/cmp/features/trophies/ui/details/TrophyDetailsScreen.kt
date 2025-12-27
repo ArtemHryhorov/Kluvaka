@@ -1,6 +1,5 @@
-package co.kluvaka.cmp.features.equipment.ui.details
+package co.kluvaka.cmp.features.trophies.ui.details
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,25 +17,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import co.kluvaka.cmp.features.equipment.domain.model.Equipment
-import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentScreen
-import co.kluvaka.cmp.features.equipment.ui.details.EquipmentDetailsOperation.Action
 import co.kluvaka.cmp.features.photos.ui.DetailedPhotoViewScreen
+import co.kluvaka.cmp.features.trophies.domain.model.Trophy
+import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
+import co.kluvaka.cmp.features.trophies.ui.details.TrophyDetailsOperation.Action
 import org.koin.compose.viewmodel.koinViewModel
 
-class EquipmentDetailsScreen(
-  private val equipmentId: Int
+class TrophyDetailsScreen(
+  private val trophyId: Int,
 ) : Screen {
 
   data class Actions(
     val onNavigateBack: () -> Unit,
-    val onNavigateToEditEquipmentClick: (Int) -> Unit,
+    val onNavigateToEditTrophyClick: (Int) -> Unit,
     val onNavigateToImageDetails: (Int, List<String>) -> Unit,
   ) {
     companion object {
       val Empty = Actions(
         onNavigateBack = {},
-        onNavigateToEditEquipmentClick = {},
+        onNavigateToEditTrophyClick = {},
         onNavigateToImageDetails = { _, _ -> },
       )
     }
@@ -48,44 +45,41 @@ class EquipmentDetailsScreen(
   @Composable
   override fun Content() {
     val navigator = LocalNavigator.current
-    val viewModel = koinViewModel<EquipmentDetailsViewModel>()
+    val viewModel = koinViewModel<TrophyDetailsViewModel>()
     val state by viewModel.state.collectAsState()
 
     val actions = Actions(
       onNavigateBack = { navigator?.pop() },
-      onNavigateToEditEquipmentClick = { equipmentId ->
-        navigator?.push(AddEquipmentScreen(equipmentId))
-      },
+      onNavigateToEditTrophyClick = { id -> navigator?.push(AddTrophyScreen(id)) },
       onNavigateToImageDetails = { index, images ->
         navigator?.push(DetailedPhotoViewScreen(images, index))
-      }
+      },
     )
 
-    // TODO: Delete when migrated to flow
-    LaunchedEffect(equipmentId) {
-      viewModel.handleAction(Action.GetEquipment(equipmentId))
+    LaunchedEffect(trophyId) {
+      viewModel.handleAction(Action.GetTrophy(trophyId))
     }
 
-    state.equipment?.let { equipment ->
-      EquipmentDetailsScreenContent(
+    state.trophy?.let { trophy ->
+      TrophyDetailsScreenContent(
         actions = actions,
-        equipment = equipment,
+        trophy = trophy,
       )
     }
   }
 }
 
 @Composable
-private fun EquipmentDetailsScreenContent(
-  actions: EquipmentDetailsScreen.Actions,
-  equipment: Equipment,
+private fun TrophyDetailsScreenContent(
+  actions: TrophyDetailsScreen.Actions,
+  trophy: Trophy,
 ) {
   Scaffold(
     topBar = {
-      EquipmentDetailsTopBar(
-        title = equipment.title,
-        onNavigateBackClick = actions.onNavigateBack,
-        onNavigateToAddEquipmentClick = { actions.onNavigateToEditEquipmentClick(equipment.id) },
+      TrophyDetailsTopAppBar(
+        title = trophy.fishType,
+        onNavigateBack = actions.onNavigateBack,
+        onNavigateToEdit = { actions.onNavigateToEditTrophyClick(trophy.id) },
       )
     }
   ) { paddingValues ->
@@ -96,21 +90,12 @@ private fun EquipmentDetailsScreenContent(
         .verticalScroll(rememberScrollState()),
     ) {
       Spacer(modifier = Modifier.height(16.dp))
-      Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-      ) {
-        Text(
-          text = "Стоимость: ${equipment.price} ГРН",
-          style = MaterialTheme.typography.bodyMedium
-        )
-      }
-
-      if (equipment.images.isNotEmpty()) {
-        EquipmentDetailsImagesSection(
-          images = equipment.images,
+      TrophyDataColumn(trophy = trophy)
+      if (trophy.images.isNotEmpty()) {
+        MediaSection(
+          images = trophy.images,
           onImageClick = { index ->
-            actions.onNavigateToImageDetails(index, equipment.images)
+            actions.onNavigateToImageDetails(index, trophy.images)
           },
         )
       }

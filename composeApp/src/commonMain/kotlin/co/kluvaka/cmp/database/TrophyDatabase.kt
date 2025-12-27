@@ -33,7 +33,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   }
 
   fun updateTrophy(
-    id: Long,
+    id: Int,
     fishType: String,
     weight: Double?,
     length: Double?,
@@ -44,7 +44,7 @@ class TrophyDatabase(databaseDriverFactory: DatabaseDriverFactory) {
   ) {
     dbQuery.transaction {
       dbQuery.updateTrophy(
-        id = id,
+        id = id.toLong(),
         fishType = fishType,
         weight = weight,
         length = length,
