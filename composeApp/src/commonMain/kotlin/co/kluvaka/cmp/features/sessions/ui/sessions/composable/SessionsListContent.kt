@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.history.composable
+package co.kluvaka.cmp.features.sessions.ui.sessions.composable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -10,13 +10,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.Session
 
 @Composable
-fun FishingSessionList(
-  sessions: List<FishingSession>,
-  onSessionClick: ((FishingSession) -> Unit)? = null,
-  onSessionDelete: (FishingSession) -> Unit = {},
+fun SessionsListContent(
+  sessions: List<Session>,
+  onSessionClick: ((Session) -> Unit)? = null,
+  onSessionDelete: (Session) -> Unit = {},
 ) {
   LazyColumn(
     modifier = Modifier
@@ -33,7 +33,7 @@ fun FishingSessionList(
       items = sessions,
       key = { it.id ?: it.hashCode() }
     ) { session ->
-      FishingSessionCard(
+      SessionItem(
         session = session,
         onClick = { onSessionClick?.invoke(session) },
         onRemove = { onSessionDelete(session) },

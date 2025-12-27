@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.history.composable
+package co.kluvaka.cmp.features.sessions.ui.sessions.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,16 +26,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FishingSessionCard(
-  session: FishingSession,
+fun SessionItem(
+  session: Session,
   onClick: (() -> Unit)? = null,
-  onRemove: (FishingSession) -> Unit,
+  onRemove: (Session) -> Unit,
 ) {
   val swipeState = rememberSwipeToDismissBoxState(
     confirmValueChange = { value ->

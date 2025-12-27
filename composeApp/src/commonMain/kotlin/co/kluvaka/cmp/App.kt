@@ -19,16 +19,16 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsScreen
-import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryScreen
+import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsScreen
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesScreen
 import co.kluvaka.cmp.theme.KluvakaTheme
 
 @Composable
 fun App() {
   KluvakaTheme {
-    Navigator(SessionsHistoryScreen) { navigator ->
+    Navigator(SessionsScreen) { navigator ->
       val bottomNavItems = listOf(
-        BottomNavItem(SessionsHistoryScreen, "Sessions", Icons.Default.History),
+        BottomNavItem(SessionsScreen, "Sessions", Icons.Default.History),
         BottomNavItem(TrophiesScreen, "Trophies", Icons.Default.EmojiEvents),
         BottomNavItem(EquipmentsScreen, "Equipments", Icons.Default.Inventory),
       )
@@ -59,7 +59,7 @@ data class BottomNavItem(
 fun BottomNavigationBar(navigator: Navigator, items: List<BottomNavItem>) {
   val current = navigator.lastItem
   val rootScreens = listOf(
-    SessionsHistoryScreen,
+    SessionsScreen,
     TrophiesScreen,
     EquipmentsScreen,
   )

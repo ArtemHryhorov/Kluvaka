@@ -39,6 +39,7 @@ class TrophiesReducer {
     currentState: TrophiesState,
     event: Events.FetchTrophiesObserved,
   ): TrophiesState = currentState.copy(
+    deleteConfirmationDialog = DialogState.Hidden,
     trophies = event.payload,
   )
 }

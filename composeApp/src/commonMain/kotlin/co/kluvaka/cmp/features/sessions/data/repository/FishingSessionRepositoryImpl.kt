@@ -1,7 +1,7 @@
 package co.kluvaka.cmp.features.sessions.data.repository
 
 import co.kluvaka.cmp.database.SessionDatabase
-import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.repository.FishingSessionRepository
 
@@ -9,19 +9,19 @@ class FishingSessionRepositoryImpl(
   private val database: SessionDatabase,
 ) : FishingSessionRepository {
 
-  override suspend fun createSession(session: FishingSession) {
+  override suspend fun createSession(session: Session) {
     database.insertSessionWithRods(session)
   }
 
-  override suspend fun getAllSessions(): List<FishingSession> {
+  override suspend fun getAllSessions(): List<Session> {
     return database.getAllSessionsWithRods()
   }
 
-  override suspend fun getSessionById(sessionId: Int): FishingSession {
+  override suspend fun getSessionById(sessionId: Int): Session {
     return database.getSessionWithRods(sessionId)
   }
 
-  override suspend fun updateSession(session: FishingSession) {
+  override suspend fun updateSession(session: Session) {
     database.updateSession(session)
   }
 
