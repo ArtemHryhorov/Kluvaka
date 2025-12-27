@@ -32,7 +32,7 @@ class EquipmentDetailsScreen(
 
   data class Actions(
     val onNavigateBack: () -> Unit,
-    val onNavigateToEditEquipmentClick: (Equipment) -> Unit,
+    val onNavigateToEditEquipmentClick: (Int) -> Unit,
     val onNavigateToImageDetails: (Int, List<String>) -> Unit,
   ) {
     companion object {
@@ -53,8 +53,8 @@ class EquipmentDetailsScreen(
 
     val actions = Actions(
       onNavigateBack = { navigator?.pop() },
-      onNavigateToEditEquipmentClick = { equipment ->
-        navigator?.push(AddEquipmentScreen(equipment))
+      onNavigateToEditEquipmentClick = { equipmentId ->
+        navigator?.push(AddEquipmentScreen(equipmentId))
       },
       onNavigateToImageDetails = { index, images ->
         navigator?.push(DetailedPhotoViewScreen(images, index))
@@ -85,7 +85,7 @@ private fun EquipmentDetailsScreenContent(
       EquipmentDetailsTopBar(
         title = equipment.title,
         onNavigateBackClick = actions.onNavigateBack,
-        onNavigateToAddEquipmentClick = { actions.onNavigateToEditEquipmentClick(equipment) },
+        onNavigateToAddEquipmentClick = { actions.onNavigateToEditEquipmentClick(equipment.id) },
       )
     }
   ) { paddingValues ->
