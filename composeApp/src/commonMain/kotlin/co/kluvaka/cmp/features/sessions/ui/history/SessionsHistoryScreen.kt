@@ -16,7 +16,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,6 +27,7 @@ import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
 import co.kluvaka.cmp.features.sessions.ui.active.SessionScreen
+import co.kluvaka.cmp.features.sessions.ui.history.composable.FabMenu
 import co.kluvaka.cmp.features.sessions.ui.history.composable.FishingSessionList
 import co.kluvaka.cmp.features.sessions.ui.history.composable.SessionsEmptyState
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionScreen
@@ -82,7 +82,7 @@ object SessionsHistoryScreen : Screen {
           SessionsEmptyState(modifier = Modifier.fillMaxWidth())
         }
       }
-      FloatingActionButton(
+      FabMenu(
         modifier = Modifier
           .align(Alignment.BottomEnd)
           .padding(all = 16.dp),
@@ -93,18 +93,7 @@ object SessionsHistoryScreen : Screen {
             navigator?.push(StartSessionScreen)
           }
         },
-      ) {
-        Text(
-          modifier = Modifier
-            .align(Alignment.Center)
-            .padding(horizontal = 16.dp),
-          text = if (state.anyActiveSession) {
-            "Открыть активную рыбалку"
-          } else {
-            "Новая рыбалка"
-          },
-        )
-      }
+      )
     }
   }
 }
