@@ -39,6 +39,7 @@ class EquipmentsReducer {
     currentState: EquipmentsState,
     event: Events.FetchEquipmentsObserved,
   ): EquipmentsState = currentState.copy(
+    deleteConfirmationDialog = DialogState.Hidden,
     equipments = event.payload,
     totalPrice = event.payload.sumOf { it.price },
   )

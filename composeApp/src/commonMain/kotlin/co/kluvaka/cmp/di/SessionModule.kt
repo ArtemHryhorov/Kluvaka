@@ -21,7 +21,8 @@ import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionEventById
 import co.kluvaka.cmp.features.sessions.ui.active.SessionViewModel
 import co.kluvaka.cmp.features.sessions.ui.detail.DetailedSessionEventViewModel
-import co.kluvaka.cmp.features.sessions.ui.history.SessionsHistoryViewModel
+import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsReducer
+import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsViewModel
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -63,6 +64,9 @@ val sessionModule = module {
     GetSessionEventByIdUseCase(repository = get())
   }
 
+  // Reducer
+  single<SessionsReducer> { SessionsReducer() }
+
   // ViewModel
   viewModel {
     SessionViewModel(
@@ -73,9 +77,10 @@ val sessionModule = module {
     )
   }
   viewModel {
-    SessionsHistoryViewModel(
+    SessionsViewModel(
       getAllFishingSessions = get(),
       deleteFishingSession = get(),
+      reducer = get(),
     )
   }
   viewModel {

@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.history.composable
+package co.kluvaka.cmp.features.sessions.ui.sessions.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
