@@ -3,7 +3,7 @@ package co.kluvaka.cmp.features.sessions.ui.start.session
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.kluvaka.cmp.features.common.domain.DateFormatter
-import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.Rod
 import co.kluvaka.cmp.features.sessions.domain.usecase.CreateFishingSession
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -90,7 +90,7 @@ class StartSessionViewModel(
   }
 
   fun saveSession() {
-    val session = FishingSession(
+    val session = Session(
       id = null,
       location = _mutableState.value.location ?: DateFormatter.format(_mutableState.value.date),
       date = DateFormatter.format(_mutableState.value.date),

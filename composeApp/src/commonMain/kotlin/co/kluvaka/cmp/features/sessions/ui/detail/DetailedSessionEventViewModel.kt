@@ -2,7 +2,7 @@ package co.kluvaka.cmp.features.sessions.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.kluvaka.cmp.features.sessions.domain.model.FishingSession
+import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionEventById
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class DetailedSessionEventState(
-  val session: FishingSession? = null,
+  val session: Session? = null,
   val event: FishingSessionEvent? = null,
   val isLoading: Boolean = true,
   val errorMessage: String? = null,
