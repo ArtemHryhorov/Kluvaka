@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -131,19 +130,10 @@ private fun SessionsScreenContent(
         SessionsEmptyState(modifier = Modifier.fillMaxWidth())
       }
     }
-    FloatingActionButton(
-      modifier = Modifier
-        .align(Alignment.BottomEnd)
-        .padding(all = 16.dp),
+    FabMenu(
+      modifier = Modifier.align(Alignment.BottomEnd),
       onClick = actions.onStartNewSessionClick,
-    ) {
-      Text(
-        modifier = Modifier
-          .align(Alignment.Center)
-          .padding(horizontal = 16.dp),
-        text = "Новая рыбалка",
-      )
-    }
+    )
   }
 }
 

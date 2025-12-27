@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.history.composable
+package co.kluvaka.cmp.features.sessions.ui.sessions
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
@@ -17,6 +17,7 @@ import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.animateFloatingActionButton
@@ -78,9 +79,9 @@ actual fun FabMenu(
         positionProvider =
           TooltipDefaults.rememberTooltipPositionProvider(
             if (fabMenuExpanded) {
-              androidx.compose.material3.TooltipAnchorPosition.Start
+              TooltipAnchorPosition.Start
             } else {
-              androidx.compose.material3.TooltipAnchorPosition.Above
+              TooltipAnchorPosition.Above
             }
           ),
         tooltip = { PlainTooltip { Text("Toggle menu") } },
