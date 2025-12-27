@@ -24,7 +24,7 @@ fun SessionsEmptyState(
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Text(
-      modifier = Modifier.padding(horizontal = 64.dp),
+      modifier = Modifier.padding(horizontal = 24.dp),
       text = "У вас пока нет рыбалок\n Самое время добавить первую \uD83C\uDFA3",
       textAlign = TextAlign.Center,
     )
