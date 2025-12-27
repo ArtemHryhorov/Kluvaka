@@ -42,6 +42,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.android.driver)
+            implementation(libs.androidx.material3)
         }
         iosMain.dependencies {
             implementation(libs.native.driver)
