@@ -35,26 +35,9 @@ import org.jetbrains.compose.resources.painterResource
 fun App() {
   KluvakaTheme {
     Navigator(SessionsScreen) { navigator ->
-      val bottomNavItems = listOf(
-        BottomNavItem(
-          screen = SessionsScreen,
-          label = "Sessions",
-          icon = painterResource(Res.drawable.bottom_nav_sessions),
-        ),
-        BottomNavItem(
-          screen = TrophiesScreen,
-          label = "Trophies",
-          icon = painterResource(Res.drawable.bottom_nav_trophies),
-        ),
-        BottomNavItem(
-          screen = EquipmentsScreen,
-          label = "Equipments",
-          icon = painterResource(Res.drawable.bottom_nav_equipments),
-        ),
-      )
       Scaffold(
         bottomBar = {
-          BottomNavigationBar(navigator, bottomNavItems)
+          BottomNavigationBar(navigator)
         }
       ) { innerPadding ->
         Box(
@@ -74,31 +57,3 @@ data class BottomNavItem(
   val label: String,
   val icon: Painter,
 )
-
-@Composable
-fun BottomNavigationBar(navigator: Navigator, items: List<BottomNavItem>) {
-  val current = navigator.lastItem
-  val rootScreens = listOf(
-    SessionsScreen,
-    TrophiesScreen,
-    EquipmentsScreen,
-  )
-  val isRootScreen = current in rootScreens
-
-  if (isRootScreen) {
-    NavigationBar {
-      items.forEach { item ->
-        NavigationBarItem(
-          icon = { Icon(item.icon, contentDescription = item.label) },
-          label = { Text(item.label) },
-          selected = current == item.screen,
-          onClick = {
-            if (current != item.screen) {
-              navigator.push(item.screen)
-            }
-          },
-        )
-      }
-    }
-  }
-}
