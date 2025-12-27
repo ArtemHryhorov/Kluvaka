@@ -25,7 +25,7 @@ import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyScreen
-import co.kluvaka.cmp.features.trophies.ui.detail.TrophyDetailScreen
+import co.kluvaka.cmp.features.trophies.ui.details.TrophyDetailsScreen
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesOperation.Actions.DeleteTrophyCancel
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesOperation.Actions.DeleteTrophyConfirm
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesOperation.Actions.DeleteTrophyRequest
@@ -63,7 +63,7 @@ object TrophiesScreen : Screen {
       onDeleteCancel = { viewModel.handleAction(DeleteTrophyCancel) },
       onDeleteConfirm = { id -> viewModel.handleAction(DeleteTrophyConfirm(id)) },
       onDeleteRequest = { trophy -> viewModel.handleAction(DeleteTrophyRequest(trophy)) },
-      onTrophyClick = { id -> navigator?.push(TrophyDetailScreen(id)) },
+      onTrophyClick = { id -> navigator?.push(TrophyDetailsScreen(id)) },
     )
 
     // TODO: Delete when migrated to flow
