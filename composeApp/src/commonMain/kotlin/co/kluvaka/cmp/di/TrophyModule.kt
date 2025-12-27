@@ -15,6 +15,7 @@ import co.kluvaka.cmp.features.trophies.domain.usecase.GetTrophyById
 import co.kluvaka.cmp.features.trophies.domain.usecase.UpdateTrophy
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyViewModel
 import co.kluvaka.cmp.features.trophies.ui.detail.TrophyDetailViewModel
+import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesReducer
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -47,11 +48,15 @@ val trophyModule = module {
     UpdateTrophyUseCase(repository = get())
   }
 
+  // Reducer
+  single { TrophiesReducer() }
+
   // ViewModel
   viewModel {
     TrophiesViewModel(
       getAllTrophies = get(),
       deleteTrophy = get(),
+      reducer = get(),
     )
   }
   viewModel {
