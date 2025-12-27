@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.history.composable
+package co.kluvaka.cmp.features.sessions.ui.sessions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

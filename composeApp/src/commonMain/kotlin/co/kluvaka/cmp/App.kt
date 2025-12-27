@@ -10,10 +10,13 @@ import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.CurrentScreen
@@ -22,15 +25,32 @@ import co.kluvaka.cmp.features.equipment.ui.equipments.EquipmentsScreen
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsScreen
 import co.kluvaka.cmp.features.trophies.ui.trophies.TrophiesScreen
 import co.kluvaka.cmp.theme.KluvakaTheme
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.bottom_nav_equipments
+import kluvaka.composeapp.generated.resources.bottom_nav_sessions
+import kluvaka.composeapp.generated.resources.bottom_nav_trophies
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun App() {
   KluvakaTheme {
     Navigator(SessionsScreen) { navigator ->
       val bottomNavItems = listOf(
-        BottomNavItem(SessionsScreen, "Sessions", Icons.Default.History),
-        BottomNavItem(TrophiesScreen, "Trophies", Icons.Default.EmojiEvents),
-        BottomNavItem(EquipmentsScreen, "Equipments", Icons.Default.Inventory),
+        BottomNavItem(
+          screen = SessionsScreen,
+          label = "Sessions",
+          icon = painterResource(Res.drawable.bottom_nav_sessions),
+        ),
+        BottomNavItem(
+          screen = TrophiesScreen,
+          label = "Trophies",
+          icon = painterResource(Res.drawable.bottom_nav_trophies),
+        ),
+        BottomNavItem(
+          screen = EquipmentsScreen,
+          label = "Equipments",
+          icon = painterResource(Res.drawable.bottom_nav_equipments),
+        ),
       )
       Scaffold(
         bottomBar = {
@@ -52,7 +72,7 @@ fun App() {
 data class BottomNavItem(
   val screen: Screen,
   val label: String,
-  val icon: ImageVector,
+  val icon: Painter,
 )
 
 @Composable
@@ -76,7 +96,7 @@ fun BottomNavigationBar(navigator: Navigator, items: List<BottomNavItem>) {
             if (current != item.screen) {
               navigator.push(item.screen)
             }
-          }
+          },
         )
       }
     }
