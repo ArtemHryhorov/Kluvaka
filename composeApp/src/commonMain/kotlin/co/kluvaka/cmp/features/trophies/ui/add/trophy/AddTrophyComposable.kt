@@ -10,6 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.add_trophy_title
+import kluvaka.composeapp.generated.resources.back
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,14 +22,14 @@ internal fun AddTrophyScreenTopAppBar(
 ) {
   TopAppBar(
     windowInsets = WindowInsets(0, 0, 0, 0),
-    title = { Text("Добавить трофей") },
+    title = { Text(stringResource(Res.string.add_trophy_title)) },
     navigationIcon = {
       IconButton(
         onClick = onNavigateBackClick,
       ) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = "Back",
+          contentDescription = stringResource(Res.string.back),
         )
       }
     },

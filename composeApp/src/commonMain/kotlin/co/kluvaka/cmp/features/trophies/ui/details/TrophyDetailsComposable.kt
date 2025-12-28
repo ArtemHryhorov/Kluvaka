@@ -31,6 +31,17 @@ import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.back
+import kluvaka.composeapp.generated.resources.date_format
+import kluvaka.composeapp.generated.resources.edit
+import kluvaka.composeapp.generated.resources.length_format
+import kluvaka.composeapp.generated.resources.location_format
+import kluvaka.composeapp.generated.resources.notes_label
+import kluvaka.composeapp.generated.resources.trophy_photo_content_description
+import kluvaka.composeapp.generated.resources.trophy_photo_section
+import kluvaka.composeapp.generated.resources.weight_format
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,14 +57,14 @@ internal fun TrophyDetailsTopAppBar(
       IconButton(
         onClick = onNavigateBack,
       ) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.back))
       }
     },
     actions = {
       IconButton(
         onClick = onNavigateToEdit,
       ) {
-        Icon(Icons.Filled.Edit, contentDescription = "Edit")
+        Icon(Icons.Filled.Edit, contentDescription = stringResource(Res.string.edit))
       }
     },
     colors = TopAppBarDefaults.topAppBarColors()
@@ -67,7 +78,7 @@ internal fun MediaSection(
 ) {
   Spacer(modifier = Modifier.padding(8.dp))
   Text(
-    text = "Фото трофея:",
+    text = stringResource(Res.string.trophy_photo_section),
     modifier = Modifier.padding(horizontal = 16.dp),
     style = MaterialTheme.typography.titleMedium
   )
@@ -91,7 +102,7 @@ internal fun MediaSection(
         ) {
           Image(
             painter = rememberAsyncImagePainter(images[index]),
-            contentDescription = "Trophy photo",
+            contentDescription = stringResource(Res.string.trophy_photo_content_description),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
           )
@@ -114,32 +125,32 @@ internal fun TrophyDataColumn(
   ) {
     trophy.weight?.let { weight ->
       Text(
-        text = "Вес: $weight кг",
+        text = stringResource(Res.string.weight_format, weight),
         style = MaterialTheme.typography.bodyMedium
       )
     }
     trophy.length?.let { length ->
       Text(
-        text = "Длина: $length см",
+        text = stringResource(Res.string.length_format, length),
         style = MaterialTheme.typography.bodyMedium
       )
     }
     trophy.location?.let { location ->
       Text(
-        text = "Место: $location",
+        text = stringResource(Res.string.location_format, location),
         style = MaterialTheme.typography.bodyMedium
       )
     }
     trophy.date?.let { date ->
       Text(
-        text = "Дата: ${DateFormatter.format(date)}",
+        text = stringResource(Res.string.date_format, DateFormatter.format(date)),
         style = MaterialTheme.typography.bodyMedium
       )
     }
     trophy.notes?.let { notes ->
       Spacer(modifier = Modifier.padding(8.dp))
       Text(
-        text = "Заметки:",
+        text = stringResource(Res.string.notes_label),
         style = MaterialTheme.typography.titleMedium
       )
       Text(

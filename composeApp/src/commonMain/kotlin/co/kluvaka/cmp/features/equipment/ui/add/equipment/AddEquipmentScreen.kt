@@ -30,6 +30,11 @@ import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentOperation.
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentOperation.Actions.Save
 import co.kluvaka.cmp.features.equipment.ui.add.equipment.AddEquipmentOperation.Actions.TitleUpdate
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.equipment_name_label
+import kluvaka.composeapp.generated.resources.equipment_photo_title
+import kluvaka.composeapp.generated.resources.equipment_price_label
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 data class AddEquipmentScreen(
@@ -123,14 +128,14 @@ private fun AddEquipmentScreenContent(
       OutlinedTextField(
         value = state.input.title,
         onValueChange = actions.onTitleUpdate,
-        label = { Text("Name") },
+        label = { Text(stringResource(Res.string.equipment_name_label)) },
         modifier = Modifier.fillMaxWidth()
       )
       Spacer(modifier = Modifier.padding(12.dp))
       OutlinedTextField(
         value = state.input.price,
         onValueChange = actions.onPriceUpdate,
-        label = { Text("Price") },
+        label = { Text(stringResource(Res.string.equipment_price_label)) },
         keyboardOptions = KeyboardOptions(
           keyboardType = KeyboardType.Number,
         ),
@@ -140,7 +145,7 @@ private fun AddEquipmentScreenContent(
 
       // Photo picker section
       Text(
-        text = "Фото приблуды",
+        text = stringResource(Res.string.equipment_photo_title),
         style = MaterialTheme.typography.titleMedium
       )
       MediaSelection(

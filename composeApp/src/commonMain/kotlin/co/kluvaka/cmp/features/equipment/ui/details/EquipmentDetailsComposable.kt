@@ -28,6 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.back
+import kluvaka.composeapp.generated.resources.edit
+import kluvaka.composeapp.generated.resources.equipment_photo_content_description
+import kluvaka.composeapp.generated.resources.equipment_photo_section
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +51,7 @@ internal fun EquipmentDetailsTopBar(
       ) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = "Back",
+          contentDescription = stringResource(Res.string.back),
         )
       }
     },
@@ -55,7 +61,7 @@ internal fun EquipmentDetailsTopBar(
       ) {
         Icon(
           imageVector = Icons.Filled.Edit,
-          contentDescription = "Edit",
+          contentDescription = stringResource(Res.string.edit),
         )
       }
     },
@@ -70,7 +76,7 @@ internal fun EquipmentDetailsImagesSection(
 ) {
   Spacer(modifier = Modifier.padding(8.dp))
   Text(
-    text = "Фото приблуды:",
+    text = stringResource(Res.string.equipment_photo_section),
     modifier = Modifier.padding(horizontal = 16.dp),
     style = MaterialTheme.typography.titleMedium
   )
@@ -95,7 +101,7 @@ internal fun EquipmentDetailsImagesSection(
         ) {
           Image(
             painter = rememberAsyncImagePainter(image),
-            contentDescription = "Equipment photo",
+            contentDescription = stringResource(Res.string.equipment_photo_content_description),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
           )

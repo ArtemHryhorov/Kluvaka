@@ -46,6 +46,23 @@ import co.kluvaka.cmp.features.common.ui.DatePickerField
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import co.kluvaka.cmp.features.trophies.ui.add.trophy.AddTrophyOperation.Actions.*
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.add_trophy_button_text
+import kluvaka.composeapp.generated.resources.camera
+import kluvaka.composeapp.generated.resources.camera_content_description
+import kluvaka.composeapp.generated.resources.date_label
+import kluvaka.composeapp.generated.resources.fish_type_label
+import kluvaka.composeapp.generated.resources.fishing_location_label
+import kluvaka.composeapp.generated.resources.gallery
+import kluvaka.composeapp.generated.resources.gallery_content_description
+import kluvaka.composeapp.generated.resources.length_cm_label
+import kluvaka.composeapp.generated.resources.notes
+import kluvaka.composeapp.generated.resources.remove_image_content_description
+import kluvaka.composeapp.generated.resources.save_changes
+import kluvaka.composeapp.generated.resources.selected_trophy_photo_content_description
+import kluvaka.composeapp.generated.resources.trophy_photo_title
+import kluvaka.composeapp.generated.resources.weight_kg_label
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -154,7 +171,7 @@ private fun AddTrophyScreenContent(
       OutlinedTextField(
         value = state.input.fishType,
         onValueChange = actions.onFishTypeUpdate,
-        label = { Text("Тип рыбы") },
+        label = { Text(stringResource(Res.string.fish_type_label)) },
         modifier = Modifier.fillMaxWidth()
       )
       Row(
@@ -164,13 +181,13 @@ private fun AddTrophyScreenContent(
         OutlinedTextField(
           value = state.input.weight,
           onValueChange = actions.onWeightUpdate,
-          label = { Text("Вес (кг)") },
+          label = { Text(stringResource(Res.string.weight_kg_label)) },
           modifier = Modifier.weight(1f)
         )
         OutlinedTextField(
           value = state.input.length,
           onValueChange = actions.onLengthUpdate,
-          label = { Text("Длина (см)") },
+          label = { Text(stringResource(Res.string.length_cm_label)) },
           modifier = Modifier.weight(1f)
         )
       }
@@ -178,20 +195,20 @@ private fun AddTrophyScreenContent(
       OutlinedTextField(
         value = state.input.location,
         onValueChange = actions.onLocationUpdate,
-        label = { Text("Место ловли") },
+        label = { Text(stringResource(Res.string.fishing_location_label)) },
         modifier = Modifier.fillMaxWidth()
       )
 
       DatePickerField(
         value = state.input.date ?: Clock.System.now().toEpochMilliseconds(),
         onDateSelected = actions.onDateUpdate,
-        label = "Дата",
+        label = stringResource(Res.string.date_label),
         modifier = Modifier.fillMaxWidth()
       )
 
       // Photo picker section
       Text(
-        text = "Фото трофея",
+        text = stringResource(Res.string.trophy_photo_title),
         style = MaterialTheme.typography.titleMedium
       )
 
@@ -204,9 +221,9 @@ private fun AddTrophyScreenContent(
           onClick = actions.onOpenCamera,
           modifier = Modifier.weight(1f)
         ) {
-          Icon(Icons.Default.Camera, contentDescription = "Camera")
+          Icon(Icons.Default.Camera, contentDescription = stringResource(Res.string.camera_content_description))
           Spacer(modifier = Modifier.padding(4.dp))
-          Text("Камера")
+          Text(stringResource(Res.string.camera))
         }
 
         // Gallery button
@@ -214,9 +231,9 @@ private fun AddTrophyScreenContent(
           onClick = actions.onOpenGallery,
           modifier = Modifier.weight(1f)
         ) {
-          Icon(Icons.Default.Photo, contentDescription = "Gallery")
+          Icon(Icons.Default.Photo, contentDescription = stringResource(Res.string.gallery_content_description))
           Spacer(modifier = Modifier.padding(4.dp))
-          Text("Галерея")
+          Text(stringResource(Res.string.gallery))
         }
       }
 
@@ -247,7 +264,7 @@ private fun AddTrophyScreenContent(
               ) {
                 Icon(
                   Icons.Default.Close,
-                  contentDescription = "Remove image",
+                  contentDescription = stringResource(Res.string.remove_image_content_description),
                   modifier = Modifier.padding(4.dp)
                 )
               }
@@ -258,7 +275,7 @@ private fun AddTrophyScreenContent(
               ) {
                 Image(
                   painter = rememberAsyncImagePainter(imageUri),
-                  contentDescription = "Selected trophy photo",
+                  contentDescription = stringResource(Res.string.selected_trophy_photo_content_description),
                   modifier = Modifier.fillMaxSize(),
                   contentScale = ContentScale.Crop
                 )
@@ -271,7 +288,7 @@ private fun AddTrophyScreenContent(
       OutlinedTextField(
         value = state.input.notes,
         onValueChange = actions.onNotesUpdate,
-        label = { Text("Заметки") },
+        label = { Text(stringResource(Res.string.notes)) },
         modifier = Modifier.fillMaxWidth(),
         minLines = 3
       )
@@ -284,8 +301,8 @@ private fun AddTrophyScreenContent(
         enabled = state.input.fishType.isNotBlank(),
       ) {
         when (state.mode) {
-          is AddTrophyMode.Edit -> Text("Сохранить изменения")
-          AddTrophyMode.New -> Text("Добавить трофей")
+          is AddTrophyMode.Edit -> Text(stringResource(Res.string.save_changes))
+          AddTrophyMode.New -> Text(stringResource(Res.string.add_trophy_button_text))
         }
       }
 

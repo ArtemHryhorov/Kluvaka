@@ -27,6 +27,11 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 import co.kluvaka.cmp.features.common.domain.DateFormatter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.cancel
+import kluvaka.composeapp.generated.resources.ok
+import kluvaka.composeapp.generated.resources.select_date_content_description
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +56,10 @@ fun DatePickerField(
             label = { Text(label) },
             readOnly = true,
             trailingIcon = {
-                Icon(Icons.Default.CalendarToday, contentDescription = "Select date")
+                Icon(
+                    imageVector = Icons.Default.CalendarToday,
+                    contentDescription = stringResource(Res.string.select_date_content_description),
+                )
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = false, // Disable text input, handle click on parent Box or use interaction source
@@ -84,12 +92,12 @@ fun DatePickerField(
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK")
+                    Text(stringResource(Res.string.ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel")
+                    Text(stringResource(Res.string.cancel))
                 }
             }
         ) {

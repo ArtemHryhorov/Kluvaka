@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -25,7 +23,7 @@ import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
-import co.kluvaka.cmp.features.sessions.ui.active.SessionScreen
+import co.kluvaka.cmp.features.sessions.ui.session.SessionScreen
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.DeleteSessionCancel
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.DeleteSessionConfirm
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.DeleteSessionRequest
@@ -33,6 +31,12 @@ import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.Fe
 import co.kluvaka.cmp.features.sessions.ui.sessions.composable.SessionsEmptyState
 import co.kluvaka.cmp.features.sessions.ui.sessions.composable.SessionsListContent
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionScreen
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.cancel
+import kluvaka.composeapp.generated.resources.delete_session_dialog_confirm
+import kluvaka.composeapp.generated.resources.delete_session_dialog_title
+import kluvaka.composeapp.generated.resources.sessions_topbar
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 object SessionsScreen : Screen {
@@ -98,10 +102,10 @@ private fun SessionsScreenContent(
 ) {
   (state.deleteConfirmationDialog as? DialogState.Shown<Session>)?.value?.let { session ->
     Dialog(
-      title = "Удалить сессию?",
+      title = stringResource(Res.string.delete_session_dialog_title),
       description = "\"${session.location}\" от ${session.date}",
-      cancelButtonText = "Отмена",
-      confirmButtonText = "Да, удалить",
+      cancelButtonText = stringResource(Res.string.cancel),
+      confirmButtonText = stringResource(Res.string.delete_session_dialog_confirm),
       onConfirmClick = { actions.onDeleteConfirm(session.id!!) },
       onDismissClick = actions.onDeleteCancel,
     )
@@ -145,7 +149,7 @@ private fun SessionsHistoryTopBar() {
     title = {
       Text(
         modifier = Modifier.fillMaxWidth(),
-        text = "Журнал рыбалок",
+        text = stringResource(Res.string.sessions_topbar),
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
         fontSize = 34.sp,

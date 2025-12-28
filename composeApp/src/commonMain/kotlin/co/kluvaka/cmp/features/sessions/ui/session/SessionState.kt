@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.active
+package co.kluvaka.cmp.features.sessions.ui.session
 
 import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent

@@ -19,8 +19,8 @@ import co.kluvaka.cmp.features.sessions.domain.usecase.GetActiveFishingSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetAllFishingSessions
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionEventById
-import co.kluvaka.cmp.features.sessions.ui.active.SessionViewModel
-import co.kluvaka.cmp.features.sessions.ui.detail.DetailedSessionEventViewModel
+import co.kluvaka.cmp.features.sessions.ui.session.SessionViewModel
+import co.kluvaka.cmp.features.sessions.ui.event.DetailedSessionEventViewModel
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsReducer
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsViewModel
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionViewModel

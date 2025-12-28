@@ -1,4 +1,4 @@
-package co.kluvaka.cmp.features.sessions.ui.active
+package co.kluvaka.cmp.features.sessions.ui.session
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -62,9 +62,43 @@ import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
-import co.kluvaka.cmp.features.sessions.ui.detail.DetailedSessionEventScreen
+import co.kluvaka.cmp.features.sessions.ui.event.DetailedSessionEventScreen
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
 import coil3.compose.rememberAsyncImagePainter
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.active_session
+import kluvaka.composeapp.generated.resources.add
+import kluvaka.composeapp.generated.resources.add_photo_content_description
+import kluvaka.composeapp.generated.resources.cancel
+import kluvaka.composeapp.generated.resources.caught
+import kluvaka.composeapp.generated.resources.choose_rod
+import kluvaka.composeapp.generated.resources.count
+import kluvaka.composeapp.generated.resources.count_label
+import kluvaka.composeapp.generated.resources.event_type
+import kluvaka.composeapp.generated.resources.event_type_fish
+import kluvaka.composeapp.generated.resources.event_type_loose
+import kluvaka.composeapp.generated.resources.event_type_media_content_description
+import kluvaka.composeapp.generated.resources.event_type_spomb
+import kluvaka.composeapp.generated.resources.events
+import kluvaka.composeapp.generated.resources.finish_session_content_description
+import kluvaka.composeapp.generated.resources.finish_session_dialog_confirm
+import kluvaka.composeapp.generated.resources.finish_session_dialog_title
+import kluvaka.composeapp.generated.resources.fish_caught
+import kluvaka.composeapp.generated.resources.kilogram
+import kluvaka.composeapp.generated.resources.loose_event_dialog_title
+import kluvaka.composeapp.generated.resources.navigate_back_icon_content_description
+import kluvaka.composeapp.generated.resources.new_event
+import kluvaka.composeapp.generated.resources.notes
+import kluvaka.composeapp.generated.resources.peaces
+import kluvaka.composeapp.generated.resources.remove_image_content_description
+import kluvaka.composeapp.generated.resources.rod
+import kluvaka.composeapp.generated.resources.rods
+import kluvaka.composeapp.generated.resources.session
+import kluvaka.composeapp.generated.resources.session_empty_state
+import kluvaka.composeapp.generated.resources.spomb_event_dialog_title
+import kluvaka.composeapp.generated.resources.weight
+import kluvaka.composeapp.generated.resources.weight_kg
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 class SessionScreen(
@@ -89,17 +123,33 @@ class SessionScreen(
         TopAppBar(
           windowInsets = WindowInsets(0, 0, 0, 0),
           title = {
-            Text(if (isActiveMode) "Активная сессия" else "Сессия")
+            Text(
+              text = if (isActiveMode) {
+                stringResource(Res.string.active_session)
+              } else {
+                stringResource(Res.string.session)
+              }
+            )
           },
           navigationIcon = {
-            IconButton(onClick = { navigator?.pop() }) {
-              Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+            IconButton(
+              onClick = { navigator?.pop() },
+            ) {
+              Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                contentDescription = stringResource(Res.string.navigate_back_icon_content_description),
+              )
             }
           },
           actions = {
             if (isActiveMode) {
-              IconButton(onClick = { viewModel.showFinishSessionDialog() }) {
-                Icon(Icons.Default.Done, contentDescription = "Finish")
+              IconButton(
+                onClick = { viewModel.showFinishSessionDialog() },
+              ) {
+                Icon(
+                  imageVector = Icons.Default.Done,
+                  contentDescription = stringResource(Res.string.finish_session_content_description),
+                )
               }
             }
           },
@@ -113,7 +163,10 @@ class SessionScreen(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
           ) {
-            Icon(Icons.Default.Add, contentDescription = "Новое событие")
+            Icon(
+              imageVector = Icons.Default.Add,
+              contentDescription = stringResource(Res.string.new_event),
+            )
           }
         }
       }
@@ -156,15 +209,17 @@ class SessionScreen(
                   color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                  text = "Удочек: ${session.rods.size}",
+                  text = stringResource(Res.string.rods) + "${session.rods.size}",
                   style = MaterialTheme.typography.bodyMedium,
                   color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
               }
+              val countMetric = stringResource(Res.string.peaces)
+              val weightMetric = stringResource(Res.string.kilogram)
               val sessionsStatisticText = when {
-                fishCount > 0 && fishWeight > 0 -> "$fishCount шт · $fishWeight кг"
-                fishCount > 0 -> "$fishCount шт"
-                fishWeight > 0 -> "$fishWeight кг"
+                fishCount > 0 && fishWeight > 0 -> "$fishCount $countMetric · $fishWeight $weightMetric"
+                fishCount > 0 -> "$fishCount $countMetric"
+                fishWeight > 0 -> "$fishWeight $weightMetric"
                 else -> null
               }
               sessionsStatisticText?.let { text ->
@@ -173,7 +228,7 @@ class SessionScreen(
                   horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                   Text(
-                    text = "Рыбы поймано",
+                    text = stringResource(Res.string.fish_caught),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                   )
@@ -192,11 +247,11 @@ class SessionScreen(
         // Events list
         if (state.events.isNotEmpty()) {
           Text(
-            text = "События",
+            text = stringResource(Res.string.events),
             style = MaterialTheme.typography.titleLarge
           )
           Spacer(modifier = Modifier.height(16.dp))
-          
+
           val events = state.events.reversed()
           LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -206,16 +261,25 @@ class SessionScreen(
               val currentSessionId = state.session?.id
               EventCard(
                 event = event,
-                onClick = currentSessionId?.let { sessionId ->
-                  { navigator?.push(DetailedSessionEventScreen(sessionId = sessionId, eventId = event.id)) }
-                }
+                onClick = {
+                  currentSessionId?.let { sessionId ->
+                    navigator?.push(DetailedSessionEventScreen(sessionId, event.id))
+                  }
+                },
               )
             }
           }
         } else {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Пока нет событий", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+          Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+          ) {
+            Text(
+              text = stringResource(Res.string.session_empty_state),
+              style = MaterialTheme.typography.bodyLarge,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+          }
         }
       }
     }
@@ -289,9 +353,9 @@ class SessionScreen(
 
     if (isActiveMode && state.showFinishSessionDialog) {
       Dialog(
-        title = "Хотите завершить текущую сессию?",
-        cancelButtonText = "Отмена",
-        confirmButtonText = "Да, завершить",
+        title = stringResource(Res.string.finish_session_dialog_title),
+        cancelButtonText = stringResource(Res.string.cancel),
+        confirmButtonText = stringResource(Res.string.finish_session_dialog_confirm),
         onConfirmClick = {
           viewModel.finishSessionWithNotes()
           navigator?.popUntilRoot()
@@ -347,9 +411,9 @@ fun EventCard(
       ) {
         Text(
           text = when (event.type) {
-            is FishingSessionEventType.Fish -> "Рыба"
-            is FishingSessionEventType.Loose -> "Сход"
-            is FishingSessionEventType.Spomb -> "Спомб"
+            is FishingSessionEventType.Fish -> stringResource(Res.string.event_type_fish)
+            is FishingSessionEventType.Loose -> stringResource(Res.string.event_type_loose)
+            is FishingSessionEventType.Spomb -> stringResource(Res.string.event_type_spomb)
           },
           style = MaterialTheme.typography.titleMedium,
           fontWeight = FontWeight.Bold
@@ -357,18 +421,38 @@ fun EventCard(
         Spacer(modifier = Modifier.height(4.dp))
         when (event.type) {
           is FishingSessionEventType.Fish -> {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                event.weight?.let { weight ->
-                  Text("Вес: ${weight} кг", style = MaterialTheme.typography.bodyMedium)
-                }
-                Text("Удочка: ${event.type.rodId}", style = MaterialTheme.typography.bodyMedium)
+            Row(
+              horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+              event.weight?.let { weight ->
+                Text(
+                  text = stringResource(Res.string.weight)
+                    + weight
+                    + stringResource(Res.string.kilogram),
+                  style = MaterialTheme.typography.bodyMedium,
+                )
+              }
+              Text(
+                text = stringResource(Res.string.rod) + "${event.type.rodId}",
+                style = MaterialTheme.typography.bodyMedium,
+              )
             }
           }
+
           is FishingSessionEventType.Loose -> {
-            Text("Удочка: ${event.type.rodId}", style = MaterialTheme.typography.bodyMedium)
+            Text(
+              text = stringResource(Res.string.rod) + "${event.type.rodId}",
+              style = MaterialTheme.typography.bodyMedium,
+            )
           }
+
           is FishingSessionEventType.Spomb -> {
-            Text("Количество: ${event.type.count} шт", style = MaterialTheme.typography.bodyMedium)
+            Text(
+              text = stringResource(Res.string.count)
+                + "${event.type.count}"
+                + stringResource(Res.string.peaces),
+              style = MaterialTheme.typography.bodyMedium,
+            )
           }
         }
 
@@ -395,7 +479,7 @@ fun EventCard(
           Spacer(modifier = Modifier.height(8.dp))
           Image(
             painter = rememberAsyncImagePainter(event.photos.first()),
-            contentDescription = "Event photo",
+            contentDescription = stringResource(Res.string.event_type_media_content_description),
             modifier = Modifier
               .size(64.dp)
               .fillMaxWidth()
@@ -440,9 +524,12 @@ fun PhotoSelectionRow(
         ) {
           Icon(
             Icons.Default.Close,
-            contentDescription = "Remove",
+            contentDescription = stringResource(Res.string.remove_image_content_description),
             tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.background(MaterialTheme.colorScheme.scrim.copy(alpha=0.5f), CircleShape)
+            modifier = Modifier.background(
+              MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
+              CircleShape
+            )
           )
         }
       }
@@ -458,7 +545,7 @@ fun PhotoSelectionRow(
       ) {
         Icon(
           Icons.Default.Add,
-          contentDescription = "Add photo",
+          contentDescription = stringResource(Res.string.add_photo_content_description),
           tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
       }
@@ -473,36 +560,54 @@ fun EventTypeDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Тип события") },
+    title = {
+      Text(
+        text = stringResource(Res.string.event_type),
+      )
+    },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Button(
           modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Fish(1)) },
-          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+          colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+          ),
         ) {
-          Text("Рыба")
+          Text(
+            text = stringResource(Res.string.event_type_fish),
+          )
         }
         Button(
           modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Spomb(1)) },
-          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+          colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.tertiary,
+          ),
         ) {
-          Text("Спомб")
+          Text(
+            text = stringResource(Res.string.event_type_spomb),
+          )
         }
         Button(
           modifier = Modifier.fillMaxWidth(),
           onClick = { onSelectEventType(FishingSessionEventType.Loose(1)) },
-          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+          colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
+          ),
         ) {
-          Text("Сход")
+          Text(
+            text = stringResource(Res.string.event_type_loose),
+          )
         }
       }
     },
     confirmButton = {},
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(
+          text = stringResource(Res.string.cancel),
+        )
       }
     }
   )
@@ -516,16 +621,24 @@ fun RodSelectionDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Выберите удочку") },
+    title = {
+      Text(
+        text = stringResource(Res.string.choose_rod),
+      )
+    },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         repeat(rodsCount) { index ->
           Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { onSelectRod(index + 1) },
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = ButtonDefaults.buttonColors(
+              containerColor = MaterialTheme.colorScheme.primary,
+            ),
           ) {
-            Text("Удочка #${index + 1}")
+            Text(
+              text = stringResource(Res.string.rod) + " #${index + 1}",
+            )
           }
         }
       }
@@ -533,7 +646,9 @@ fun RodSelectionDialog(
     confirmButton = {},
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(
+          text = stringResource(Res.string.cancel),
+        )
       }
     }
   )
@@ -553,7 +668,11 @@ fun FishEventDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Улов") },
+    title = {
+      Text(
+        text = stringResource(Res.string.caught),
+      )
+    },
     text = {
       Column {
         PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
@@ -561,7 +680,11 @@ fun FishEventDialog(
         OutlinedTextField(
           value = weight,
           onValueChange = onWeightChange,
-          label = { Text("Вес (кг)") },
+          label = {
+            Text(
+              text = stringResource(Res.string.weight_kg),
+            )
+          },
           modifier = Modifier.fillMaxWidth(),
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -569,7 +692,11 @@ fun FishEventDialog(
         OutlinedTextField(
           value = notes,
           onValueChange = onNotesChange,
-          label = { Text("Заметки") },
+          label = {
+            Text(
+              text = stringResource(Res.string.notes),
+            )
+          },
           modifier = Modifier.fillMaxWidth(),
           minLines = 2
         )
@@ -577,12 +704,12 @@ fun FishEventDialog(
     },
     confirmButton = {
       Button(onClick = onAddEvent) {
-        Text("Добавить")
+        Text(stringResource(Res.string.add))
       }
     },
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(stringResource(Res.string.cancel))
       }
     }
   )
@@ -602,7 +729,7 @@ fun SpombEventDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Кормление") },
+    title = { Text(stringResource(Res.string.spomb_event_dialog_title)) },
     text = {
       Column {
         PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
@@ -610,7 +737,7 @@ fun SpombEventDialog(
         OutlinedTextField(
           value = count,
           onValueChange = onCountChange,
-          label = { Text("Количество") },
+          label = { Text(stringResource(Res.string.count_label)) },
           modifier = Modifier.fillMaxWidth(),
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -618,7 +745,7 @@ fun SpombEventDialog(
         OutlinedTextField(
           value = notes,
           onValueChange = onNotesChange,
-          label = { Text("Заметки") },
+          label = { Text(stringResource(Res.string.notes)) },
           modifier = Modifier.fillMaxWidth(),
           minLines = 2
         )
@@ -626,12 +753,12 @@ fun SpombEventDialog(
     },
     confirmButton = {
       Button(onClick = onAddEvent) {
-        Text("Добавить")
+        Text(stringResource(Res.string.add))
       }
     },
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(stringResource(Res.string.cancel))
       }
     }
   )
@@ -649,7 +776,7 @@ fun LooseEventDialog(
 ) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Сход") },
+    title = { Text(stringResource(Res.string.loose_event_dialog_title)) },
     text = {
       Column {
         PhotoSelectionRow(photos, onAddPhoto, onRemovePhoto)
@@ -657,7 +784,7 @@ fun LooseEventDialog(
         OutlinedTextField(
           value = notes,
           onValueChange = onNotesChange,
-          label = { Text("Заметки") },
+          label = { Text(stringResource(Res.string.notes)) },
           modifier = Modifier.fillMaxWidth(),
           minLines = 3
         )
@@ -665,12 +792,12 @@ fun LooseEventDialog(
     },
     confirmButton = {
       Button(onClick = onAddEvent) {
-        Text("Добавить")
+        Text(stringResource(Res.string.add))
       }
     },
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Отмена")
+        Text(stringResource(Res.string.cancel))
       }
     }
   )

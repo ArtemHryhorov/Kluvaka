@@ -28,6 +28,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil3.compose.AsyncImage
+import kluvaka.composeapp.generated.resources.Res
+import kluvaka.composeapp.generated.resources.back
+import kluvaka.composeapp.generated.resources.full_screen_photo_content_description
+import org.jetbrains.compose.resources.stringResource
 
 data class DetailedPhotoViewScreen(
     val images: List<String>,
@@ -57,7 +61,7 @@ data class DetailedPhotoViewScreen(
             ) {
               AsyncImage(
                 model = images[page],
-                contentDescription = "Full screen photo",
+                contentDescription = stringResource(Res.string.full_screen_photo_content_description),
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Fit
               )
@@ -79,7 +83,7 @@ data class DetailedPhotoViewScreen(
             ) {
               Icon(
                 imageVector = Icons.Default.Close,
-                contentDescription = "Back",
+                contentDescription = stringResource(Res.string.back),
                 tint = MaterialTheme.colorScheme.onSurface
               )
             }
