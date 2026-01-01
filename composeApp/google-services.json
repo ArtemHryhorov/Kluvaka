@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "799791600780",
+    "project_id": "kluvaka-app",
+    "storage_bucket": "kluvaka-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799791600780:android:b3bd7114a703421e0c97a9",
+        "android_client_info": {
+          "package_name": "co.kluvaka.cmp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799791600780-c88596rd7o1d3413n8hueiivq3i7l5k7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "co.kluvaka.cmp",
+            "certificate_hash": "c4238e90e1b10bdeb56899c3671c9f6ed668e09a"
+          }
+        },
+        {
+          "client_id": "799791600780-77a2nejv9engk2gtbd6gsmf6ckl9hogj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsRm4vRtjCWNyJOZiB_Lwe8m2XtlkafWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799791600780-77a2nejv9engk2gtbd6gsmf6ckl9hogj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

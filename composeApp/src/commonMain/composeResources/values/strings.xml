@@ -9,6 +9,14 @@
     <string name="bottom_nav_equipments">Equipments</string>
     <string name="bottom_nav_sessions">Journal</string>
     <string name="bottom_nav_trophies">Trophies</string>
+    <string name="bottom_nav_profile">Profile</string>
+    
+    <!--  Profile Screen  -->
+    <string name="profile_title">Profile</string>
+    <string name="user_id_label">User ID</string>
+    <string name="email_label">Email</string>
+    <string name="auth_token_label">Auth Token</string>
+    <string name="logout">Logout</string>
 
     <!--  Sessions Screen  -->
     <string name="sessions_empty_state">You don’t have any fishing trips yet\nIt’s the perfect time to add your first one 🎣</string>

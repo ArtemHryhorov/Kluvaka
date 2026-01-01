@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.sqldelight)
+    id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "2.1.21"
 }
 
@@ -43,6 +44,11 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.android.driver)
             implementation(libs.androidx.material3)
+            // Firebase is Android-only, must be in androidMain, not commonMain
+            implementation("com.google.firebase:firebase-analytics:23.0.0")
+            implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+            // Google Sign In
+            implementation("com.google.android.gms:play-services-auth:21.2.0")
         }
         iosMain.dependencies {
             implementation(libs.native.driver)

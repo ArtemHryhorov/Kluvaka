@@ -9,6 +9,14 @@
     <string name="bottom_nav_equipments">Снаряжение</string>
     <string name="bottom_nav_sessions">Журнал</string>
     <string name="bottom_nav_trophies">Трофеи</string>
+    <string name="bottom_nav_profile">Профиль</string>
+    
+    <!--  Profile Screen  -->
+    <string name="profile_title">Профиль</string>
+    <string name="user_id_label">ID пользователя</string>
+    <string name="email_label">Email</string>
+    <string name="auth_token_label">Токен авторизации</string>
+    <string name="logout">Выйти</string>
 
     <!--  Sessions Screen  -->
     <string name="sessions_empty_state">У вас пока нет рыбалок\nСамое время добавить первую 🎣</string>
