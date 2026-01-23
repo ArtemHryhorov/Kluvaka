@@ -1,9 +1,12 @@
 package co.kluvaka.cmp.features.sessions.ui.sessions.composable
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PanoramaFishEye
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,10 +31,14 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
+import coil3.compose.rememberAsyncImagePainter
 import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.delete_session_content_description
 import kluvaka.composeapp.generated.resources.fish_caught_count_format
@@ -36,97 +46,95 @@ import kluvaka.composeapp.generated.resources.fish_caught_format
 import kluvaka.composeapp.generated.resources.fish_caught_weight_format
 import kluvaka.composeapp.generated.resources.session_status_active
 import kluvaka.composeapp.generated.resources.session_status_completed
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionItem(
   session: Session,
-  onClick: (() -> Unit)? = null,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
   onRemove: (Session) -> Unit,
 ) {
-  val swipeState = rememberSwipeToDismissBoxState(
-    confirmValueChange = { value ->
-      if (value == SwipeToDismissBoxValue.EndToStart) {
-        onRemove(session)
-        false
-      } else {
-        value != SwipeToDismissBoxValue.StartToEnd
-      }
-    }
-  )
-
-  SwipeToDismissBox(
-    state = swipeState,
-    modifier = Modifier.fillMaxWidth(),
-    enableDismissFromStartToEnd = false,
-    backgroundContent = {
-      when (swipeState.dismissDirection) {
-        SwipeToDismissBoxValue.EndToStart -> {
-          Box(
-            modifier = Modifier
-              .fillMaxSize()
-              .background(
-                color = MaterialTheme.colorScheme.error,
-                shape = RoundedCornerShape(12.dp),
-              )
-              .wrapContentSize(Alignment.CenterEnd)
-              .padding(end = 16.dp)
-          ) {
-            Icon(
-              imageVector = Icons.Default.Delete,
-              contentDescription = stringResource(Res.string.delete_session_content_description),
-              tint = MaterialTheme.colorScheme.onError
-            )
-          }
-        }
-        SwipeToDismissBoxValue.StartToEnd -> {}
-        SwipeToDismissBoxValue.Settled -> {}
-      }
-    }
+  Card(
+    modifier = modifier
+      .fillMaxWidth()
+      .combinedClickable(
+        onClick = onClick,
+        onLongClick = { onRemove(session) },
+      ),
   ) {
-    Card(
+    val coverPhoto = session.events.first().photos.first()
+    Image(
+      painter = rememberAsyncImagePainter(coverPhoto),
+      contentDescription = null,
       modifier = Modifier
         .fillMaxWidth()
-        .clickable(enabled = onClick != null) {
-          onClick?.invoke()
-        },
-      elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-    ) {
-      Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-          text = session.location,
-          style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-          text = session.date,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        val fishCount = session.events.totalFishCount()
-        val fishWeight = session.events.totalFishWeight()
-        val sessionsStatisticText = when {
-          fishCount > 0 && fishWeight > 0 -> stringResource(Res.string.fish_caught_format, fishCount, fishWeight)
-          fishCount > 0 -> stringResource(Res.string.fish_caught_count_format, fishCount)
-          fishWeight > 0 -> stringResource(Res.string.fish_caught_weight_format, fishWeight)
-          else -> null
-        }
-          sessionsStatisticText?.let { text ->
-          Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary
+        .height(128.dp)
+        .clip(
+          RoundedCornerShape(
+            topStart = 8.dp,
+            topEnd = 8.dp,
           )
-          Spacer(modifier = Modifier.height(8.dp))
-        }
-        Text(
-          text = if (session.isActive) stringResource(Res.string.session_status_active) else stringResource(Res.string.session_status_completed),
-          style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-      }
+        ),
+      contentScale = ContentScale.Crop
+    )
+    Text(
+      modifier = Modifier.padding(
+        start = 8.dp,
+        end = 8.dp,
+        top = 12.dp,
+      ),
+      text = session.location,
+      style = MaterialTheme.typography.titleMedium,
+      overflow = TextOverflow.Ellipsis,
+    )
+    Row {
+      DateRow(
+        date = session.date,
+      )
+      FishCountRow(
+        count = session.events.totalFishCount(),
+      )
     }
+  }
+}
+
+@Composable
+private fun DateRow(
+  date: String,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier,
+  ) {
+    Icon(
+      imageVector = Icons.Default.CalendarMonth,
+      contentDescription = null,
+    )
+    Text(
+      text = date,
+      style = MaterialTheme.typography.labelSmall,
+    )
+  }
+}
+
+@Composable
+private fun FishCountRow(
+  count: Int,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier,
+  ) {
+    Icon(
+      imageVector = Icons.Default.PanoramaFishEye,
+      contentDescription = null,
+    )
+    Text(
+      text = count.toString(),
+      style = MaterialTheme.typography.labelSmall,
+    )
   }
 }
