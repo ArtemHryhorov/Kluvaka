@@ -4,10 +4,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +40,11 @@ import kluvaka.composeapp.generated.resources.add_equipment_button
 import kluvaka.composeapp.generated.resources.cancel
 import kluvaka.composeapp.generated.resources.delete_equipment_dialog_confirm
 import kluvaka.composeapp.generated.resources.delete_equipment_dialog_title
+import kluvaka.composeapp.generated.resources.equipments_empty_state
+import kluvaka.composeapp.generated.resources.equipments_empty_state_content_description
+import kluvaka.composeapp.generated.resources.sessions_empty_state_background
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 object EquipmentsScreen : Screen {
@@ -108,17 +119,28 @@ private fun EquipmentsScreenContent(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
           .fillMaxSize()
-          .padding(16.dp)
+          .padding(vertical = 16.dp),
       ) {
-        items(
-          items = state.equipments,
-          key = { it.id }
-        ) { equipment ->
-          EquipmentItem(
-            equipment = equipment,
-            onClick = { actions.onEquipmentClick(equipment.id) },
-            onRemove = { actions.onDeleteRequest(equipment) },
-          )
+        if (state.equipments.isEmpty()) {
+          item {
+            EquipmentsEmptyState(
+              modifier = Modifier
+                .fillParentMaxHeight()
+                .fillMaxWidth()
+            )
+          }
+        } else {
+          items(
+            items = state.equipments,
+            key = { it.id }
+          ) { equipment ->
+            EquipmentItem(
+              modifier = Modifier.padding(horizontal = 16.dp),
+              equipment = equipment,
+              onClick = { actions.onEquipmentClick(equipment.id) },
+              onRemove = { actions.onDeleteRequest(equipment) },
+            )
+          }
         }
       }
       FloatingActionButton(
@@ -128,11 +150,39 @@ private fun EquipmentsScreenContent(
           .zIndex(3f),
         onClick = actions.onAddEquipmentClick,
       ) {
-        Text(
-          modifier = Modifier.padding(horizontal = 16.dp),
-          text = stringResource(Res.string.add_equipment_button),
+        Icon(
+          imageVector = Icons.Default.Add,
+          contentDescription = stringResource(Res.string.add_equipment_button),
         )
       }
+    }
+  }
+}
+
+@Composable
+private fun EquipmentsEmptyState(
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier,
+    contentAlignment = Alignment.Center,
+  ) {
+    Column(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      Text(
+        text = stringResource(Res.string.equipments_empty_state),
+        textAlign = TextAlign.Center,
+      )
+      Image(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 64.dp),
+        painter = painterResource(Res.drawable.sessions_empty_state_background),
+        contentDescription = stringResource(Res.string.equipments_empty_state_content_description),
+        contentScale = ContentScale.Crop,
+      )
     }
   }
 }

@@ -110,6 +110,8 @@
     <string name="location_format">Место: %1$s</string>
     <string name="date_format">Дата: %1$s</string>
     <string name="notes_label">Заметки:</string>
+    <string name="trophies_empty_state">У вас пока нет трофеев\nДобавьте первый</string>
+    <string name="trophies_empty_state_content_description">Иллюстрация пустого состояния трофеев</string>
     
     <!-- Equipment -->
     <string name="add_equipment_title">Новая Приблуда</string>
@@ -123,6 +125,8 @@
     <string name="equipment_photo_section">Фото приблуды:</string>
     <string name="save_button">Сохранить</string>
     <string name="price_format">Стоимость: %1$s ГРН</string>
+    <string name="equipments_empty_state">У вас пока нет снаряжения\nДобавьте первый комплект</string>
+    <string name="equipments_empty_state_content_description">Иллюстрация пустого состояния снаряжения</string>
     
     <!-- Session Item -->
     <string name="fish_caught_format">Рыбы поймано: %1$d шт · %2$s кг</string>

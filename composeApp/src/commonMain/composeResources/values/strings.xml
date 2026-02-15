@@ -110,6 +110,8 @@
     <string name="location_format">Location: %1$s</string>
     <string name="date_format">Date: %1$s</string>
     <string name="notes_label">Notes:</string>
+    <string name="trophies_empty_state">You don’t have any trophies yet\nAdd your first one</string>
+    <string name="trophies_empty_state_content_description">Trophies empty state illustration</string>
     
     <!-- Equipment -->
     <string name="add_equipment_title">New Equipment</string>
@@ -123,6 +125,8 @@
     <string name="equipment_photo_section">Equipment photos:</string>
     <string name="save_button">Save</string>
     <string name="price_format">Price: %1$s UAH</string>
+    <string name="equipments_empty_state">You don’t have any equipment yet\nAdd your first setup</string>
+    <string name="equipments_empty_state_content_description">Equipment empty state illustration</string>
     
     <!-- Session Item -->
     <string name="fish_caught_format">Fish caught: %1$d pcs · %2$s kg</string>
