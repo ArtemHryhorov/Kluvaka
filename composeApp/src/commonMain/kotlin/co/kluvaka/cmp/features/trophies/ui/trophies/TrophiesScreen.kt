@@ -5,11 +5,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,7 +42,11 @@ import kluvaka.composeapp.generated.resources.add_trophy_button
 import kluvaka.composeapp.generated.resources.cancel
 import kluvaka.composeapp.generated.resources.delete_trophy_dialog_confirm
 import kluvaka.composeapp.generated.resources.delete_trophy_dialog_title
+import kluvaka.composeapp.generated.resources.trophies_empty_state
+import kluvaka.composeapp.generated.resources.trophies_empty_state_content_description
+import kluvaka.composeapp.generated.resources.sessions_empty_state_background
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 object TrophiesScreen : Screen {
@@ -108,25 +119,30 @@ private fun TrophiesScreenContent(
     ) {
       LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(horizontal = 16.dp)
+        modifier = Modifier.fillMaxSize(),
       ) {
-        item {
-          Spacer(modifier = Modifier.height(8.dp))
-        }
-        items(
-          items = state.trophies,
-          key = { it.id }
-        ) { trophy ->
-          TrophyItem(
-            trophy = trophy,
-            onRemove = { actions.onDeleteRequest(trophy) },
-            onClick = { actions.onTrophyClick(trophy.id) }
-          )
-        }
-        item {
-          Spacer(modifier = Modifier.height(8.dp))
+        if (state.trophies.isEmpty()) {
+          item {
+            TrophiesEmptyState(
+              modifier = Modifier
+                .fillParentMaxHeight()
+                .fillMaxWidth()
+            )
+          }
+        } else {
+          item { Spacer(modifier = Modifier.height(8.dp)) }
+          items(
+            items = state.trophies,
+            key = { it.id }
+          ) { trophy ->
+            TrophyItem(
+              modifier = Modifier.padding(horizontal = 16.dp),
+              trophy = trophy,
+              onRemove = { actions.onDeleteRequest(trophy) },
+              onClick = { actions.onTrophyClick(trophy.id) }
+            )
+          }
+          item { Spacer(modifier = Modifier.height(8.dp)) }
         }
       }
       FloatingActionButton(
@@ -136,11 +152,39 @@ private fun TrophiesScreenContent(
           .zIndex(3f),
         onClick = actions.onAddTrophyClick,
       ) {
-        Text(
-          modifier = Modifier.padding(horizontal = 16.dp),
-          text = stringResource(Res.string.add_trophy_button),
+        Icon(
+          imageVector = Icons.Default.Add,
+          contentDescription = stringResource(Res.string.add_trophy_button),
         )
       }
+    }
+  }
+}
+
+@Composable
+private fun TrophiesEmptyState(
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier,
+    contentAlignment = Alignment.Center,
+  ) {
+    Column(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      Text(
+        text = stringResource(Res.string.trophies_empty_state),
+        textAlign = TextAlign.Center,
+      )
+      Image(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 64.dp),
+        painter = painterResource(Res.drawable.sessions_empty_state_background),
+        contentDescription = stringResource(Res.string.trophies_empty_state_content_description),
+        contentScale = ContentScale.Crop,
+      )
     }
   }
 }

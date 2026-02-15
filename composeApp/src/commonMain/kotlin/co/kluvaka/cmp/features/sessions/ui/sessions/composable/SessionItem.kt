@@ -1,132 +1,270 @@
 package co.kluvaka.cmp.features.sessions.ui.sessions.composable
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.PanoramaFishEye
+import androidx.compose.material.icons.filled.SetMeal
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
-import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
+import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import kluvaka.composeapp.generated.resources.Res
-import kluvaka.composeapp.generated.resources.delete_session_content_description
-import kluvaka.composeapp.generated.resources.fish_caught_count_format
-import kluvaka.composeapp.generated.resources.fish_caught_format
-import kluvaka.composeapp.generated.resources.fish_caught_weight_format
-import kluvaka.composeapp.generated.resources.session_status_active
-import kluvaka.composeapp.generated.resources.session_status_completed
-import org.jetbrains.compose.resources.stringResource
+import kluvaka.composeapp.generated.resources.sessions_empty_state_background
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionItem(
   session: Session,
-  onClick: (() -> Unit)? = null,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
   onRemove: (Session) -> Unit,
 ) {
-  val swipeState = rememberSwipeToDismissBoxState(
-    confirmValueChange = { value ->
-      if (value == SwipeToDismissBoxValue.EndToStart) {
-        onRemove(session)
-        false
-      } else {
-        value != SwipeToDismissBoxValue.StartToEnd
-      }
-    }
-  )
-
-  SwipeToDismissBox(
-    state = swipeState,
-    modifier = Modifier.fillMaxWidth(),
-    enableDismissFromStartToEnd = false,
-    backgroundContent = {
-      when (swipeState.dismissDirection) {
-        SwipeToDismissBoxValue.EndToStart -> {
-          Box(
-            modifier = Modifier
-              .fillMaxSize()
-              .background(
-                color = MaterialTheme.colorScheme.error,
-                shape = RoundedCornerShape(12.dp),
-              )
-              .wrapContentSize(Alignment.CenterEnd)
-              .padding(end = 16.dp)
-          ) {
-            Icon(
-              imageVector = Icons.Default.Delete,
-              contentDescription = stringResource(Res.string.delete_session_content_description),
-              tint = MaterialTheme.colorScheme.onError
-            )
-          }
-        }
-        SwipeToDismissBoxValue.StartToEnd -> {}
-        SwipeToDismissBoxValue.Settled -> {}
-      }
-    }
+  val formattedDate = DateFormatter.format(session.dateMillis)
+  Card(
+    modifier = modifier
+      .fillMaxWidth()
+      .combinedClickable(
+        onClick = onClick,
+        onLongClick = { onRemove(session) },
+      ),
   ) {
-    Card(
+    val coverPhoto = session.coverPhoto?.takeIf { it.isNotEmpty() }
+      ?: session.events
+        .flatMap { it.photos }
+        .firstOrNull { it.isNotEmpty() }
+    Image(
+      painter = rememberAsyncImagePainter(coverPhoto),
+      contentDescription = null,
       modifier = Modifier
         .fillMaxWidth()
-        .clickable(enabled = onClick != null) {
-          onClick?.invoke()
-        },
-      elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-    ) {
-      Column(modifier = Modifier.padding(16.dp)) {
+        .height(128.dp)
+        .clip(
+          RoundedCornerShape(
+            topStart = 8.dp,
+            topEnd = 8.dp,
+          )
+        ),
+      contentScale = ContentScale.Crop
+    )
+    Text(
+      modifier = Modifier.padding(
+        start = 8.dp,
+        end = 8.dp,
+        top = 12.dp,
+      ),
+      text = session.location,
+      style = MaterialTheme.typography.titleMedium,
+      overflow = TextOverflow.Ellipsis,
+    )
+    Row {
+      DateRow(
+        date = formattedDate,
+      )
+      FishCountRow(
+        count = session.events.totalFishCount(),
+      )
+    }
+  }
+}
+
+@Composable
+private fun DateRow(
+  date: String,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier,
+  ) {
+    Icon(
+      imageVector = Icons.Default.CalendarMonth,
+      contentDescription = null,
+    )
+    Text(
+      text = date,
+      style = MaterialTheme.typography.labelSmall,
+    )
+  }
+}
+
+@Composable
+private fun FishCountRow(
+  count: Int,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier,
+  ) {
+    Icon(
+      imageVector = Icons.Default.PanoramaFishEye,
+      contentDescription = null,
+    )
+    Text(
+      text = count.toString(),
+      style = MaterialTheme.typography.labelSmall,
+    )
+  }
+}
+
+@Composable
+fun SessionNewItem(
+  session: Session,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
+  onRemove: (Session) -> Unit,
+) {
+  val formattedDate = DateFormatter.format(
+    timestamp = session.dateMillis,
+    pattern = "dd.mm.yyyy",
+  )
+  Card(
+    modifier = modifier
+      .fillMaxWidth()
+      .combinedClickable(
+        onClick = onClick,
+        onLongClick = { onRemove(session) },
+      ),
+    shape = RoundedCornerShape(16.dp),
+    colors = CardDefaults.cardColors(
+      containerColor = Color(0xFF3A3D38),
+    ),
+    elevation = CardDefaults.cardElevation(4.dp),
+  ) {
+    Column {
+      // Image section
+      val coverPhoto = session.coverPhoto?.takeIf { it.isNotEmpty() }
+        ?: session
+          .events
+          .flatMap { it.photos }
+          .firstOrNull { it.isNotEmpty() }
+      val placeholder = painterResource(Res.drawable.sessions_empty_state_background)
+      Box {
+        AsyncImage(
+          model = coverPhoto,
+          contentDescription = null,
+          placeholder = placeholder,
+          error = placeholder,
+          fallback = placeholder,
+          contentScale = ContentScale.Crop,
+          modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(4f / 3f),
+        )
+
+//        // Badge (top-right)
+//        Box(
+//          modifier = Modifier
+//            .padding(8.dp)
+//            .size(36.dp)
+//            .align(Alignment.TopEnd)
+//            .background(
+//              color = Color(0xFF6B7C3E),
+//              shape = RoundedCornerShape(8.dp),
+//            ),
+//          contentAlignment = Alignment.Center,
+//        ) {
+//          Icon(
+//            imageVector = Icons.Default.PanoramaFishEye,
+//            contentDescription = null,
+//            tint = Color.White,
+//            modifier = Modifier.size(18.dp),
+//          )
+//        }
+      }
+
+      // Content
+      Column(
+        modifier = Modifier.padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
         Text(
           text = session.location,
-          style = MaterialTheme.typography.titleMedium
+          style = MaterialTheme.typography.titleMedium,
+          color = Color.White,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-          text = session.date,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        val fishCount = session.events.totalFishCount()
-        val fishWeight = session.events.totalFishWeight()
-        val sessionsStatisticText = when {
-          fishCount > 0 && fishWeight > 0 -> stringResource(Res.string.fish_caught_format, fishCount, fishWeight)
-          fishCount > 0 -> stringResource(Res.string.fish_caught_count_format, fishCount)
-          fishWeight > 0 -> stringResource(Res.string.fish_caught_weight_format, fishWeight)
-          else -> null
-        }
-          sessionsStatisticText?.let { text ->
-          Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary
+
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+          InfoChip(
+            icon = Icons.Default.CalendarMonth,
+            text = formattedDate,
           )
-          Spacer(modifier = Modifier.height(8.dp))
+          InfoChip(
+            icon = Icons.Default.SetMeal,
+            text = session.events.totalFishCount().toString(),
+          )
         }
+
         Text(
-          text = if (session.isActive) stringResource(Res.string.session_status_active) else stringResource(Res.string.session_status_completed),
+          text = session.notes.orEmpty(),
           style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          color = Color(0xFFBDBDBD),
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis,
         )
       }
     }
+  }
+}
+
+@Composable
+private fun InfoChip(
+  icon: ImageVector,
+  text: String,
+) {
+  Row(
+    modifier = Modifier
+      .background(
+        color = Color(0xFF2F322E),
+        shape = RoundedCornerShape(8.dp),
+      )
+      .padding(horizontal = 8.dp, vertical = 4.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
+  ) {
+    Icon(
+      imageVector = icon,
+      contentDescription = null,
+      tint = Color.White,
+      modifier = Modifier.size(14.dp),
+    )
+    Text(
+      text = text,
+      color = Color.White,
+      style = MaterialTheme.typography.labelSmall,
+    )
   }
 }

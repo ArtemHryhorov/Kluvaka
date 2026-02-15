@@ -93,9 +93,11 @@ class StartSessionViewModel(
     val session = Session(
       id = null,
       location = _mutableState.value.location ?: DateFormatter.format(_mutableState.value.date),
-      date = DateFormatter.format(_mutableState.value.date),
+      dateMillis = _mutableState.value.date,
       rods = _mutableState.value.rods,
       isActive = true,
+      coverPhoto = null,
+      notes = null,
     )
     viewModelScope.launch {
       createFishingSession(session)

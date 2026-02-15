@@ -14,6 +14,7 @@
     <string name="sessions_empty_state">You don’t have any fishing trips yet\nIt’s the perfect time to add your first one 🎣</string>
     <string name="sessions_empty_state_content_description">Sessions empty state image</string>
     <string name="sessions_topbar">Fishing journal</string>
+    <string name="sessions_progress_label">My progress · %1$d sessions</string>
     <string name="delete_session_dialog_confirm">Yes, delete</string>
     <string name="delete_session_dialog_title">Do you want to delete that session?</string>
 
@@ -50,6 +51,7 @@
     <string name="event_type_loose">Loose</string>
     <string name="event_type_media_content_description">Event's image</string>
     <string name="event_type">Event type</string>
+    <string name="information">Information</string>
     <string name="remove_image_content_description">Remove image</string>
     <string name="add_photo_content_description">Add photo</string>
     <string name="weight_kg">Weight (kg)</string>
@@ -109,6 +111,8 @@
     <string name="location_format">Location: %1$s</string>
     <string name="date_format">Date: %1$s</string>
     <string name="notes_label">Notes:</string>
+    <string name="trophies_empty_state">You don’t have any trophies yet\nAdd your first one</string>
+    <string name="trophies_empty_state_content_description">Trophies empty state illustration</string>
     
     <!-- Equipment -->
     <string name="add_equipment_title">New Equipment</string>
@@ -122,6 +126,8 @@
     <string name="equipment_photo_section">Equipment photos:</string>
     <string name="save_button">Save</string>
     <string name="price_format">Price: %1$s UAH</string>
+    <string name="equipments_empty_state">You don’t have any equipment yet\nAdd your first setup</string>
+    <string name="equipments_empty_state_content_description">Equipment empty state illustration</string>
     
     <!-- Session Item -->
     <string name="fish_caught_format">Fish caught: %1$d pcs · %2$s kg</string>
@@ -129,6 +135,7 @@
     <string name="fish_caught_weight_format">Fish caught: %1$s kg</string>
     <string name="session_status_active">Status: Active</string>
     <string name="session_status_completed">Status: Completed</string>
+    <string name="change_cover">Change cover</string>
     
     <!-- Month Names -->
     <string name="month_january">January</string>

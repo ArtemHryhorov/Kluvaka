@@ -41,6 +41,7 @@ import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Fish
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Loose
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType.Spomb
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import coil3.compose.rememberAsyncImagePainter
 import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.back
@@ -123,7 +124,7 @@ class DetailedSessionEventScreen(
           EventDetailsContent(
             modifier = Modifier.padding(paddingValues),
             sessionName = state.session?.location.orEmpty(),
-            sessionDate = state.session?.date.orEmpty(),
+            sessionDate = state.session?.dateMillis?.let { DateFormatter.format(it) }.orEmpty(),
             event = event,
             onPhotoClick = { index ->
               navigator?.push(

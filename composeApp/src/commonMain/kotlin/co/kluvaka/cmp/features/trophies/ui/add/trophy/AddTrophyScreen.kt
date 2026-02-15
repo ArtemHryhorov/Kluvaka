@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
@@ -38,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
@@ -182,13 +184,15 @@ private fun AddTrophyScreenContent(
           value = state.input.weight,
           onValueChange = actions.onWeightUpdate,
           label = { Text(stringResource(Res.string.weight_kg_label)) },
-          modifier = Modifier.weight(1f)
+          modifier = Modifier.weight(1f),
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
         OutlinedTextField(
           value = state.input.length,
           onValueChange = actions.onLengthUpdate,
           label = { Text(stringResource(Res.string.length_cm_label)) },
-          modifier = Modifier.weight(1f)
+          modifier = Modifier.weight(1f),
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
       }
 

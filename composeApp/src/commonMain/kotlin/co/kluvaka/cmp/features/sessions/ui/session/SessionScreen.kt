@@ -38,6 +38,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -51,12 +53,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.common.ui.Dialog
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
@@ -64,6 +68,7 @@ import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
 import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
 import co.kluvaka.cmp.features.sessions.ui.event.DetailedSessionEventScreen
 import co.kluvaka.cmp.features.trophies.domain.rememberPhotoPicker
+import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.active_session
@@ -71,6 +76,7 @@ import kluvaka.composeapp.generated.resources.add
 import kluvaka.composeapp.generated.resources.add_photo_content_description
 import kluvaka.composeapp.generated.resources.cancel
 import kluvaka.composeapp.generated.resources.caught
+import kluvaka.composeapp.generated.resources.change_cover
 import kluvaka.composeapp.generated.resources.choose_rod
 import kluvaka.composeapp.generated.resources.count
 import kluvaka.composeapp.generated.resources.count_label
@@ -84,6 +90,7 @@ import kluvaka.composeapp.generated.resources.finish_session_content_description
 import kluvaka.composeapp.generated.resources.finish_session_dialog_confirm
 import kluvaka.composeapp.generated.resources.finish_session_dialog_title
 import kluvaka.composeapp.generated.resources.fish_caught
+import kluvaka.composeapp.generated.resources.information
 import kluvaka.composeapp.generated.resources.kilogram
 import kluvaka.composeapp.generated.resources.loose_event_dialog_title
 import kluvaka.composeapp.generated.resources.navigate_back_icon_content_description
@@ -93,12 +100,15 @@ import kluvaka.composeapp.generated.resources.peaces
 import kluvaka.composeapp.generated.resources.remove_image_content_description
 import kluvaka.composeapp.generated.resources.rod
 import kluvaka.composeapp.generated.resources.rods
+import kluvaka.composeapp.generated.resources.save_changes
 import kluvaka.composeapp.generated.resources.session
 import kluvaka.composeapp.generated.resources.session_empty_state
+import kluvaka.composeapp.generated.resources.sessions_empty_state_background
 import kluvaka.composeapp.generated.resources.spomb_event_dialog_title
 import kluvaka.composeapp.generated.resources.weight
 import kluvaka.composeapp.generated.resources.weight_kg
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 class SessionScreen(
@@ -177,8 +187,9 @@ class SessionScreen(
           .padding(paddingValues)
           .padding(horizontal = 16.dp)
       ) {
-        // Session info
+        // Session info & tabs
         state.session?.let { session ->
+          val formattedDate = DateFormatter.format(session.dateMillis)
           Spacer(modifier = Modifier.height(16.dp))
           val fishCount = state.events.totalFishCount()
           val fishWeight = state.events.totalFishWeight()
@@ -204,7 +215,7 @@ class SessionScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
               ) {
                 Text(
-                  text = session.date,
+                  text = formattedDate,
                   style = MaterialTheme.typography.bodyMedium,
                   color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -241,44 +252,77 @@ class SessionScreen(
               }
             }
           }
-          Spacer(modifier = Modifier.height(24.dp))
-        }
-
-        // Events list
-        if (state.events.isNotEmpty()) {
-          Text(
-            text = stringResource(Res.string.events),
-            style = MaterialTheme.typography.titleLarge
-          )
           Spacer(modifier = Modifier.height(16.dp))
 
-          val events = state.events.reversed()
-          LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
-          ) {
-            items(events, key = { it.id }) { event ->
-              val currentSessionId = state.session?.id
-              EventCard(
-                event = event,
-                onClick = {
-                  currentSessionId?.let { sessionId ->
-                    navigator?.push(DetailedSessionEventScreen(sessionId, event.id))
+          TabRow(selectedTabIndex = state.selectedTab.ordinal) {
+            Tab(
+              selected = state.selectedTab == SessionTab.Events,
+              onClick = { viewModel.selectTab(SessionTab.Events) },
+              text = { Text(text = stringResource(Res.string.events)) }
+            )
+            Tab(
+              selected = state.selectedTab == SessionTab.Information,
+              onClick = { viewModel.selectTab(SessionTab.Information) },
+              text = { Text(text = stringResource(Res.string.information)) }
+            )
+          }
+          Spacer(modifier = Modifier.height(12.dp))
+
+          when (state.selectedTab) {
+            SessionTab.Events -> {
+              if (state.events.isNotEmpty()) {
+                Text(
+                  text = stringResource(Res.string.events),
+                  style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                val events = state.events.reversed()
+                LazyColumn(
+                  verticalArrangement = Arrangement.spacedBy(12.dp),
+                  modifier = Modifier.fillMaxSize()
+                ) {
+                  items(events, key = { it.id }) { event ->
+                    val currentSessionId = state.session?.id
+                    EventCard(
+                      event = event,
+                      onClick = {
+                        currentSessionId?.let { sessionId ->
+                          navigator?.push(DetailedSessionEventScreen(sessionId, event.id))
+                        }
+                      },
+                    )
+                  }
+                }
+              } else {
+                Box(
+                  modifier = Modifier.fillMaxSize(),
+                  contentAlignment = Alignment.Center
+                ) {
+                  Text(
+                    text = stringResource(Res.string.session_empty_state),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                  )
+                }
+              }
+            }
+            SessionTab.Information -> {
+              InformationTabContent(
+                notes = state.sessionNotes,
+                coverPhoto = state.sessionCoverPhoto ?: session.coverPhoto,
+                eventsPhotosFallback = state.events.flatMap { it.photos },
+                onNotesChange = viewModel::updateSessionNotes,
+                onChangeCover = {
+                  photoPicker.pickFromGallery { uri ->
+                    uri?.let { viewModel.updateSessionCoverPhoto(uri) }
                   }
                 },
+                onSave = { viewModel.saveSessionInfo() },
+                hasChanges = session.notes.orEmpty() != state.sessionNotes ||
+                  session.coverPhoto != state.sessionCoverPhoto,
               )
             }
-          }
-        } else {
-          Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-          ) {
-            Text(
-              text = stringResource(Res.string.session_empty_state),
-              style = MaterialTheme.typography.bodyLarge,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
           }
         }
       }
@@ -549,6 +593,70 @@ fun PhotoSelectionRow(
           tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
       }
+    }
+  }
+}
+
+@Composable
+private fun InformationTabContent(
+  notes: String,
+  coverPhoto: String?,
+  eventsPhotosFallback: List<String>,
+  onNotesChange: (String) -> Unit,
+  onChangeCover: () -> Unit,
+  onSave: () -> Unit,
+  hasChanges: Boolean,
+) {
+  val placeholder = painterResource(Res.drawable.sessions_empty_state_background)
+  val cover = coverPhoto?.takeIf { it.isNotEmpty() }
+    ?: eventsPhotosFallback.firstOrNull { it.isNotEmpty() }
+
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(200.dp)
+        .clip(RoundedCornerShape(12.dp))
+    ) {
+      AsyncImage(
+        model = cover,
+        contentDescription = null,
+        placeholder = placeholder,
+        error = placeholder,
+        fallback = placeholder,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.fillMaxSize(),
+      )
+      Button(
+        modifier = Modifier
+          .align(Alignment.BottomEnd)
+          .padding(8.dp),
+        onClick = onChangeCover,
+      ) {
+        Text(text = stringResource(Res.string.change_cover))
+      }
+    }
+
+    OutlinedTextField(
+      value = notes,
+      onValueChange = onNotesChange,
+      label = { Text(text = stringResource(Res.string.notes)) },
+      modifier = Modifier
+        .fillMaxWidth()
+        .weight(1f, fill = false),
+      minLines = 4,
+      keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+    )
+
+    Button(
+      onClick = onSave,
+      enabled = hasChanges,
+      modifier = Modifier.align(Alignment.End),
+    ) {
+      Text(text = stringResource(Res.string.save_changes))
     }
   }
 }

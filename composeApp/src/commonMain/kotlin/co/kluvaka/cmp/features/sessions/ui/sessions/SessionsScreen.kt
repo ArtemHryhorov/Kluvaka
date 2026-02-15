@@ -1,11 +1,16 @@
 package co.kluvaka.cmp.features.sessions.ui.sessions
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -16,9 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.sessions.domain.model.Session
@@ -35,6 +43,7 @@ import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.cancel
 import kluvaka.composeapp.generated.resources.delete_session_dialog_confirm
 import kluvaka.composeapp.generated.resources.delete_session_dialog_title
+import kluvaka.composeapp.generated.resources.sessions_progress_label
 import kluvaka.composeapp.generated.resources.sessions_topbar
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -101,9 +110,10 @@ private fun SessionsScreenContent(
   state: SessionsState,
 ) {
   (state.deleteConfirmationDialog as? DialogState.Shown<Session>)?.value?.let { session ->
+    val formattedDate = DateFormatter.format(session.dateMillis)
     Dialog(
       title = stringResource(Res.string.delete_session_dialog_title),
-      description = "\"${session.location}\" от ${session.date}",
+      description = "\"${session.location}\" от $formattedDate",
       cancelButtonText = stringResource(Res.string.cancel),
       confirmButtonText = stringResource(Res.string.delete_session_dialog_confirm),
       onConfirmClick = { actions.onDeleteConfirm(session.id!!) },
@@ -115,7 +125,9 @@ private fun SessionsScreenContent(
     modifier = Modifier.fillMaxSize()
   ) {
     Column {
-      SessionsHistoryTopBar()
+      SessionsHistoryTopBar(
+        sessionsCount = state.sessions.size,
+      )
       if (state.sessions.isNotEmpty()) {
         SessionsListContent(
           sessions = state.sessions,
@@ -143,17 +155,84 @@ private fun SessionsScreenContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SessionsHistoryTopBar() {
-  TopAppBar(
-    windowInsets = WindowInsets(0, 0, 0, 0),
-    title = {
-      Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = stringResource(Res.string.sessions_topbar),
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        fontSize = 34.sp,
+private fun SessionsHistoryTopBar(
+  sessionsCount: Int,
+) {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(top = 8.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    ProgressLabel(count = sessionsCount)
+    TopAppBar(
+      windowInsets = WindowInsets(0, 0, 0, 0),
+      title = {
+        Text(
+          modifier = Modifier.fillMaxWidth(),
+          text = stringResource(Res.string.sessions_topbar),
+          textAlign = TextAlign.Center,
+          fontWeight = FontWeight.Bold,
+          fontSize = 34.sp,
+        )
+      }
+    )
+  }
+}
+
+@Composable
+private fun ProgressLabel(
+  count: Int,
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier
+      .background(
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+        shape = RoundedCornerShape(24.dp),
       )
-    }
+      .padding(
+        horizontal = 16.dp,
+        vertical = 4.dp,
+      )
+  ) {
+    Text(
+      text = stringResource(Res.string.sessions_progress_label, count),
+      style = MaterialTheme.typography.bodySmall,
+      color = MaterialTheme.colorScheme.onSurface,
+    )
+  }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun PreviewSessionsHistory() {
+  SessionsScreenContent(
+    actions = SessionsScreen.Actions.Empty,
+    state = SessionsState(
+      sessions = listOf(
+        Session(
+          id = null,
+          location = "Karpuch",
+          dateMillis = 1700784000000L,
+          rods = emptyList(),
+          isActive = false,
+          events = emptyList(),
+        ),
+      ),
+      deleteConfirmationDialog = DialogState.Hidden,
+    ),
+  )
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun PreviewSessionsHistoryEmptyState() {
+  SessionsScreenContent(
+    actions = SessionsScreen.Actions.Empty,
+    state = SessionsState(
+      sessions = emptyList(),
+      deleteConfirmationDialog = DialogState.Hidden,
+    ),
   )
 }
