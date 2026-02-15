@@ -6,9 +6,10 @@ sealed interface SessionsOperation {
 
   sealed interface Actions : SessionsOperation {
     data object FetchSessions : Actions
-    object DeleteSessionCancel : Actions
+    data object DeleteSessionCancel : Actions
     data class DeleteSessionConfirm(val id: Int) : Actions
     data class DeleteSessionRequest(val session: Session) : Actions
+    data object ToggleProgressMetric : Actions
   }
 
   sealed interface Events : SessionsOperation {

@@ -26,6 +26,7 @@ class SessionsViewModel(
       Actions.DeleteSessionCancel -> dispatchOperation(actions)
       is Actions.DeleteSessionConfirm -> handleDeleteSession(actions)
       is Actions.DeleteSessionRequest -> dispatchOperation(actions)
+      Actions.ToggleProgressMetric -> dispatchOperation(actions)
     }
   }
 

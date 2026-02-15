@@ -6,6 +6,7 @@ import co.kluvaka.cmp.features.sessions.domain.model.Session
 data class SessionsState(
   val sessions: List<Session>,
   val deleteConfirmationDialog: DialogState<Session>,
+  val progressMetric: ProgressMetric = ProgressMetric.SessionsCount,
 ) {
   companion object {
     val Initial = SessionsState(
@@ -13,4 +14,10 @@ data class SessionsState(
       deleteConfirmationDialog = DialogState.Hidden,
     )
   }
+}
+
+enum class ProgressMetric {
+  SessionsCount,
+  FishCount,
+  FishWeight,
 }
