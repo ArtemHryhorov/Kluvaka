@@ -14,6 +14,7 @@ class SessionsReducer {
     is Actions.DeleteSessionCancel -> handleDeleteSessionCancel(currentState)
     is Actions.DeleteSessionConfirm -> currentState
     is Actions.DeleteSessionRequest -> handleDeleteSessionRequest(currentState, operation)
+    is Actions.ToggleProgressMetric -> handleToggleProgressMetric(currentState)
   }
 
   private fun handleDeleteSessionCancel(
@@ -35,5 +36,15 @@ class SessionsReducer {
   ): SessionsState = currentState.copy(
     deleteConfirmationDialog = DialogState.Hidden,
     sessions = event.payload,
+  )
+
+  private fun handleToggleProgressMetric(
+    currentState: SessionsState,
+  ): SessionsState = currentState.copy(
+    progressMetric = when (currentState.progressMetric) {
+      ProgressMetric.SessionsCount -> ProgressMetric.FishCount
+      ProgressMetric.FishCount -> ProgressMetric.FishWeight
+      ProgressMetric.FishWeight -> ProgressMetric.SessionsCount
+    }
   )
 }

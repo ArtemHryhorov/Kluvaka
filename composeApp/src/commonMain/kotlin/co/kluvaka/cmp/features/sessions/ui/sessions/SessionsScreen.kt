@@ -1,6 +1,7 @@
 package co.kluvaka.cmp.features.sessions.ui.sessions
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,11 +32,17 @@ import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.sessions.domain.model.Session
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
+import co.kluvaka.cmp.features.sessions.domain.model.totalFishCount
+import co.kluvaka.cmp.features.sessions.domain.model.totalFishWeight
+import co.kluvaka.cmp.features.sessions.ui.sessions.ProgressMetric.FishCount
+import co.kluvaka.cmp.features.sessions.ui.sessions.ProgressMetric.FishWeight
+import co.kluvaka.cmp.features.sessions.ui.sessions.ProgressMetric.SessionsCount
 import co.kluvaka.cmp.features.sessions.ui.session.SessionScreen
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.DeleteSessionCancel
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.DeleteSessionConfirm
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.DeleteSessionRequest
 import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.FetchSessions
+import co.kluvaka.cmp.features.sessions.ui.sessions.SessionsOperation.Actions.ToggleProgressMetric
 import co.kluvaka.cmp.features.sessions.ui.sessions.composable.SessionsEmptyState
 import co.kluvaka.cmp.features.sessions.ui.sessions.composable.SessionsListContent
 import co.kluvaka.cmp.features.sessions.ui.start.session.StartSessionScreen
@@ -43,6 +50,8 @@ import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.cancel
 import kluvaka.composeapp.generated.resources.delete_session_dialog_confirm
 import kluvaka.composeapp.generated.resources.delete_session_dialog_title
+import kluvaka.composeapp.generated.resources.sessions_progress_fish_count
+import kluvaka.composeapp.generated.resources.sessions_progress_fish_weight
 import kluvaka.composeapp.generated.resources.sessions_progress_label
 import kluvaka.composeapp.generated.resources.sessions_topbar
 import org.jetbrains.compose.resources.stringResource
@@ -57,6 +66,7 @@ object SessionsScreen : Screen {
     val onDeleteConfirm: (Int) -> Unit,
     val onDeleteRequest: (Session) -> Unit,
     val onStartNewSessionClick: () -> Unit,
+    val onToggleProgressMetric: () -> Unit,
   ) {
     companion object Companion {
       val Empty = Actions(
@@ -66,6 +76,7 @@ object SessionsScreen : Screen {
         onDeleteConfirm = {},
         onDeleteRequest = {},
         onStartNewSessionClick = {},
+        onToggleProgressMetric = {},
       )
     }
   }
@@ -84,13 +95,10 @@ object SessionsScreen : Screen {
         navigator?.push(SessionScreen(mode = SessionMode.Completed, sessionId = id))
       },
       onDeleteCancel = { viewModel.handleAction(DeleteSessionCancel) },
-      onDeleteConfirm = { id ->
-        viewModel.handleAction(DeleteSessionConfirm(id))
-      },
-      onDeleteRequest = { session ->
-        viewModel.handleAction(DeleteSessionRequest(session))
-      },
+      onDeleteConfirm = { id -> viewModel.handleAction(DeleteSessionConfirm(id)) },
+      onDeleteRequest = { session -> viewModel.handleAction(DeleteSessionRequest(session)) },
       onStartNewSessionClick = { navigator?.push(StartSessionScreen) },
+      onToggleProgressMetric = { viewModel.handleAction(ToggleProgressMetric) }
     )
 
     LaunchedEffect(Unit) {
@@ -124,9 +132,16 @@ private fun SessionsScreenContent(
   Box(
     modifier = Modifier.fillMaxSize()
   ) {
+    val totalFishCount = state.sessions.sumOf { it.events.totalFishCount() }
+    val totalFishWeight = state.sessions.sumOf { it.events.totalFishWeight() }
+
     Column {
       SessionsHistoryTopBar(
         sessionsCount = state.sessions.size,
+        progressMetric = state.progressMetric,
+        fishCount = totalFishCount,
+        fishWeight = totalFishWeight,
+        onToggleMetric = { actions.onToggleProgressMetric() },
       )
       if (state.sessions.isNotEmpty()) {
         SessionsListContent(
@@ -157,6 +172,10 @@ private fun SessionsScreenContent(
 @Composable
 private fun SessionsHistoryTopBar(
   sessionsCount: Int,
+  progressMetric: ProgressMetric,
+  fishCount: Int,
+  fishWeight: Double,
+  onToggleMetric: () -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -164,7 +183,13 @@ private fun SessionsHistoryTopBar(
       .padding(top = 8.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    ProgressLabel(count = sessionsCount)
+    ProgressLabel(
+      metric = progressMetric,
+      sessionsCount = sessionsCount,
+      fishCount = fishCount,
+      fishWeight = fishWeight,
+      onClick = onToggleMetric,
+    )
     TopAppBar(
       windowInsets = WindowInsets(0, 0, 0, 0),
       title = {
@@ -182,11 +207,22 @@ private fun SessionsHistoryTopBar(
 
 @Composable
 private fun ProgressLabel(
-  count: Int,
+  metric: ProgressMetric,
+  sessionsCount: Int,
+  fishCount: Int,
+  fishWeight: Double,
+  onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val weightRounded = ((fishWeight * 10).toInt() / 10.0).toString()
+  val labelText = when (metric) {
+    SessionsCount -> stringResource(Res.string.sessions_progress_label, sessionsCount)
+    FishCount -> stringResource(Res.string.sessions_progress_fish_count, fishCount)
+    FishWeight -> stringResource(Res.string.sessions_progress_fish_weight, weightRounded)
+  }
   Box(
     modifier = modifier
+      .clickable { onClick() }
       .background(
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
         shape = RoundedCornerShape(24.dp),
@@ -197,7 +233,7 @@ private fun ProgressLabel(
       )
   ) {
     Text(
-      text = stringResource(Res.string.sessions_progress_label, count),
+      text = labelText,
       style = MaterialTheme.typography.bodySmall,
       color = MaterialTheme.colorScheme.onSurface,
     )
