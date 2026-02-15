@@ -51,6 +51,7 @@
     <string name="event_type_loose">Сход</string>
     <string name="event_type_media_content_description">Изображение события</string>
     <string name="event_type">Тип события</string>
+    <string name="information">Информация</string>
     <string name="remove_image_content_description">Удалить изображение</string>
     <string name="add_photo_content_description">Добавить фото</string>
     <string name="weight_kg">Вес (кг)</string>
@@ -134,6 +135,7 @@
     <string name="fish_caught_weight_format">Рыбы поймано: %1$s кг</string>
     <string name="session_status_active">Статус: Активная</string>
     <string name="session_status_completed">Статус: Завершена</string>
+    <string name="change_cover">Сменить обложку</string>
     
     <!-- Month Names -->
     <string name="month_january">Январь</string>

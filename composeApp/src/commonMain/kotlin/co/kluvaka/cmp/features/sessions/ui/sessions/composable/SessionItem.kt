@@ -58,7 +58,10 @@ fun SessionItem(
         onLongClick = { onRemove(session) },
       ),
   ) {
-    val coverPhoto = session.events.firstOrNull()?.photos?.firstOrNull()
+    val coverPhoto = session.coverPhoto?.takeIf { it.isNotEmpty() }
+      ?: session.events
+        .flatMap { it.photos }
+        .firstOrNull { it.isNotEmpty() }
     Image(
       painter = rememberAsyncImagePainter(coverPhoto),
       contentDescription = null,
@@ -158,10 +161,11 @@ fun SessionNewItem(
   ) {
     Column {
       // Image section
-      val coverPhoto = session
-        .events
-        .flatMap { it.photos }
-        .firstOrNull { it.isNotEmpty() }
+      val coverPhoto = session.coverPhoto?.takeIf { it.isNotEmpty() }
+        ?: session
+          .events
+          .flatMap { it.photos }
+          .firstOrNull { it.isNotEmpty() }
       val placeholder = painterResource(Res.drawable.sessions_empty_state_background)
       Box {
         AsyncImage(
@@ -225,17 +229,11 @@ fun SessionNewItem(
         }
 
         Text(
-          text = "Краткое описание или можем попробовать добавить больше инфы за саму рыбалку",
+          text = session.notes.orEmpty(),
           style = MaterialTheme.typography.bodySmall,
           color = Color(0xFFBDBDBD),
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
-        )
-
-        Text(
-          text = "Показать больше",
-          color = Color(0xFFFFC107),
-          style = MaterialTheme.typography.labelMedium,
         )
       }
     }

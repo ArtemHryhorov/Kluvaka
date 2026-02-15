@@ -51,6 +51,7 @@
     <string name="event_type_loose">Loose</string>
     <string name="event_type_media_content_description">Event's image</string>
     <string name="event_type">Event type</string>
+    <string name="information">Information</string>
     <string name="remove_image_content_description">Remove image</string>
     <string name="add_photo_content_description">Add photo</string>
     <string name="weight_kg">Weight (kg)</string>
@@ -134,6 +135,7 @@
     <string name="fish_caught_weight_format">Fish caught: %1$s kg</string>
     <string name="session_status_active">Status: Active</string>
     <string name="session_status_completed">Status: Completed</string>
+    <string name="change_cover">Change cover</string>
     
     <!-- Month Names -->
     <string name="month_january">January</string>

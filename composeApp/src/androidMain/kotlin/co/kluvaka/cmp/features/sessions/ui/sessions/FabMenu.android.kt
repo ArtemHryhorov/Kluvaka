@@ -63,8 +63,6 @@ actual fun FabMenu(
     listOf(
       Icons.AutoMirrored.Filled.Message to "Спиннинг",
       Icons.Filled.People to "Карпфишинг",
-      Icons.Filled.Contacts to "Поплавок",
-      Icons.Filled.Snooze to "Фидер",
     )
 
   var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }

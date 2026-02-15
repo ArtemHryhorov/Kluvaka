@@ -9,6 +9,7 @@ import co.kluvaka.cmp.features.sessions.domain.usecase.AddSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.usecase.FinishActiveSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetActiveFishingSession
 import co.kluvaka.cmp.features.sessions.domain.usecase.GetSessionById
+import co.kluvaka.cmp.features.sessions.domain.usecase.UpdateSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -20,6 +21,7 @@ class SessionViewModel(
   private val getSessionById: GetSessionById,
   private val finishActiveSession: FinishActiveSession,
   private val addSessionEvent: AddSessionEvent,
+  private val updateSession: UpdateSession,
 ) : ViewModel() {
 
   private val _mutableState = MutableStateFlow(SessionState(null))
@@ -41,10 +43,16 @@ class SessionViewModel(
         it.copy(
           mode = mode,
           session = session,
-          events = session?.events ?: emptyList()
+          events = session?.events ?: emptyList(),
+          sessionNotes = session?.notes.orEmpty(),
+          sessionCoverPhoto = session?.coverPhoto,
         )
       }
     }
+  }
+
+  fun selectTab(tab: SessionTab) {
+    _mutableState.update { it.copy(selectedTab = tab) }
   }
 
   fun showEventTypeDialog() {
@@ -263,8 +271,23 @@ class SessionViewModel(
   }
 
   fun updateSessionNotes(notes: String) {
-    if (isReadOnlyMode()) return
     _mutableState.update { it.copy(sessionNotes = notes) }
+  }
+
+  fun updateSessionCoverPhoto(photo: String) {
+    _mutableState.update { it.copy(sessionCoverPhoto = photo) }
+  }
+
+  fun saveSessionInfo() {
+    val currentSession = state.value.session ?: return
+    val updatedSession = currentSession.copy(
+      coverPhoto = state.value.sessionCoverPhoto,
+      notes = state.value.sessionNotes,
+    )
+    viewModelScope.launch {
+      updateSession(updatedSession)
+      updatedSession.id?.let { refreshCurrentSessionFromDb(it) }
+    }
   }
 
   fun finishSessionWithNotes() {
@@ -290,7 +313,9 @@ class SessionViewModel(
       _mutableState.update {
         it.copy(
           session = session,
-          events = session.events
+          events = session.events,
+          sessionNotes = session.notes.orEmpty(),
+          sessionCoverPhoto = session.coverPhoto,
         )
       }
     }

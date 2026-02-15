@@ -18,6 +18,8 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
       location = session.location,
       date = session.dateMillis,
       isActive = if (session.isActive) 1 else 0,
+      coverPhoto = session.coverPhoto,
+      notes = session.notes,
     )
 
     // Get the ID of the newly inserted session.
@@ -58,6 +60,8 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
       dateMillis = session.date,
       rods = rods,
       isActive = session.isActive == 1L,
+      coverPhoto = session.coverPhoto,
+      notes = session.notes,
       events = events,
     )
   }
@@ -84,6 +88,8 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
           dateMillis = session.date,
           rods = rods,
           isActive = session.isActive == 1L,
+          coverPhoto = session.coverPhoto,
+          notes = session.notes,
           events = events,
         )
       }
@@ -95,6 +101,8 @@ class SessionDatabase(databaseDriverFactory: DatabaseDriverFactory) {
       location = session.location,
       date = session.dateMillis,
       isActive = if (session.isActive) 1L else 0L,
+      coverPhoto = session.coverPhoto,
+      notes = session.notes,
     )
   }
 

@@ -6,5 +6,7 @@ data class Session(
   val dateMillis: Long,
   val rods: List<Rod>,
   val isActive: Boolean,
+  val coverPhoto: String? = null,
+  val notes: String? = null,
   val events: List<FishingSessionEvent> = emptyList(),
 )

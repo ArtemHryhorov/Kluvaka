@@ -96,6 +96,8 @@ class StartSessionViewModel(
       dateMillis = _mutableState.value.date,
       rods = _mutableState.value.rods,
       isActive = true,
+      coverPhoto = null,
+      notes = null,
     )
     viewModelScope.launch {
       createFishingSession(session)

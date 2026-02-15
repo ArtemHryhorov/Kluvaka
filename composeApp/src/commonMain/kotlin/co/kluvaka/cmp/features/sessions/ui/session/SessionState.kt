@@ -9,6 +9,7 @@ data class SessionState(
   val session: Session?,
   val mode: SessionMode = SessionMode.Active,
   val events: List<FishingSessionEvent> = emptyList(),
+  val selectedTab: SessionTab = SessionTab.Events,
   val showEventTypeDialog: Boolean = false,
   val showRodSelectionDialog: Boolean = false,
   val showFishEventDialog: Boolean = false,
@@ -22,5 +23,7 @@ data class SessionState(
   val newEventPhotos: List<String> = emptyList(),
   val newSpombCount: String = "",
   val sessionNotes: String = "",
-  val sessionPhotos: List<String> = emptyList(),
+  val sessionCoverPhoto: String? = null,
 )
+
+enum class SessionTab { Events, Information }

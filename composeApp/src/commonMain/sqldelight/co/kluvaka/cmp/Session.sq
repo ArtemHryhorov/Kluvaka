@@ -2,7 +2,9 @@ CREATE TABLE fishing_session (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     location TEXT NOT NULL,
     date INTEGER NOT NULL,
-    isActive INTEGER NOT NULL
+    isActive INTEGER NOT NULL,
+    coverPhoto TEXT,
+    notes TEXT
 );
 
 CREATE TABLE rod (
@@ -32,14 +34,16 @@ getAllSessions:
 SELECT * FROM fishing_session;
 
 insertSession:
-INSERT INTO fishing_session(location, date, isActive)
-VALUES (:location, :date, :isActive);
+INSERT INTO fishing_session(location, date, isActive, coverPhoto, notes)
+VALUES (:location, :date, :isActive, :coverPhoto, :notes);
 
 updateSession:
 UPDATE fishing_session
 SET location = :location,
     date = :date,
-    isActive = :isActive
+    isActive = :isActive,
+    coverPhoto = :coverPhoto,
+    notes = :notes
 WHERE id = :id;
 
 getRodsBySession:
