@@ -176,25 +176,25 @@ fun SessionNewItem(
             .aspectRatio(4f / 3f),
         )
 
-        // Badge (top-right)
-        Box(
-          modifier = Modifier
-            .padding(8.dp)
-            .size(36.dp)
-            .align(Alignment.TopEnd)
-            .background(
-              color = Color(0xFF6B7C3E),
-              shape = RoundedCornerShape(8.dp),
-            ),
-          contentAlignment = Alignment.Center,
-        ) {
-          Icon(
-            imageVector = Icons.Default.PanoramaFishEye,
-            contentDescription = null,
-            tint = Color.White,
-            modifier = Modifier.size(18.dp),
-          )
-        }
+//        // Badge (top-right)
+//        Box(
+//          modifier = Modifier
+//            .padding(8.dp)
+//            .size(36.dp)
+//            .align(Alignment.TopEnd)
+//            .background(
+//              color = Color(0xFF6B7C3E),
+//              shape = RoundedCornerShape(8.dp),
+//            ),
+//          contentAlignment = Alignment.Center,
+//        ) {
+//          Icon(
+//            imageVector = Icons.Default.PanoramaFishEye,
+//            contentDescription = null,
+//            tint = Color.White,
+//            modifier = Modifier.size(18.dp),
+//          )
+//        }
       }
 
       // Content

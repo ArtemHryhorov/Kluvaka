@@ -14,6 +14,7 @@
     <string name="sessions_empty_state">У вас пока нет рыбалок\nСамое время добавить первую 🎣</string>
     <string name="sessions_empty_state_content_description">Изображение пустого состояния журнала рыбалок</string>
     <string name="sessions_topbar">Журнал рыбалок</string>
+    <string name="sessions_progress_label">Мой прогресс · %1$d рыбалок</string>
     <string name="delete_session_dialog_confirm">Да, удалить</string>
     <string name="delete_session_dialog_title">Удалить эту сессию?</string>
 
