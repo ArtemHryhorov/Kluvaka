@@ -78,7 +78,7 @@ class AddTrophyReducer {
     action: Actions.LengthUpdate,
   ): AddTrophyState = currentState.copy(
     input = currentState.input.copy(
-      length = action.length,
+      length = action.length.filter { it.isDigit() },
     ),
   )
 
@@ -115,7 +115,7 @@ class AddTrophyReducer {
     action: Actions.WeightUpdate,
   ): AddTrophyState = currentState.copy(
     input = currentState.input.copy(
-      weight = action.weight,
+      weight = sanitizeDecimal(action.weight),
     ),
   )
 
@@ -135,4 +135,20 @@ class AddTrophyReducer {
       trophy = event.payload,
     ),
   )
+
+  private fun sanitizeDecimal(raw: String): String {
+    val normalized = raw.replace(",", ".")
+    val builder = StringBuilder()
+    var dotSeen = false
+    normalized.forEach { ch ->
+      when {
+        ch.isDigit() -> builder.append(ch)
+        ch == '.' && !dotSeen -> {
+          builder.append(ch)
+          dotSeen = true
+        }
+      }
+    }
+    return builder.toString()
+  }
 }
