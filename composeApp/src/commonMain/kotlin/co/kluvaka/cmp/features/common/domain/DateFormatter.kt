@@ -3,8 +3,10 @@ package co.kluvaka.cmp.features.common.domain
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
 
 object DateFormatter {
+    @OptIn(ExperimentalTime::class)
     fun format(timestamp: Long, pattern: String = "d MMMM yyyy"): String {
         if (timestamp <= 0) return ""
         

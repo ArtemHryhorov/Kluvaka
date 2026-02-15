@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import co.kluvaka.cmp.features.common.ui.Dialog
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
@@ -179,6 +180,7 @@ class SessionScreen(
       ) {
         // Session info
         state.session?.let { session ->
+          val formattedDate = DateFormatter.format(session.dateMillis)
           Spacer(modifier = Modifier.height(16.dp))
           val fishCount = state.events.totalFishCount()
           val fishWeight = state.events.totalFishWeight()
@@ -204,7 +206,7 @@ class SessionScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
               ) {
                 Text(
-                  text = session.date,
+                text = formattedDate,
                   style = MaterialTheme.typography.bodyMedium,
                   color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

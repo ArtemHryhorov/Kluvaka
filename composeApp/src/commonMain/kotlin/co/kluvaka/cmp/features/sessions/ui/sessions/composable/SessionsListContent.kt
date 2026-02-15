@@ -30,7 +30,7 @@ fun SessionsListContent(
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(sessions) { session ->
-      SessionItem(
+      SessionNewItem(
         session = session,
         onClick = { onSessionClick?.invoke(session) },
         onRemove = { onSessionDelete(session) },

@@ -1,7 +1,7 @@
 CREATE TABLE fishing_session (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     location TEXT NOT NULL,
-    date TEXT NOT NULL,
+    date INTEGER NOT NULL,
     isActive INTEGER NOT NULL
 );
 

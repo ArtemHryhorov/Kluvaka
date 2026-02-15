@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.common.ui.DialogState
 import co.kluvaka.cmp.features.sessions.domain.model.Session
@@ -102,9 +103,10 @@ private fun SessionsScreenContent(
   state: SessionsState,
 ) {
   (state.deleteConfirmationDialog as? DialogState.Shown<Session>)?.value?.let { session ->
+    val formattedDate = DateFormatter.format(session.dateMillis)
     Dialog(
       title = stringResource(Res.string.delete_session_dialog_title),
-      description = "\"${session.location}\" от ${session.date}",
+      description = "\"${session.location}\" от $formattedDate",
       cancelButtonText = stringResource(Res.string.cancel),
       confirmButtonText = stringResource(Res.string.delete_session_dialog_confirm),
       onConfirmClick = { actions.onDeleteConfirm(session.id!!) },
@@ -169,7 +171,7 @@ private fun PreviewSessionsHistory() {
         Session(
           id = null,
           location = "Karpuch",
-          date = "24 November 2025",
+          dateMillis = 1700784000000L,
           rods = emptyList(),
           isActive = false,
           events = emptyList(),
