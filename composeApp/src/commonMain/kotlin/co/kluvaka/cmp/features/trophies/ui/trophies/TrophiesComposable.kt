@@ -31,8 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import co.kluvaka.cmp.features.common.domain.DateFormatter
 import co.kluvaka.cmp.features.trophies.domain.model.Trophy
 import coil3.compose.rememberAsyncImagePainter
@@ -42,6 +45,7 @@ import kluvaka.composeapp.generated.resources.length_format
 import kluvaka.composeapp.generated.resources.location_format
 import kluvaka.composeapp.generated.resources.my_trophies
 import kluvaka.composeapp.generated.resources.remove_item_content_description
+import kluvaka.composeapp.generated.resources.sessions_topbar
 import kluvaka.composeapp.generated.resources.trophy_photo_content_description
 import kluvaka.composeapp.generated.resources.weight_format
 import org.jetbrains.compose.resources.stringResource
@@ -53,7 +57,11 @@ internal fun TrophiesTopBar() {
     windowInsets = WindowInsets(0, 0, 0, 0),
     title = {
       Text(
+        modifier = Modifier.fillMaxWidth(),
         text = stringResource(Res.string.my_trophies),
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Bold,
+        fontSize = 34.sp,
       )
     }
   )

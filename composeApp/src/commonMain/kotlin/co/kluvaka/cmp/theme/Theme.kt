@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import co.kluvaka.cmp.theme.ConfigureSystemBars
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
@@ -93,6 +94,8 @@ fun KluvakaTheme(
         LightColorScheme
     }
 
+    ConfigureSystemBars(isDarkTheme = darkTheme)
+    
     MaterialTheme(
         colorScheme = colorScheme,
         content = content

@@ -155,7 +155,7 @@ fun SessionNewItem(
       ),
     shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(
-      containerColor = Color(0xFF3A3D38),
+      containerColor = MaterialTheme.colorScheme.surfaceVariant,
     ),
     elevation = CardDefaults.cardElevation(4.dp),
   ) {

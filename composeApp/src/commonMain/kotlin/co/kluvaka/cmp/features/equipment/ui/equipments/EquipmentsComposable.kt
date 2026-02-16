@@ -30,13 +30,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import co.kluvaka.cmp.features.equipment.domain.model.Equipment
 import coil3.compose.rememberAsyncImagePainter
 import kluvaka.composeapp.generated.resources.Res
 import kluvaka.composeapp.generated.resources.equipment_photo_content_description
 import kluvaka.composeapp.generated.resources.my_arsenal
+import kluvaka.composeapp.generated.resources.my_trophies
 import kluvaka.composeapp.generated.resources.remove_item_content_description
 import org.jetbrains.compose.resources.stringResource
 
@@ -53,10 +57,14 @@ internal fun EquipmentsTopBar(totalPrice: Double) {
       ) {
         Text(
           text = stringResource(Res.string.my_arsenal),
+          fontWeight = FontWeight.Bold,
+          fontSize = 34.sp,
         )
         Text(
           modifier = Modifier.padding(end = 16.dp),
           text = "₴$totalPrice",
+          fontWeight = FontWeight.Bold,
+          fontSize = 34.sp,
         )
       }
     }
