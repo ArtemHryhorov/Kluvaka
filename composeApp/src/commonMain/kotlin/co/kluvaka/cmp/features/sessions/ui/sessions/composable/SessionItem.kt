@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
@@ -155,7 +154,7 @@ fun SessionNewItem(
       ),
     shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(
-      containerColor = MaterialTheme.colorScheme.surfaceVariant,
+//      containerColor = MaterialTheme.colorScheme.surfaceVariant,
     ),
     elevation = CardDefaults.cardElevation(4.dp),
   ) {
@@ -209,7 +208,7 @@ fun SessionNewItem(
         Text(
           text = session.location,
           style = MaterialTheme.typography.titleMedium,
-          color = Color.White,
+          color = MaterialTheme.colorScheme.onSurface,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
         )
@@ -231,7 +230,7 @@ fun SessionNewItem(
         Text(
           text = session.notes.orEmpty(),
           style = MaterialTheme.typography.bodySmall,
-          color = Color(0xFFBDBDBD),
+          color = MaterialTheme.colorScheme.onSurface,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
         )
@@ -248,7 +247,7 @@ private fun InfoChip(
   Row(
     modifier = Modifier
       .background(
-        color = Color(0xFF2F322E),
+        color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(8.dp),
       )
       .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -258,12 +257,12 @@ private fun InfoChip(
     Icon(
       imageVector = icon,
       contentDescription = null,
-      tint = Color.White,
+      tint = MaterialTheme.colorScheme.onSurface,
       modifier = Modifier.size(14.dp),
     )
     Text(
       text = text,
-      color = Color.White,
+      color = MaterialTheme.colorScheme.onSurface,
       style = MaterialTheme.typography.labelSmall,
     )
   }
