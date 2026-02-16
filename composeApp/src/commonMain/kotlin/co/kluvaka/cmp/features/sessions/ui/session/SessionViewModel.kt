@@ -272,17 +272,23 @@ class SessionViewModel(
 
   fun updateSessionNotes(notes: String) {
     _mutableState.update { it.copy(sessionNotes = notes) }
+    // Auto-save notes
+    val currentSession = state.value.session ?: return
+    val updatedSession = currentSession.copy(
+      notes = notes,
+    )
+    viewModelScope.launch {
+      updateSession(updatedSession)
+      updatedSession.id?.let { refreshCurrentSessionFromDb(it) }
+    }
   }
 
   fun updateSessionCoverPhoto(photo: String) {
     _mutableState.update { it.copy(sessionCoverPhoto = photo) }
-  }
-
-  fun saveSessionInfo() {
+    // Auto-save cover photo
     val currentSession = state.value.session ?: return
     val updatedSession = currentSession.copy(
-      coverPhoto = state.value.sessionCoverPhoto,
-      notes = state.value.sessionNotes,
+      coverPhoto = photo,
     )
     viewModelScope.launch {
       updateSession(updatedSession)
