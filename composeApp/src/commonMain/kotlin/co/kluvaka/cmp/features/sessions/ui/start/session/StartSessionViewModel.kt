@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import co.kluvaka.cmp.features.common.utils.TimeProvider
 
 class StartSessionViewModel(
   private val createFishingSession: CreateFishingSession,
@@ -22,7 +22,7 @@ class StartSessionViewModel(
   init {
     _mutableState.update {
       it.copy(
-        date = Clock.System.now().toEpochMilliseconds(),
+        date = TimeProvider.nowMillis(),
         rods = it.rods + createNewEmptyRod()
       )
     }
