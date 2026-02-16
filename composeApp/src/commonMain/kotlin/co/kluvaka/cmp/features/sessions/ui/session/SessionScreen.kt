@@ -38,9 +38,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -53,14 +53,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.common.domain.DateFormatter
+import co.kluvaka.cmp.features.common.ui.Dialog
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEvent
 import co.kluvaka.cmp.features.sessions.domain.model.FishingSessionEventType
 import co.kluvaka.cmp.features.sessions.domain.model.SessionMode
@@ -100,15 +99,14 @@ import kluvaka.composeapp.generated.resources.peaces
 import kluvaka.composeapp.generated.resources.remove_image_content_description
 import kluvaka.composeapp.generated.resources.rod
 import kluvaka.composeapp.generated.resources.rods
-import kluvaka.composeapp.generated.resources.save_changes
 import kluvaka.composeapp.generated.resources.session
 import kluvaka.composeapp.generated.resources.session_empty_state
 import kluvaka.composeapp.generated.resources.sessions_empty_state_background
 import kluvaka.composeapp.generated.resources.spomb_event_dialog_title
 import kluvaka.composeapp.generated.resources.weight
 import kluvaka.composeapp.generated.resources.weight_kg
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 class SessionScreen(
@@ -318,9 +316,6 @@ class SessionScreen(
                     uri?.let { viewModel.updateSessionCoverPhoto(uri) }
                   }
                 },
-                onSave = { viewModel.saveSessionInfo() },
-                hasChanges = session.notes.orEmpty() != state.sessionNotes ||
-                  session.coverPhoto != state.sessionCoverPhoto,
               )
             }
           }
@@ -604,8 +599,6 @@ private fun InformationTabContent(
   eventsPhotosFallback: List<String>,
   onNotesChange: (String) -> Unit,
   onChangeCover: () -> Unit,
-  onSave: () -> Unit,
-  hasChanges: Boolean,
 ) {
   val placeholder = painterResource(Res.drawable.sessions_empty_state_background)
   val cover = coverPhoto?.takeIf { it.isNotEmpty() }
@@ -650,14 +643,6 @@ private fun InformationTabContent(
       minLines = 4,
       keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
     )
-
-    Button(
-      onClick = onSave,
-      enabled = hasChanges,
-      modifier = Modifier.align(Alignment.End),
-    ) {
-      Text(text = stringResource(Res.string.save_changes))
-    }
   }
 }
 
