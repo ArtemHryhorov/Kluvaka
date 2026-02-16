@@ -40,6 +40,8 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.androidx.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.android.driver)
             implementation(libs.androidx.material3)
@@ -53,10 +55,8 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.androidx.ui.tooling.preview)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)

@@ -66,8 +66,8 @@ import kluvaka.composeapp.generated.resources.trophy_photo_title
 import kluvaka.composeapp.generated.resources.weight_kg_label
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import co.kluvaka.cmp.features.common.utils.TimeProvider
 
 data class AddTrophyScreen(
   val trophyId: Int? = null,
@@ -144,7 +144,7 @@ data class AddTrophyScreen(
     LaunchedEffect(trophyId) {
       trophyId
         ?.let { actions.onEditTrophy(it) }
-        ?: run { actions.onSetCurrentDate(Clock.System.now().toEpochMilliseconds()) }
+        ?: run { actions.onSetCurrentDate(TimeProvider.nowMillis()) }
     }
 
     AddTrophyScreenContent(
@@ -204,7 +204,7 @@ private fun AddTrophyScreenContent(
       )
 
       DatePickerField(
-        value = state.input.date ?: Clock.System.now().toEpochMilliseconds(),
+        value = state.input.date ?: TimeProvider.nowMillis(),
         onDateSelected = actions.onDateUpdate,
         label = stringResource(Res.string.date_label),
         modifier = Modifier.fillMaxWidth()

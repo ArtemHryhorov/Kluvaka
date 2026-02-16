@@ -3,7 +3,7 @@ package co.kluvaka.cmp.features.trophies.data.usecase
 import co.kluvaka.cmp.features.trophies.domain.model.TrophyInput
 import co.kluvaka.cmp.features.trophies.domain.repository.TrophyRepository
 import co.kluvaka.cmp.features.trophies.domain.usecase.AddTrophy
-import kotlinx.datetime.Clock
+import co.kluvaka.cmp.features.common.utils.TimeProvider
 
 class AddTrophyUseCase(
   private val repository: TrophyRepository,
@@ -14,7 +14,7 @@ class AddTrophyUseCase(
     weight = input.weight.toDoubleOrNull(),
     length = input.length.toDoubleOrNull(),
     location = input.location.takeIf { it.isNotEmpty() },
-    date = input.date ?: Clock.System.now().toEpochMilliseconds(),
+    date = input.date ?: TimeProvider.nowMillis(),
     images = input.images,
     notes = input.notes.takeIf { it.isNotEmpty() },
   )

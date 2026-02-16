@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
@@ -240,35 +239,3 @@ private fun ProgressLabel(
   }
 }
 
-@Composable
-@Preview(showBackground = true)
-private fun PreviewSessionsHistory() {
-  SessionsScreenContent(
-    actions = SessionsScreen.Actions.Empty,
-    state = SessionsState(
-      sessions = listOf(
-        Session(
-          id = null,
-          location = "Karpuch",
-          dateMillis = 1700784000000L,
-          rods = emptyList(),
-          isActive = false,
-          events = emptyList(),
-        ),
-      ),
-      deleteConfirmationDialog = DialogState.Hidden,
-    ),
-  )
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun PreviewSessionsHistoryEmptyState() {
-  SessionsScreenContent(
-    actions = SessionsScreen.Actions.Empty,
-    state = SessionsState(
-      sessions = emptyList(),
-      deleteConfirmationDialog = DialogState.Hidden,
-    ),
-  )
-}

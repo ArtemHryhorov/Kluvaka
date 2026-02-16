@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toLocalDateTime
+import co.kluvaka.cmp.features.common.utils.TimeProvider
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 
 class SessionViewModel(
   private val getActiveFishingSession: GetActiveFishingSession,
@@ -308,8 +311,8 @@ class SessionViewModel(
   }
 
   private fun getCurrentTimestamp(): String {
-    val now = kotlinx.datetime.Clock.System.now()
-    val localDateTime = now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
+    val now = Instant.fromEpochMilliseconds(TimeProvider.nowMillis())
+    val localDateTime = now.toLocalDateTime(TimeZone.currentSystemDefault())
     return "${localDateTime.hour.toString().padStart(2, '0')}:${localDateTime.minute.toString().padStart(2, '0')}"
   }
 
