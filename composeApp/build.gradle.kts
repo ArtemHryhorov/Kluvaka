@@ -50,6 +50,30 @@ kotlin {
             implementation(libs.native.driver)
         }
         commonMain.dependencies {
+            implementation(projects.core.data)
+            implementation(projects.core.domain)
+            implementation(projects.core.presentation)
+
+            implementation(projects.feature.auth.data)
+            implementation(projects.feature.auth.domain)
+            implementation(projects.feature.auth.presentation)
+
+            implementation(projects.feature.equipment.data)
+            implementation(projects.feature.equipment.domain)
+            implementation(projects.feature.equipment.presentation)
+
+            implementation(projects.feature.home.data)
+            implementation(projects.feature.home.domain)
+            implementation(projects.feature.home.presentation)
+
+            implementation(projects.feature.more.data)
+            implementation(projects.feature.more.domain)
+            implementation(projects.feature.more.presentation)
+
+            implementation(projects.feature.session.data)
+            implementation(projects.feature.session.domain)
+            implementation(projects.feature.session.presentation)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
